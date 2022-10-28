@@ -65,7 +65,7 @@ In this iteration, you are expected to:
 
     * `eslint` is assessed identically to iteration 2.
 
-    * Good coverage for all .ts files that aren't tests will be assessed: see section 5.4 for details.
+    * Good coverage for all files that aren't tests will be assessed: see section 5.4 for details.
 
     * You can structure your test files however you choose, as long as they are appended with `.test.ts`. You may place them inside a `/tests` folder, if you wish. For this iteration, we will only be testing your HTTP layer of tests. 
 
@@ -110,7 +110,7 @@ npm start
 
 This will start the server on the port in the `src/server.ts` file, using `ts-node`.
 
-If you get an OSError stating that the address is already in use, you can change the port number in `config.json` to any number from 1024 to 49151. Is it likely that another student may be using your original port number.
+If you get an error stating that the address is already in use, you can change the port number in `config.json` to any number from 1024 to 49151. Is it likely that another student may be using your original port number.
 
 Please note: For routes such as `standup/start` and `message/sendlater`, you are not required to account for situations where the server process crashes or restarts while waiting. If the server ever restarts while these active "sessions" are ongoing, you can assume they are no longer happening after restart.
 
@@ -129,7 +129,7 @@ Continue working on this project by making distinct "features". Each feature sho
 
 For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.ts`). It is up to you and your team to decide what each feature is.
 
-There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features, especially to help those who may still be coming to grips with Typescript.
+There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features.
 
 Please pay careful attention to the following:
 
@@ -157,18 +157,18 @@ Back in the first terminal, stop the server with Ctrl+C or Command+C. There shou
 
 ### 5.5. Dryrun
 
-There is no new dryrun for iteration 3, however you can still run the dryrun for iteration 2. It consists of 4 tests, one each for your implementation of `clear/v1`, `auth/register/v2`, `channels/create/v2`, and `channels/list/v2`. These only check whether your server wrapper functions accept requests correctly, the format of your return types and simple expected behaviour, so do not rely on these as an indicator for the correctness of your implementation or tests.
+The dryrun for iteration 3 consists of 4 tests, one each for your implementation of `clear/v1`, `auth/register/v3`, `channels/create/v3`, and `channels/list/v3`. These only check whether your server wrapper functions accept requests correctly, the format of your return types and simple expected behaviour, so do not rely on these as an indicator for the correctness of your implementation or tests.
 
 To run the dryrun, you should be in the root directory of your project (e.g. `/project-backend`) and use the command:
 
 ```bash
-1531 dryrun 2
+1531 dryrun 3
 ```
 
 To view the dryrun tests, you can run the following command on the CSE machines:  
 
 ```bash
-cat ~cs1531/bin/iter2_test.py
+cat ~cs1531/bin/iter3_test.py
 ```
 
 ### 5.6. Planning for the next problems to solve
