@@ -239,7 +239,6 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
       <li>Correctly written tests based on the specification requirements</li>
       <li>Code coverage (99% coverage gives full marks for the coverage component)</li>
       <li>Correctly linted code (worth 5% of this iteration)</li>
-      <li>Correctly typechecked code (worth 5% of this iteration)</li>
     </ul></td>
   </tr>
   <tr>
@@ -293,10 +292,10 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
   </td>
   </tr>
   <tr>
-    <td>(Bonus Marks) Extra Features</td>
+    <td>(Bonus Marks) Extra Features & Typescript</td>
     <td>10%</td>
     <td><ul>
-      <li>Up to 10% extra marks can be gained through additions of "extra feature(s)".</li>
+      <li>Up to 10% extra marks can be gained through additions of "extra feature(s)", or by ensuring your code is typescript compliant using <code>npm run tsc</code></li>
       <li>Marks will be awarded based on 1) Originality, 2) Technical or creative achievement, 3) Lack of bugs associated with it, 4) Size/scale of the addition.</li>
       <li>Your tutor is not required to provide any assistance with this, as it's intended for more advanced students once they complete all other criteria to a high standard.</li>
       <li>A brief explanation of your additions must be written in a file <code>extra.md</code> that is added to your repo.</li>
@@ -309,23 +308,22 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
 
 The formula used for automarking in this iteration is:
 
-`Mark = 90*(t * i * min(c + 1, 100)^3) + 5*e + 5*f`
-(Mark equals 90% of `t` multiplied by `i` multiplied by the minimum of `c + 1` and 100 to the power of three, plus 5% of `e`, plus 5% of `f`)
+`Mark = 95*(t * i * min(c + 1, 100)^3) + 5*e`
+(Mark equals 95% of `t` multiplied by `i` multiplied by the minimum of `c + 1` and 100 to the power of three, plus 5% of `e`)
 
 Where:
  * `t` is the mark you receive for your tests running against your code (100% = your implementation passes all of your tests).
  * `i` is the mark you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
  * `c` is the score achieved by running coverage on your entire codebase. Note that 99% coverage is enough to give you full marks for this part.
  * `e` is the score between 0-1 achieved by running eslint against your code and the provided configuration.
- * `f` is the score between 0-1 achieved by running typechecking against your code with the provided configuration
-
 
 ### 5.9. Submission
 
 This iteration due date described in section 7. Note there will be no demonstration for iteration 3.
 
+### 5.10. Extra Features & Typescript
 
-### 5.10. Extra Features
+You can gain all 10 bonus marks by ensuring your code is Typescript compliant. You can run `npm run tsc` to check this, if no output is produced, then all your files are typechecked correctly. Apart from this, you can gain bonus marks by implementing extra features.
 
 Your tutor is not required to provide any assistance with this section, as it's intended for more advanced students once they complete all other criteria to a high standard.
 
@@ -489,9 +487,10 @@ Reference 8.5.
 
 ### 6.2.3. Iteration 2 Interface (for iteration 3)
 
+**IMPORTANT NOTE**: All routes that require a `token` should raise a `403 Error` when the `token` passed in is invalid.
+
 CHANGELOG:
 * Error returns should be converted to the respective Exception (see table below and section 6.8.2)
-* All routes that require a `token` should raise a `403 Error` object when the `token` passed in is invalid.
 * Instead of passing `token` as a query or body parameter, you should pass it through a HTTP header (see section 6.9):
   * You should remove `token` from query and body parameters for all routes.  
   * You also need to increment the version of each route that previously accepted `token` as a query or body parameter, e.g. v2 --> v3.  
@@ -885,7 +884,8 @@ CHANGELOG:
 #### 6.2.4. Iteration 3 Interface
 All return values should be an object, with keys identically matching the names in the table below, along with their respective values.
 
-The following routes require a `token`, except `auth/passwordreset/request` and `auth/passwordreset/reset`. You should raise a `403 Error` object when the `token` passed in is invalid.
+**IMPORTANT NOTE**: All of the following routes (except `auth/passwordreset/request` and `auth/passwordreset/reset`) require a `token` in their header. You should raise a `403 Error` when the `token` passed in is invalid.
+
 <table>
   <tr>
     <th>Name & Description</th>
@@ -1216,7 +1216,7 @@ The data is reset occasionally, but you can use this link to play around and get
 #### 6.8.2. Error raising
 Either a `400 (Bad Request)` or `403 (Forbidden)` is thrown when something goes wrong. A `400` error refers to issues with user input, whereas a `403` error refers to issues with authorisation. All of these cases are listed in the **Interface** table. If input implies that both errors should be thrown, throw a `403` error.
 
-One exception is that, even though it's not listed in the table, for all routes except `auth/register`, `auth/login`, `auth/passwordreset/request` and `auth/passwordreset/reset`, a `403` error is thrown when the token passed in is invalid.
+One exception is that even though it's not listed in the table, for all routes (except `auth/register`, `auth/login`, `auth/passwordreset/request` and `auth/passwordreset/reset`), a `403` error is thrown when the token passed in is invalid.
 
 For errors to be appropriately raised on the frontend, they must be thrown as follows:
 
@@ -1511,6 +1511,8 @@ When running your code or tests as part of the automarking, we place a 2.5 minut
 
 ### 9.2. Leaderboard
 In the days preceding iterations 1, 2, and 3's due date, we will be running your code against the actual automarkers (the same ones that determine your final mark) and publishing the results of every group on a leaderboard. [The leaderboard will be available here once released](http://cgi.cse.unsw.edu.au/~cs1531/22T3/leaderboard).
+
+You must have the code you wish to be tested in master by 9am on the day of leaderboard runs.  
 
 The leaderboard will be run on Monday, Wednesday, and Friday afternoons during the week that the iteration is due.
 
