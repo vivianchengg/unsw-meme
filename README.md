@@ -523,7 +523,7 @@ CHANGELOG:
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>email entered is not a valid email (more in section 6.4)</li>
+        <li>email entered is not a valid email (more in section 6.3)</li>
         <li>email address is already being used by another user</li>
         <li>length of password is less than 6 characters</li>
         <li>length of nameFirst is not between 1 and 50 characters inclusive</li>
@@ -862,7 +862,7 @@ CHANGELOG:
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-          <li>email entered is not a valid email (more in section 6.4)</li>
+          <li>email entered is not a valid email (more in section 6.3)</li>
           <li>email address is already being used by another user</li>
         </ul>
   </tr>
