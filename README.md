@@ -102,7 +102,7 @@ In this iteration, you are expected to:
 
 ### 5.2. Running the server
 
-To run the server, you can run the following command from the root directory of your project:
+To run the server, you can run the following command from the root directory of your project (e.g. `/project-backend`):
 
 ```bash
 npm start
@@ -134,14 +134,14 @@ There is no requirement that each feature be implemented by only one person. In 
 Please pay careful attention to the following:
 
 * We want to see **evidence that you wrote your tests before writing the implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. If we don't see this evidence, we will assume you did not write your tests first and your mark will be reduced.
-* You should have black-box tests for all tests required (i.e. testing each function/endpoint). However, you are also welcome to write whitebox unit tests in this iteration if you see that as important.
-* Merging in merge requests with failing pipelines is **very bad practice**. Not only does this interfere with your teams ability to work on different features at the same time, and thus slow down development, it is something you will be penalised for in marking.
+* You should have black-box tests for all tests required (i.e. testing each function/endpoint). However, you are also welcome to write white-box unit tests in this iteration if you see that as important.
+* Merging in merge requests with failing pipelines is **very bad practice**. Not only does this interfere with your team's ability to work on different features at the same time, and thus slow down development - it is something you will be penalised for in marking.
 * Similarly, merging in branches with untested features is also **very bad practice**. We will assume, and you should too, that any code without tests does not work.
 * Pushing directly to `master` is not possible for this repo. The only way to get code into `master` is via a merge request. If you discover you have a bug in `master` that got through testing, create a bugfix branch and merge that in via a merge request.
 
 ### 5.4. Test coverage
 
-To get the coverage of your tests locally, you will need to have two terminals open. Run these commands from the root directory of your project.
+To get the coverage of your tests locally, you will need to have two terminals open. Run these commands from the root directory of your project (e.g. `/project-backend`).
 
 In the first terminal, run
 ```bash
@@ -203,7 +203,7 @@ With your completed use case work, reach out to the 2-3 people you interviewed o
 
 #### [Design] Interface Design
 
-Now that we've established our _problem_ (described as requirements), it's time to think about our _solution_ in terms of what capabilities would be necessary. You will specify these capabilities as HTTP endpoints, similar to what is described in `6.2`. There is no minimum or maximum of what is needed - it will depend on what problem you're solving.
+Now that we've established our *problem* (described as requirements), it's time to think about our *solution* in terms of what capabilities would be necessary. You will specify these capabilities as HTTP endpoints, similar to what is described in `6.2`. There is no minimum or maximum of what is needed - it will depend on what problem you're solving.
 
 #### [Design] Conceptual Modelling - State Diagrams
 
@@ -249,7 +249,7 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
       <li>Demonstrated an understanding of the importance of <b>clarity</b> in communicating the purpose of tests and code</li>
       <li>Demonstrated an understanding of thoughtful test <b>design</b></li>
       <li>Appropriate use of Javascript data structures (arrays, objects, etc.)</li>
-      <li>Appropriate style as described in section 8.4</li>
+      <li>Appropriate style and documentation, as described in section 8.4</li>
       <li>Appropriate application of good software design practices</li>
       <li>Implementation of persistent state</li>
     </ul>
@@ -259,8 +259,8 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
     <td>Feature demonstrations</td>
     <td>10%</td>
     <td><ul>
-      <li>Backend works with the supplied frontend.</li>
-      <li>Successful implementation of user/profile/uploadphoto and auth/passwordreset</li>
+      <li>Backend works with the supplied frontend</li>
+      <li>Successful implementation of <code>user/profile/uploadphoto</code> and <code>auth/passwordreset</code></li>
       <li>Successful deployment to a cloud provider</li>
     </ul>
   </td>
@@ -295,10 +295,17 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
     <td>(Bonus Marks) Extra Features & Typescript</td>
     <td>10%</td>
     <td><ul>
-      <li>Up to 10% extra marks can be gained through additions of "extra feature(s)", or by ensuring your code is typescript compliant using <code>npm run tsc</code></li>
-      <li>Marks will be awarded based on 1) Originality, 2) Technical or creative achievement, 3) Lack of bugs associated with it, 4) Size/scale of the addition.</li>
+      <li>Up to 10% extra marks can be gained through additions of "extra feature(s)", or by ensuring your code is Typescript compliant using <code>npm run tsc</code>.</li>
+      <li>Marks will be awarded based on
+        <ol type="1">
+        <li>Originality,</li>
+        <li>Technical or creative achievement,</li>
+        <li>Lack of bugs associated with it,</li>
+        <li>Size/scale of the addition.</li>
+        </ol>
+      </li>
       <li>Your tutor is not required to provide any assistance with this, as it's intended for more advanced students once they complete all other criteria to a high standard.</li>
-      <li>A brief explanation of your additions must be written in a file <code>extra.md</code> that is added to your repo.</li>
+      <li>A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.</li>
       <li>Section 5.10 provides some examples of extra features you may want to implement, if you need any suggestions.</li>
       <li>To give a rough indication of how much time should be spent on extra features, a group scoring in the top 10% should spend ~40 hours collectively on this section</li>
     </ul>
@@ -315,15 +322,15 @@ Where:
  * `t` is the mark you receive for your tests running against your code (100% = your implementation passes all of your tests).
  * `i` is the mark you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
  * `c` is the score achieved by running coverage on your entire codebase. Note that 99% coverage is enough to give you full marks for this part.
- * `e` is the score between 0-1 achieved by running eslint against your code and the provided configuration.
+ * `e` is the score between 0-1 achieved by running <code>eslint</code> against your code and the provided configuration.
 
 ### 5.9. Submission
 
-This iteration due date described in section 7. Note there will be no demonstration for iteration 3.
+This iteration's due date described in section 7. Note there will be no demonstration for iteration 3.
 
 ### 5.10. Extra Features & Typescript
 
-You can gain all 10 bonus marks by ensuring your code is Typescript compliant. You can run `npm run tsc` to check this, if no output is produced, then all your files are typechecked correctly. Apart from this, you can gain bonus marks by implementing extra features.
+You can gain all 10 bonus marks by ensuring your code is Typescript compliant. You can run `npm run tsc` to check this: if no output is produced, then all your files are typechecked correctly. Apart from this, you can gain bonus marks by implementing extra features.
 
 Your tutor is not required to provide any assistance with this section, as it's intended for more advanced students once they complete all other criteria to a high standard.
 
@@ -479,7 +486,7 @@ Reference 8.5.
   </tr>
   <tr>
     <td>named exactly <b>uIds</b></td>
-    <td>Array of user ids</td>
+    <td>Array of user IDs</td>
   </tr>
 </table>
 
@@ -505,29 +512,36 @@ CHANGELOG:
     <th style="width:32%">Exceptions</th>
   </tr>
   <tr>
-    <td><code>auth/login/v3</code><br /><br />Given a registered user's email and password, returns their `authUserId` value.</td>
+    <td><code>auth/login/v3</code><br /><br />Given a registered user's <code>email</code> and <code>password</code>, returns their <code>authUserId</code> value.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>( email, password )</code><br /><br /><b>Return type if no error:</b><br /><code>{ token, authUserId }</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>email entered does not belong to a user</li>
-        <li>password is not correct</li>
+        <li><code>email</code> entered does not belong to a user</li>
+        <li><code>password</code> is not correct</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>auth/register/v3</code><br /><br />Given a user's first and last name, email address, and password, create a new account for them and return a new `authUserId`.<br /><br />A handle is generated that is the concatenation of their casted-to-lowercase alphanumeric (a-z0-9) first name and last name (i.e. make lowercase then remove non-alphanumeric characters). If the concatenation is longer than 20 characters, it is cut off at 20 characters. Once you've concatenated it, if the handle is once again taken, append the concatenated names with the smallest number (starting from 0) that forms a new handle that isn't already taken. The addition of this final number may result in the handle exceeding the 20 character limit (the handle 'abcdefghijklmnopqrst0' is allowed if the handle 'abcdefghijklmnopqrst' is already taken).</td>
+    <td><code>auth/register/v2</code><br /><br />Given a user's first and last name, email address, and password, creates a new account for them and returns a new <code>authUserId</code>.<br /><br />A unique handle will be generated for each registered user. The user handle is created as follows:
+      <ul>
+        <li>First, generate a concatenation of their casted-to-lowercase alphanumeric (a-z0-9) first name and last name (i.e. make lowercase then remove non-alphanumeric characters).</li>
+        <li>If the concatenation is longer than 20 characters, it is cut off at 20 characters.</li>
+        <li>If this handle is already taken by another user, append the concatenated names with the smallest number (starting from 0) that forms a new handle that isn't already taken.</li>
+        <li>The addition of this final number may result in the handle exceeding the 20 character limit (the handle 'abcdefghijklmnopqrst0' is allowed if the handle 'abcdefghijklmnopqrst' is already taken).</li>
+      </ul>
+    </td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>( email, password, nameFirst, nameLast )</code><br /><br /><b>Return type if no error:</b><br /><code>{ token, authUserId }</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>email entered is not a valid email (more in section 6.3)</li>
-        <li>email address is already being used by another user</li>
-        <li>length of password is less than 6 characters</li>
-        <li>length of nameFirst is not between 1 and 50 characters inclusive</li>
-        <li>length of nameLast is not between 1 and 50 characters inclusive</li>
+        <li><code>email</code> entered is not a valid email (more in section 6.3)</li>
+        <li><code>email</code> is already being used by another user</li>
+        <li>length of <code>password</code> is less than 6 characters</li>
+        <li>length of <code>nameFirst</code> is not between 1 and 50 characters inclusive</li>
+        <li>length of <code>nameLast</code> is not between 1 and 50 characters inclusive</li>
       </ul>
     </td>
   </tr>
@@ -538,95 +552,95 @@ CHANGELOG:
     <td>
       <b>400 Error</b> when:
       <ul>
-        <li>length of name is less than 1 or more than 20 characters</li>
+        <li>length of <code>name</code> is less than 1 or more than 20 characters</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>channels/list/v3</code><br /><br />Provide an array of all channels (and their associated details) that the authorised user is part of.</td>
+    <td><code>channels/list/v3</code><br /><br />Provides an array of all channels (and their associated details) that the authorised user is part of.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ channels }</code></td>
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>channels/listAll/v3</code><br /><br />Provide an array of all channels, including private channels, (and their associated details)</td>
+    <td><code>channels/listAll/v3</code><br /><br />Provides an array of all channels, including private channels (and their associated details).</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ channels }</code></td>
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>channel/details/v3</code><br /><br />Given a channel with ID channelId that the authorised user is a member of, provide basic details about the channel.</td>
+    <td><code>channel/details/v3</code><br /><br />Given a channel with ID <code>channelId</code> that the authorised user is a member of, provides basic details about the channel.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( channelId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ name, isPublic, ownerMembers, allMembers }</code></td>
     <td>
       <b>400 Error</b> when:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>channel/join/v3</code><br /><br />Given a channelId of a channel that the authorised user can join, adds them to that channel.</td>
+    <td><code>channel/join/v3</code><br /><br />Given a <code>channelId</code> of a channel that the authorised user can join, adds them to that channel.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>( channelId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
         <li>the authorised user is already a member of the channel</li>
         </ul>
         <b>403 Error</b> when:
         <ul>
-        <li>channelId refers to a channel that is private and the authorised user is not already a channel member and is not a global owner</li>
+        <li><code>channelId</code> refers to a channel that is private and the authorised user is not already a channel member and is not a global owner</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>channel/invite/v3</code><br /><br />Invites a user with ID uId to join a channel with ID channelId. Once invited, the user is added to the channel immediately. In both public and private channels, all members are able to invite users.</td>
+    <td><code>channel/invite/v3</code><br /><br />Invites a user with ID <code>uId</code> to join a channel with ID <code>channelId</code>. Once invited, the user is added to the channel immediately. In both public and private channels, all members are able to invite users.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>( channelId, uId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>uId does not refer to a valid user</li>
-        <li>uId refers to a user who is already a member of the channel</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li><code>uId</code> does not refer to a valid user</li>
+        <li><code>uId</code> refers to a user who is already a member of the channel</li>
         </ul>
         <b>403 Error</b> when:
         <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>channel/messages/v3</code><br /><br />Given a channel with ID channelId that the authorised user is a member of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the channel. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the channel, returns -1 in "end" to indicate there are no more messages to load after this return.</td>
+    <td><code>channel/messages/v3</code><br /><br />Given a channel with ID <code>channelId</code> that the authorised user is a member of, returns up to 50 messages between index <code>start</code> and "<code>start</code> + 50". Message with index 0 (i.e. the first element in the returned array of <code>messages</code>) is the most recent message in the channel. This function returns a new index <code>end</code>. If there are more messages to return after this function call, <code>end</code> equals "<code>start</code> + 50". If this function has returned the least recent messages in the channel, <code>end</code> equals -1 to indicate that there are no more messages to load after this return.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( channelId, start )</code><br /><br /><b>Return type if no error:</b><br /><code>{ messages, start, end }</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>start is greater than the total number of messages in the channel</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li><code>start</code> is greater than the total number of messages in the channel</li>
       </ul>
       <b>403 Error</b> when any of:
       <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>user/profile/v3</code><br /><br />For a valid user, returns information about their userId, email, first name, last name, and handle
+    <td><code>user/profile/v3</code><br /><br />For a valid user, returns information about their user ID, email, first name, last name, and handle
     </td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( uId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ user }</code></td>
     <td>
       <b>400 Error</b> when:
       <ul>
-        <li>uId does not refer to a valid user</li>
+        <li><code>uId</code> does not refer to a valid user</li>
       </ul>
     </td>
   </tr>
@@ -643,83 +657,83 @@ CHANGELOG:
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>channel/leave/v2</code><br /><br />Given a channel with ID channelId that the authorised user is a member of, remove them as a member of the channel. Their messages should remain in the channel. If the only channel owner leaves, the channel will remain.</td>
+    <td><code>channel/leave/v2</code><br /><br />Given a channel with ID <code>channelId</code> that the authorised user is a member of, removes them as a member of the channel. Their messages should remain in the channel. If the only channel owner leaves, the channel will remain.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ channelId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when:
         <ul>
-          <li>channelId does not refer to a valid channel</li>
+          <li><code>channelId</code> does not refer to a valid channel</li>
           <li>the authorised user is the starter of an active standup in the channel</li>
         </ul>
       <b>403 Error</b> when any of:
         <ul>
-          <li>channelId is valid and the authorised user is not a member of the channel</li>
+          <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
         </ul>
     </td>
   </tr>
   <tr>
-    <td><code>channel/addowner/v2</code><br /><br />Make user with user id uId an owner of the channel.</td>
+    <td><code>channel/addowner/v2</code><br /><br />Makes user with user ID <code>uId</code> an owner of the channel.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ channelId, uId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code>
     </td>
     <td>
       <b>400 Error</b> when any of:
         <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>uId does not refer to a valid user</li>
-        <li>uId refers to a user who is not a member of the channel</li>
-        <li>uId refers to a user who is already an owner of the channel</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li><code>uId</code> does not refer to a valid user</li>
+        <li><code>uId</code> refers to a user who is not a member of the channel</li>
+        <li><code>uId</code> refers to a user who is already an owner of the channel</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>channelId is valid and the authorised user does not have owner permissions in the channel</li>
+        <li><code>channelId</code> is valid and the authorised user does not have owner permissions in the channel</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>channel/removeowner/v2</code><br /><br />Remove user with user id uId as an owner of the channel.</td>
+    <td><code>channel/removeowner/v2</code><br /><br />Removes user with user ID <code>uId</code> as an owner of the channel.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ channelId, uId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>uId does not refer to a valid user</li>
-        <li>uId refers to a user who is not an owner of the channel</li>
-        <li>uId refers to a user who is currently the only owner of the channel</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li><code>uId</code> does not refer to a valid user</li>
+        <li><code>uId</code> refers to a user who is not an owner of the channel</li>
+        <li><code>uId</code> refers to a user who is currently the only owner of the channel</li>
       </ul>
       <b>403 Error</b> when any of:
       <ul>
-        <li>channelId is valid and the authorised user does not have owner permissions in the channel</li>
+        <li><code>channelId</code> is valid and the authorised user does not have owner permissions in the channel</li>
         </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/send/v2</code><br /><br />Send a message from the authorised user to the channel specified by channelId. Note: Each message should have its own unique ID, i.e. no messages should share an ID with another message, even if that other message is in a different channel.</td>
+    <td><code>message/send/v2</code><br /><br />Sends a message from the authorised user to the channel specified by <code>channelId</code>. Note: Each message should have its own unique ID, i.e. no messages should share an ID with another message, even if that other message is in a different channel or DM.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ channelId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>length of message is less than 1 or over 1000 characters</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
         </ul>
       <b>403 Error</b> when any of:
         <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
         </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/edit/v2</code><br /><br />Given a message, update its text with new text. If the new message is an empty string, the message is deleted. <b>NEW IN ITERATION 3</b>: If a shared/standup message is edited, the entire contents will be edited as if it was a normal message.</td>
+    <td><code>message/edit/v2</code><br /><br />Given a message with ID <code>messageId</code>, updates its text with new text given in <code>message</code>. If the new message is an empty string, the message is deleted. <b>NEW IN ITERATION 3</b>: If a shared/standup message is edited, the entire contents will be edited as if it was a normal message.</td>
     <td style="font-weight: bold; color: brown;">PUT</td>
     <td><b>Body Parameters:</b><br /><code>{ messageId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>
-        <li>length of message is over 1000 characters</li>
-        <li>messageId does not refer to a valid message within a channel/DM that the authorised user has joined</li>
+        <li>length of <code>message</code> is over 1000 characters</li>
+        <li><code>messageId</code> does not refer to a valid message within a channel/DM that the authorised user has joined</li>
       </ul>
       <b>403 Error</b> when any of:
       <ul>
@@ -728,13 +742,13 @@ CHANGELOG:
     </td>
   </tr>
   <tr>
-    <td><code>message/remove/v2</code><br /><br />Given a messageId for a message, this message is removed from the channel/DM</td>
+    <td><code>message/remove/v2</code><br /><br />Given a <code>messageId</code> for a message, removes the message from the channel/DM</td>
     <td style="color: red; font-weight: bold;">DELETE</td>
     <td><b>Query Parameters:</b><br /><code>( messageId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-        <li>messageId does not refer to a valid message within a channel/DM that the authorised user has joined</li>
+        <li><code>messageId</code> does not refer to a valid message within a channel/DM that the authorised user has joined</li>
         </ul>
       <b>403 Error</b> when any of:
         <ul>
@@ -749,8 +763,8 @@ CHANGELOG:
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-        <li>any uId in uIds does not refer to a valid user</li>
-        <li>there are duplicate 'uId's in uIds</li>
+        <li>any <code>uId</code> in <code>uIds</code> does not refer to a valid user</li>
+        <li>there are duplicate <code>uId</code>'s in <code>uIds</code></li>
         </ul>
     </td>
   </tr>
@@ -761,80 +775,80 @@ CHANGELOG:
     <td> N/A </td>
   </tr>
   <tr>
-    <td><code>dm/remove/v2</code><br /><br />Remove an existing DM, so all members are no longer in the DM. This can only be done by the original creator of the DM.</td>
+    <td><code>dm/remove/v2</code><br /><br />Removes an existing DM with ID <code>dmId</code>, so all members are no longer in the DM. This can only be done by the original creator of the DM.</td>
     <td style="color: red; font-weight: bold;">DELETE</td>
     <td><b>Query Parameters:</b><br /><code>( dmId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when:
         <ul>  
-         <li>dmId does not refer to a valid DM</li>
+         <li><code>dmId</code> does not refer to a valid DM</li>
         </ul>
       <b>403 Error</b> when any of:
         <ul>
-        <li>dmId is valid and the authorised user is not the original DM creator</li>
-        <li>dmId is valid and the authorised user is no longer in the DM</li>
+        <li><code>dmId</code> is valid and the authorised user is not the original DM creator</li>
+        <li><code>dmId</code> is valid and the authorised user is no longer in the DM</li>
         </ul>
     </td>
   </tr>
   <tr>
-    <td><code>dm/details/v2</code><br /><br />Given a DM with ID dmId that the authorised user is a member of, provide basic details about the DM.</td>
+    <td><code>dm/details/v2</code><br /><br />Given a DM with ID <code>dmId</code> that the authorised user is a member of, provides basic details about the DM.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( dmId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ name, members }</code></td>
     <td>
       <b>400 Error</b> when:
         <ul>  
-         <li>dmId does not refer to a valid DM</li>
+         <li><code>dmId</code> does not refer to a valid DM</li>
         </ul>
       <b>403 Error</b> when:
         <ul>
-        <li>dmId is valid and the authorised user is not a member of the DM</li>
+        <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
         </ul>
     </td>
   </tr>
   <tr>
-    <td><code>dm/leave/v2</code><br /><br />Given a DM ID, the user is removed as a member of this DM. The creator is allowed to leave and the DM will still exist if this happens. This does not update the name of the DM.</td>
+    <td><code>dm/leave/v2</code><br /><br />Given a DM with ID <code>dmId</code>, the authorised user is removed as a member of this DM. This does not update the name of the DM. The creator is allowed to leave and the DM will still exist if this happens.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ dmId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-          <li>dmId does not refer to a valid DM</li>
+          <li><code>dmId</code> does not refer to a valid DM</li>
         </ul>
       <b>403 Error</b> when any of:
         <ul>
-          <li>dmId is valid and the authorised user is not a member of the DM</li>
+          <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
         </ul>
     </td>
   </tr>
   <tr>
-    <td><code>dm/messages/v2</code><br /><br />Given a DM with ID dmId that the authorised user is a member of, return up to 50 messages between index "start" and "start + 50". Message with index 0 is the most recent message in the DM. This function returns a new index "end" which is the value of "start + 50", or, if this function has returned the least recent messages in the DM, returns -1 in "end" to indicate there are no more messages to load after this return.</td>
+    <td><code>dm/messages/v2</code><br /><br />Given a DM with ID <code>dmId</code> that the authorised user is a member of, returns up to 50 messages between index <code>start</code> and "<code>start</code> + 50". Message with index 0 (i.e. the first element in the returned array of <code>messages</code>) is the most recent message in the DM. This function returns a new index <code>end</code>. If there are more messages to return after this function call, <code>end</code> equals "<code>start</code> + 50". If this function has returned the least recent messages in the DM, <code>end</code> equals -1 to indicate that there are no more messages to load after this return.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( dmId, start )</code><br /><br /><b>Return type if no error:</b><br /><code>{ messages, start, end }</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-          <li>dmId does not refer to a valid DM</li>
-          <li>start is greater than the total number of messages in the channel</li>
+          <li><code>dmId</code> does not refer to a valid DM</li>
+          <li><code>start</code> is greater than the total number of messages in the channel</li>
         </ul>
         <b>403 Error</b> when any of:
         <ul>
-          <li>dmId is valid and the authorised user is not a member of the DM</li>
+          <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
         </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/senddm/v2</code><br /><br />Send a message from authorisedUser to the DM specified by dmId. Note: Each message should have it's own unique ID, i.e. no messages should share an ID with another message, even if that other message is in a different channel or DM.</td>
+    <td><code>message/senddm/v2</code><br /><br />Sends a message from authorised user to the DM specified by <code>dmId</code>. Note: Each message should have its own unique ID, i.e. no messages should share an ID with another message, even if that other message is in a different channel or DM.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ dmId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-          <li>dmId does not refer to a valid DM</li>
-          <li>length of message is less than 1 or over 1000 characters</li>
+          <li><code>dmId</code> does not refer to a valid DM</li>
+          <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
         </ul>
       <b>403 Error</b> when any of:
         <ul>
-          <li>dmId is valid and the authorised user is not a member of the DM</li>
+          <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
         </ul> 
     </td>
   </tr>
@@ -845,37 +859,37 @@ CHANGELOG:
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>user/profile/setname/v2</code><br /><br />Update the authorised user's first and last name</td>
+    <td><code>user/profile/setname/v2</code><br /><br />Updates the authorised user's first and last name</td>
     <td style="font-weight: bold; color: brown;">PUT</td>
     <td><b>Body Parameters:</b><br /><code>{ nameFirst, nameLast }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-          <li>length of nameFirst is not between 1 and 50 characters inclusive</li>
-          <li>length of nameLast is not between 1 and 50 characters inclusive</li>
+          <li>length of <code>nameFirst</code> is not between 1 and 50 characters inclusive</li>
+          <li>length of <code>nameLast</code> is not between 1 and 50 characters inclusive</li>
         </ul>
   </tr>
   <tr>
-    <td><code>user/profile/setemail/v2</code><br /><br />Update the authorised user's email address</td>
+    <td><code>user/profile/setemail/v2</code><br /><br />Updates the authorised user's email address</td>
     <td style="font-weight: bold; color: brown;">PUT</td>
     <td><b>Body Parameters:</b><br /><code>{ email }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-          <li>email entered is not a valid email (more in section 6.3)</li>
-          <li>email address is already being used by another user</li>
+          <li><code>email</code> entered is not a valid email (more in section 6.3)</li>
+          <li><code>email</code> is already being used by another user</li>
         </ul>
   </tr>
   <tr>
-    <td><code>user/profile/sethandle/v2</code><br /><br />Update the authorised user's handle (i.e. display name)</td>
+    <td><code>user/profile/sethandle/v2</code><br /><br />Updates the authorised user's handle (i.e. display name)</td>
     <td style="font-weight: bold; color: brown;">PUT</td>
     <td><b>Body Parameters:</b><br /><code>{ handleStr }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
         <ul>  
-          <li>length of handleStr is not between 3 and 20 characters inclusive</li>
-          <li>handleStr contains characters that are not alphanumeric</li>
-          <li>the handle is already used by another user</li> 
+          <li>length of <code>handleStr</code> is not between 3 and 20 characters inclusive</li>
+          <li><code>handleStr</code> contains non-alphanumeric characters</li>
+          <li><code>handleStr</code> is already used by another user</li> 
         </ul>
     </td>
   </tr>
@@ -894,185 +908,185 @@ All return values should be an object, with keys identically matching the names 
     <th style="width:32%">Exceptions</th>
   </tr>
   <tr>
-    <td><code>notifications/get/v1</code><br /><br />Return the user's most recent 20 notifications, ordered from most recent to least recent.</td>
+    <td><code>notifications/get/v1</code><br /><br />Returns the user's most recent 20 notifications, ordered from most recent to least recent.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ notifications }</code></td>
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>search/v1</code><br /><br />Given a query substring, return a collection of messages in all of the channels/DMs that the user has joined that contain the query (case-insensitive). There is no expected order for these messages.</td>
+    <td><code>search/v1</code><br /><br />Given a query substring, returns a collection of messages in all of the channels/DMs that the user has joined that contain the query (case-insensitive). There is no expected order for these messages.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( queryStr )</code><br /><br /><b>Return type if no error:</b><br /><code>{ messages }</code></td>
     <td>
       <b>400 Error</b> when:
       <ul>
-        <li>length of queryStr is less than 1 or over 1000 characters</li>
+        <li>length of <code>queryStr</code> is less than 1 or over 1000 characters</li>
       </ul>
     </td>
   </tr>
   <tr>
     <td><code>message/share/v1</code><br /><br /><code>ogMessageId</code> is the ID of the original message. <code>channelId</code> is the channel that the message is being shared to, and is <code>-1</code> if it is being sent to a DM. <code>dmId</code> is the DM that the message is being shared to, and is <code>-1</code> if it is being sent to a channel. <code>message</code> is the optional message in addition to the shared message, and will be an empty string <code>''</code> if no message is given.<br /><br />
-    A new message containing the contents of both the original message and the optional message should be sent to the channel/DM identified by the channelId/dmId. The format of the new message does not matter as long as both the original and optional message exist as a substring within the new message. Once sent, this new message has no link to the original message, so if the original message is edited/deleted, no change will occur for the new message.</td>
+    A new message containing the contents of both the original message and the optional message should be sent to the channel/DM identified by the <code>channelId</code>/<code>dmId</code>. The format of the new message does not matter as long as both the original and optional message exist as a substring within the new message. Once sent, this new message has no link to the original message, so if the original message is edited/deleted, no change will occur for the new message.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ ogMessageId, message, channelId, dmId }</code><br /><br /><b>Return type if no error:</b><br /><code>{ sharedMessageId }</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>both channelId and dmId are invalid</li>
-        <li>neither channelId nor dmId are -1
-        <li>ogMessageId does not refer to a valid message within a channel/DM that the authorised user has joined</li>
-        <li>length of optional message is more than 1000 characters</li>
+        <li>both <code>channelId</code> and <code>dmId</code> are invalid</li>
+        <li>neither <code>channelId</code> nor <code>dmId</code> are -1
+        <li><code>ogMessageId</code> does not refer to a valid message within a channel/DM that the authorised user has joined</li>
+        <li>length of optional <code>message</code> is more than 1000 characters</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>the pair of channelId and dmId are valid (i.e. one is -1, the other is valid) and the authorised user has not joined the channel or DM they are trying to share the message to</li>
+        <li>the pair of <code>channelId</code> and <code>dmId</code> are valid (i.e. one is -1, the other is valid) and the authorised user has not joined the channel or DM they are trying to share the message to</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/react/v1</code><br /><br />Given a message within a channel or DM the authorised user is part of, add a "react" to that particular message.</td>
+    <td><code>message/react/v1</code><br /><br />Given a message within a channel or DM the authorised user is part of, adds a "react" to that particular message.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ messageId, reactId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>messageId is not a valid message within a channel or DM that the authorised user is part of</li>
-        <li>reactId is not a valid react ID - currently, the only valid react ID the frontend has is 1</li>
-        <li>the message already contains a react with ID reactId from the authorised user</li>
+        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
+        <li><code>reactId</code> is not a valid react ID - currently, the only valid react ID the frontend has is 1</li>
+        <li>the message already contains a react with ID <code>reactId</code> from the authorised user</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/unreact/v1</code><br /><br />Given a message within a channel or DM the authorised user is part of, remove a "react" to that particular message.</td>
+    <td><code>message/unreact/v1</code><br /><br />Given a message within a channel or DM the authorised user is part of, removes a "react" to that particular message.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ messageId, reactId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>messageId is not a valid message within a channel or DM that the authorised user is part of</li>
-        <li>reactId is not a valid react ID</li>
-        <li>the message does not contain a react with ID reactId from the authorised user</li>
+        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
+        <li><code>reactId</code> is not a valid react ID</li>
+        <li>the message does not contain a react with ID <code>reactId</code> from the authorised user</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/pin/v1</code><br /><br />Given a message within a channel or DM, mark it as "pinned".</td>
+    <td><code>message/pin/v1</code><br /><br />Given a message within a channel or DM, marks it as "pinned".</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ messageId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>messageId is not a valid message within a channel or DM that the authorised user is part of</li>
+        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
         <li>the message is already pinned</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>messageId refers to a valid message in a joined channel/DM and the authorised user does not have owner permissions in the channel/DM</li>
+        <li><code>messageId</code> refers to a valid message in a joined channel/DM and the authorised user does not have owner permissions in the channel/DM</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/unpin/v1</code><br /><br />Given a message within a channel or DM, remove its mark as "pinned".</td>
+    <td><code>message/unpin/v1</code><br /><br />Given a message within a channel or DM, removes its mark as "pinned".</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ messageId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>messageId is not a valid message within a channel or DM that the authorised user is part of</li>
+        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
         <li>the message is not already pinned</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>messageId refers to a valid message in a joined channel/DM and the authorised user does not have owner permissions in the channel/DM</li>
+        <li><code>messageId</code> refers to a valid message in a joined channel/DM and the authorised user does not have owner permissions in the channel/DM</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/sendlater/v1</code><br /><br />Send a message from the authorised user to the channel specified by channelId automatically at a specified time in the future. The returned messageId will only be considered valid for other actions (editing/deleting/reacting/etc) once it has been sent (i.e. after timeSent).</td>
+    <td><code>message/sendlater/v1</code><br /><br />Sends a message from the authorised user to the channel specified by <code>channelId</code> automatically at a specified time in the future. The returned <code>messageId</code> will only be considered valid for other actions (editing/deleting/reacting/etc) once it has been sent (i.e. after <code>timeSent</code>).</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ channelId, message, timeSent }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>length of message is less than 1 or over 1000 characters</li>
-        <li>timeSent is a time in the past</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
+        <li><code>timeSent</code> is a time in the past</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel they are trying to post to</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel they are trying to post to</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>message/sendlaterdm/v1</code><br /><br />Send a message from the authorised user to the DM specified by dmId automatically at a specified time in the future. The returned messageId will only be considered valid for other actions (editing/deleting/reacting/etc) once it has been sent (i.e. after timeSent). If the DM is removed before the message has sent, the message will not be sent.</td>
+    <td><code>message/sendlaterdm/v1</code><br /><br />Sends a message from the authorised user to the DM specified by <code>dmId</code> automatically at a specified time in the future. The returned <code>messageId</code> will only be considered valid for other actions (editing/deleting/reacting/etc) once it has been sent (i.e. after <code>timeSent</code>). If the DM is removed before the message has sent, the message will not be sent.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ dmId, message, timeSent }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>dmId does not refer to a valid DM</li>
-        <li>length of message is less than 1 or over 1000 characters</li>
-        <li>timeSent is a time in the past</li>
+        <li><code>dmId</code> does not refer to a valid DM</li>
+        <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
+        <li><code>timeSent</code> is a time in the past</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>dmId is valid and the authorised user is not a member of the DM they are trying to post to</li>
+        <li><code>dmId</code> is valid and the authorised user is not a member of the DM they are trying to post to</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>standup/start/v1</code><br /><br />For a given channel, start a standup period lasting <code>length</code> seconds. <br /><br />
+    <td><code>standup/start/v1</code><br /><br />For a given channel, starts a standup period lasting <code>length</code> seconds. <br /><br />
     During this standup period, if someone calls <code>standup/send</code> with a message, it will be buffered during the <code>length</code>-second window. Then, at the end of the standup, all buffered messages are packaged into one message, and this packaged message is sent to the channel from the user who started the standup: see section 6.13. for more details. If no standup messages are sent during the standup, no message should be sent at the end.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ channelId, length }</code><br /><br /><b>Return type if no error:</b><br /><code>{ timeFinish }</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>length is a negative integer</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li><code>length</code> is a negative integer</li>
         <li>an active standup is currently running in the channel</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>standup/active/v1</code><br /><br />For a given channel, return whether a standup is active in it, and what time the standup finishes. If no standup is active, then timeFinish should be <code>null</code>.</td>
+    <td><code>standup/active/v1</code><br /><br />For a given channel, returns whether a standup is active in it, and what time the standup finishes. If no standup is active, then <code>timeFinish</code> should be <code>null</code>.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( channelId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ isActive, timeFinish }</code></td>
     <td>
       <b>400 Error</b> when:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>standup/send/v1</code><br /><br />For a given channel, if a standup is currently active in the channel, send a message to get buffered in the standup queue. Note: @ tags should not be parsed as proper tags (i.e. no notification should be triggered on send, or when the standup finishes)</td>
+    <td><code>standup/send/v1</code><br /><br />For a given channel, if a standup is currently active in the channel, sends a message to get buffered in the standup queue. Note: @ tags should not be parsed as proper tags (i.e. no notification should be triggered on send, or when the standup finishes)</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ channelId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>channelId does not refer to a valid channel</li>
-        <li>length of message is over 1000 characters</li>
+        <li><code>channelId</code> does not refer to a valid channel</li>
+        <li>length of <code>message</code> is over 1000 characters</li>
         <li>an active standup is not currently running in the channel</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
-        <li>channelId is valid and the authorised user is not a member of the channel</li>
+        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>auth/passwordreset/request/v1</code><br /><br />Given an email address, if the email address belongs to a registered user, send them an email containing a secret password reset code. This code, when supplied to <code>auth/passwordreset/reset</code>, shows that the user trying to reset the password is the who got sent this email. No error should be raised when given an invalid email, as that would pose a security/privacy concern. When a user requests a password reset, they should be logged out of all current sessions.</td>
+    <td><code>auth/passwordreset/request/v1</code><br /><br />Given an email address, if the email address belongs to a registered user, sends them an email containing a secret password reset code. This code, when supplied to <code>auth/passwordreset/reset</code>, shows that the user trying to reset the password is the same user who got sent the email contaning the code. No error should be raised when given an invalid email, as that would pose a security/privacy concern. When a user requests a password reset, they should be logged out of all current sessions.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ email }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
@@ -1080,52 +1094,52 @@ All return values should be an object, with keys identically matching the names 
     </td>
   </tr>
   <tr>
-    <td><code>auth/passwordreset/reset/v1</code><br /><br />Given a reset code for a user, set that user's new password to the password provided. Once a reset code has been used, it is then invalidated.</td>
+    <td><code>auth/passwordreset/reset/v1</code><br /><br />Given a reset code for a user, sets that user's new password to the password provided. Once a reset code has been used, it is then invalidated.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ resetCode, newPassword }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>resetCode is not a valid reset code</li>
-        <li>password entered is less than 6 characters long</li>
+        <li><code>resetCode</code> is not a valid reset code</li>
+        <li><code>newPassword</code> is less than 6 characters long</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>user/profile/uploadphoto/v1</code><br /><br />Given a URL of an image on the internet, crop the image within bounds (xStart, yStart) and (xEnd, yEnd). Position (0,0) is the top left. Please note: the URL needs to be a non-https URL (it should just have "http://" in the URL). We will only test with non-https URLs.</td>
+    <td><code>user/profile/uploadphoto/v1</code><br /><br />Given a URL of an image on the internet, crops the image within bounds (<code>xStart</code>, <code>yStart</code>) and (<code>xEnd</code>, <code>yEnd</code>). Position (0,0) is the top left. Please note: the URL needs to be a non-https URL (it should just have "http://" in the URL). We will only test with non-https URLs.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>{ imgUrl, xStart, yStart, xEnd, yEnd }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>imgUrl returns an HTTP status other than 200, or any other errors occur when attempting to retrieve the image</li>
-        <li>any of xStart, yStart, xEnd, yEnd are not within the dimensions of the image at the URL</li>
-        <li>xEnd is less than or equal to xStart or yEnd is less than or equal to yStart</li>
+        <li><code>imgUrl</code> returns an HTTP status other than 200, or any other errors occur when attempting to retrieve the image</li>
+        <li>any of <code>xStart</code>, <code>yStart</code>, <code>xEnd</code>, <code>yEnd</code> are not within the dimensions of the image at the URL</li>
+        <li><code>xEnd</code> is less than or equal to <code>xStart</code> or <code>yEnd</code> is less than or equal to <code>yStart</code></li>
         <li>image uploaded is not a JPG</li>
       </ul>
     </td>
   </tr>
   <tr>
-    <td><code>user/stats/v1</code><br /><br />Fetch the required statistics about this user's use of UNSW Beans.</td>
+    <td><code>user/stats/v1</code><br /><br />Fetches the required statistics about this user's use of UNSW Beans.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ userStats }</code></td>
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>users/stats/v1</code><br /><br />Fetch the required statistics about the workspace's use of UNSW Beans.</td>
+    <td><code>users/stats/v1</code><br /><br />Fetches the required statistics about the workspace's use of UNSW Beans.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ workspaceStats }</code></td>
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>admin/user/remove/v1</code><br /><br />Given a user by their uId, remove them from the Beans. This means they should be removed from all channels/DMs, and will not be included in the array of users returned by <code>users/all</code>. Beans owners can remove other Beans owners (including the original first owner). Once users are removed, the contents of the messages they sent will be replaced by 'Removed user'. Their profile must still be retrievable with <code>user/profile</code>, however nameFirst should be 'Removed' and nameLast should be 'user'. The user's email and handle should be reusable.</td>
+    <td><code>admin/user/remove/v1</code><br /><br />Given a user by their <code>uId</code>, removes them from the Beans. This means they should be removed from all channels/DMs, and will not be included in the array of <code>users</code> returned by <code>users/all</code>. Beans owners can remove other Beans owners (including the original first owner). Once a user is removed, the contents of the messages they sent will be replaced by 'Removed user'. Their profile must still be retrievable with <code>user/profile</code>, however <code>nameFirst</code> should be 'Removed' and <code>nameLast</code> should be 'user'. The user's email and handle should be reusable.</td>
     <td style="color: red; font-weight: bold;">DELETE</td>
     <td><b>Query Parameters:</b><br /><code>( uId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>uId does not refer to a valid user</li>
-        <li>uId refers to a user who is the only global owner</li>
+        <li><code>uId</code> does not refer to a valid user</li>
+        <li><code>uId</code> refers to a user who is the only global owner</li>
       </ul>
       <b>403 Error</b> when:
       <ul>
@@ -1134,16 +1148,16 @@ All return values should be an object, with keys identically matching the names 
     </td>
   </tr>
   <tr>
-    <td><code>admin/userpermission/change/v1</code><br /><br />Given a user by their user ID, set their permissions to new permissions described by permissionId.</td>
+    <td><code>admin/userpermission/change/v1</code><br /><br />Given a user by their <code>uID</code>, sets their permissions to new permissions described by <code>permissionId</code>.</td>
     <td style="font-weight: bold; color: blue;">POST</td>
     <td><b>Body Parameters:</b><br /><code>( uId, permissionId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
       <b>400 Error</b> when any of:
       <ul>
-        <li>uId does not refer to a valid user</li>
-        <li>uId refers to a user who is the only global owner and they are being demoted to a user</li>
-        <li>permissionId is invalid</li>
-        <li>the user already has the permissions level of permissionId</li>
+        <li><code>uId</code> does not refer to a valid user</li>
+        <li><code>uId</code> refers to a user who is the only global owner and they are being demoted to a user</li>
+        <li><code>permissionId</code> is invalid</li>
+        <li>the user already has the permissions level of <code>permissionId</code></li>
       </ul>
       <b>403 Error</b> when:
       <ul>
@@ -1165,7 +1179,7 @@ validator.isEmail('foo@bar.com');
 A common question asked throughout the project is usually "How can I test this?" or "Can I test this?". In any situation, most things can be tested thoroughly. However, some things can only be tested sparsely, and on some other rare occasions, some things can't be tested at all. A challenge of this project is for you to use your discretion to figure out what to test, and how much to test. Often, you can use the functions you've already written to test new functions in a black-box manner.
 
 ### 6.5. Pagination
-The behaviour in which channelMessages returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. Most of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.
+The behaviour in which <code>channelMessages</code> returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. Most of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.
 
 For example, in iteration 1, if we imagine a user with `authUserId` 12345 is trying to read messages from channel with ID 6, and this channel has 124 messages in it, 3 calls from the client to the server would be made. These calls, and their corresponding return values would be:
  * `channelMessages(12345, 6, 0) => { [messages], 0, 50 }`
@@ -1176,8 +1190,8 @@ For example, in iteration 1, if we imagine a user with `authUserId` 12345 is try
 There are TWO different types of permissions: global permissions and channel/DM-specific permissions. A user's primary permissions are their global permissions. Then the channel/DM permissions are layered on top.
 
 * Global permissions
-   1) Owners (permission id 1), who can also modify other owners' permissions
-   2) Members (permission id 2), who do not have any special permissions
+   1) Owners (permission ID 1), who can also modify other owners' permissions
+   2) Members (permission ID 2), who do not have any special permissions
  * Channel/DM permissions
    1) Owners of the channel/DM
    2) Members of the channel/DM
@@ -1312,7 +1326,7 @@ For the workspace, `numMsgs` is the number of messages that exist at the current
 In addition to keeping track of these metrics, you are required to implement two new endpoints, `user/stats` and `users/stats`.
 
 ### 6.12. Reacts
-The only React ID currently associated with the frontend is React ID 1, which is a thumbs up. You are welcome to add more (this will require some frontend work).
+The only React ID currently associated with the frontend is React ID 1, which is a thumbs up :thumbsup:. You are welcome to add more (this will require some frontend work).
 
 ### 6.13. Standups
 Once a standup is finished, all of the messages sent to `standup/send` are packaged together in *one single message* posted by *the user who started the standup*. This packaged message is sent as a message to the channel where the standup was started, timestamped at the moment the standup finished.
@@ -1329,10 +1343,10 @@ The structure of the packaged message is like this:
 For example:
 
 ```txt
-jake: I ate a catfish
-hayden: I went to kmart
-emily: I ate a toaster
-nick: my catfish ate a kmart toaster
+hayden: I ate a catfish
+giuliana: I went to kmart
+rani: I ate a toaster
+tam: my catfish ate a kmart toaster
 ```
 
 Standups can be started on the frontend by typing "/standup X" (where X is the number of seconds that the standup lasts for) into the message input and clicking send. E.g., to start a 90-second standup, type "/standup 90" and press send.
@@ -1493,7 +1507,7 @@ Your other team members will **not** be able to see how you rated them or what c
 
 When a group member does not contribute equally, we are aware it can implicitly have an impact on your own mark by pulling the group mark down (e.g. through not finishing a critical feature), etc.
 
-The first step of any disagreement or issue is always to talk to your team member(s) on the chats in MS teams. Make sure you have:
+The first step of any disagreement or issue is always to talk to your team member(s) on the chats in MS Teams. Make sure you have:
 1. Been clear about the issue you feel exists
 2. Been clear about what you feel needs to happen and in what time frame to feel the issue is resolved
 3. Gotten clarity that your team member(s) want to make the change.
@@ -1512,7 +1526,7 @@ When running your code or tests as part of the automarking, we place a 2.5 minut
 ### 9.2. Leaderboard
 In the days preceding iterations 1, 2, and 3's due date, we will be running your code against the actual automarkers (the same ones that determine your final mark) and publishing the results of every group on a leaderboard. [The leaderboard will be available here once released](http://cgi.cse.unsw.edu.au/~cs1531/22T3/leaderboard).
 
-You must have the code you wish to be tested in master by 9am on the day of leaderboard runs.  
+You must have the code you wish to be tested in master by **9am** on the day of leaderboard runs.  
 
 The leaderboard will be run on Monday, Wednesday, and Friday afternoons during the week that the iteration is due.
 
