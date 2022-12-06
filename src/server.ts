@@ -25,9 +25,9 @@ app.get('/echo', (req: Request, res: Response, next) => {
   }
 });
 
+// Keep this BENEATH route definitions
 // handles errors nicely
 app.use(errorHandler());
-
 // for logging errors (print to terminal)
 app.use(morgan('dev'));
 
