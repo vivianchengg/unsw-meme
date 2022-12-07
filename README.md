@@ -1526,7 +1526,9 @@ When running your code or tests as part of the automarking, we place a 2.5 minut
 ### 9.2. Leaderboard
 In the days preceding iterations 1, 2, and 3's due date, we will be running your code against the actual automarkers (the same ones that determine your final mark) and publishing the results of every group on a leaderboard. [The leaderboard will be available here once released](http://cgi.cse.unsw.edu.au/~cs1531/22T3/leaderboard).
 
-You must have the code you wish to be tested in master by **9am** on the day of leaderboard runs.  
+You must have the code you wish to be tested in your `master` branch by **10pm** the night before leaderboard runs.
+
+The leaderboard will be updated on Monday, Wednesday, and Friday morning during the week that the iteration is due.
 
 The leaderboard will be run on Monday, Wednesday, and Friday afternoons during the week that the iteration is due.
 
