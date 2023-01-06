@@ -292,22 +292,10 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
   </td>
   </tr>
   <tr>
-    <td>(Bonus Marks) Extra Features & Typescript</td>
+    <td>(Bonus Marks) Typescript</td>
     <td>10%</td>
     <td><ul>
-      <li>Up to 10% extra marks can be gained through additions of "extra feature(s)", or by ensuring your code is Typescript compliant using <code>npm run tsc</code>.</li>
-      <li>Marks will be awarded based on
-        <ol type="1">
-        <li>Originality,</li>
-        <li>Technical or creative achievement,</li>
-        <li>Lack of bugs associated with it,</li>
-        <li>Size/scale of the addition.</li>
-        </ol>
-      </li>
-      <li>Your tutor is not required to provide any assistance with this, as it's intended for more advanced students once they complete all other criteria to a high standard.</li>
-      <li>A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.</li>
-      <li>Section 5.10 provides some examples of extra features you may want to implement, if you need any suggestions.</li>
-      <li>To give a rough indication of how much time should be spent on extra features, a group scoring in the top 10% should spend ~40 hours collectively on this section</li>
+      <li>Up to 10% extra marks can be gained by ensuring your code is Typescript compliant using <code>npm run tsc</code>.</li>
     </ul>
   </td>
   </tr>
@@ -328,33 +316,9 @@ Where:
 
 This iteration's due date described in section 7. Note there will be no demonstration for iteration 3.
 
-### 5.10. Extra Features & Typescript
+### 5.10. Typescript
 
-You can gain all 10 bonus marks by ensuring your code is Typescript compliant. You can run `npm run tsc` to check this: if no output is produced, then all your files are typechecked correctly. Apart from this, you can gain bonus marks by implementing extra features.
-
-Your tutor is not required to provide any assistance with this section, as it's intended for more advanced students once they complete all other criteria to a high standard.
-
-A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.
-
-Here are some suggestions for extra features.
-
-1. Frontend - **Hangman on Frontend**
-
-    * After a game of Hangman has been started, any user in the channel can type "/guess X" where X is an individual letter. If that letter is contained in the word or phrase they're trying to guess, the app should indicate where it occurs. If it does not occur, more of the hangman is drawn. 
-    
-    * There is a lot of flexibility in how you achieve this. It can be done only by modifying the backend and relying on messages to communicate the state of the game (e.g. after making a guess, the "Hangman" posts a message with a drawing of the hangman in ASCII/emoji art). Alternatively, you can modify the frontend, if you want to experiment with fancier graphics.
-
-    * The app should use words and phrases from an external source, not just a small handful hardcoded into the app. One suitable source is `/usr/share/dict/words` available on Unix-based systems
-
-    * Note that this part of the specification is deliberately open-ended. You're free to make your own creative choices in exactly how the game should work, as long as the end result is something that could be fairly described as Hangman.
-
-2. Frontend - **Dark Mode** - Modify the frontend code so that on the flip of a switch in the navbar, the website can change to "dark mode" with a colour scheme of your choosing.
-
-3. Frontend - **LaTEX / Markdown Support** - Modify the frontend code so that messages in channels and DMs can be rendered in LaTEX and/or Markdown.
-
-4. **Databases** - Implementing persistence using a form of database via `typeorm`.
-
-7. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design.
+You can gain 10 bonus marks by ensuring your code is Typescript compliant. You can run `npm run tsc` to check this: if no output is produced, then all your files are typechecked correctly.
 
 ### 5.11. Peer Assessment
 
