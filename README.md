@@ -284,7 +284,7 @@ You must add the URL to your deployed backend inside `deploy-url.md`.
     <td>Requirements & Design for future work</td>
     <td>15%</td>
     <td><ul>
-      <li>Requirements elicited from potential users, recorded as user stories</li>
+      <li>Requirements elicited from potential users, recorded as user stories with acceptance criteria for each</li>
       <li>User journey justified and expressed as use case(s)</li>
       <li>Interface proposed as a potential solution to provide capabilities</li>
       <li>State diagram(s) drawn to demonstrate how application responds to actions</li>
