@@ -433,7 +433,7 @@ Reference 8.5.
   </tr>
 </table>
 
-#### 6.1.3. Iteration 2+ Input/Output
+#### 6.1.4. Iteration 3+ Input/Output Types
 
 <table>
   <tr>
@@ -441,16 +441,85 @@ Reference 8.5.
     <th>Type</th>
   </tr>
   <tr>
-    <td>named exactly <b>token</b></td>
+    <td>contains substring <b>code</b></td>
     <td>string</td>
   </tr>
   <tr>
-    <td>(outputs only) named exactly <b>dms</b></td>
-    <td>Array of objects, where each object contains types { dmId, name }</td>
+    <td>has suffix <b>Id</b></td>
+    <td>integer</td>
   </tr>
   <tr>
-    <td>named exactly <b>uIds</b></td>
-    <td>Array of user IDs</td>
+    <td>has prefix <b>num</b></td>
+    <td>integer</td>
+  </tr>
+  <tr>
+    <td>has suffix <b>Rate</b></td>
+    <td>float between 0 and 1 inclusive</td>
+  </tr>
+  <tr>
+    <td>(outputs only) named exactly <b>userStats</b></td>
+    <td> Object of shape {<br />
+    &emsp;channelsJoined: [{numChannelsJoined, timeStamp}],<br/>
+    &emsp;dmsJoined: [{numDmsJoined, timeStamp}], <br />
+    &emsp;messagesSent: [{numMessagesSent, timeStamp}], <br />
+    &emsp;involvementRate <br />
+    }
+    </td>
+  </tr>
+  <tr>
+    <td>(outputs only) named exactly <b>workspaceStats</b></td>
+    <td> Object of shape {<br />
+    &emsp;channelsExist: [{numChannelsExist, timeStamp}], <br />
+    &emsp;dmsExist: [{numDmsExist, timeStamp}], <br />
+    &emsp;messagesExist: [{numMessagesExist, timeStamp}], <br />
+    &emsp;utilizationRate <br />
+    }
+    </td>
+  </tr>
+  <tr>
+    <td>has suffix <b>End</b></td>
+    <td>integer</td>
+  </tr>
+  <tr>
+    <td>has suffix <b>Start</b></td>
+    <td>integer</td>
+  </tr>
+  <tr>
+    <td>has suffix <b>Url</b></td>
+    <td>string</td>
+  </tr>
+  <tr>
+    <td>(outputs only) name ends in <b>reacts</b></td>
+    <td>Array of objects, where each object contains types { reactId, uIds, isThisUserReacted } where: 
+      <ul>
+        <li>reactId is the id of a react</li>
+        <li>uIds is an array of user id's of people who've reacted for that react</li>
+        <li>isThisUserReacted is whether or not the authorised user (user making the request) currently has one of the reacts to this message</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>(outputs only) named exactly <b>notifications</b></td>
+    <td>Array of objects, where each object contains types { channelId, dmId, notificationMessage } where 
+      <ul>
+        <li>channelId is the id of the channel that the event happened in, and is <code>-1</code> if it is being sent to a DM</li>
+        <li>dmId is the DM that the event happened in, and is <code>-1</code> if it is being sent to a channel</li>
+        <li>notificationMessage is a string of the following format for each trigger action:</li>
+        <ul>
+          <li>tagged: "{User’s handle} tagged you in {channel/DM name}: {first 20 characters of the message}"</li>
+          <li>reacted message: "{User’s handle} reacted to your message in {channel/DM name}"</li>
+          <li>added to a channel/DM: "{User’s handle} added you to {channel/DM name}"</li>
+        </ul>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>(Iteration 3) (outputs only) named exactly <b>user</b></td>
+    <td>Object containing uId, email, nameFirst, nameLast, handleStr, profileImgUrl</td>
+  </tr>
+  <tr>
+    <td>(Iteration 3) (outputs only) named exactly <b>messages</b></td>
+    <td>Array of objects, where each object contains types { messageId, uId, message, timeSent, reacts, isPinned  }</td>
   </tr>
 </table>
 
