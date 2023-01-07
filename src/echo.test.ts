@@ -9,6 +9,7 @@ const url = config.url;
 /*
 Iteration 2
 */
+
 describe('HTTP tests using Jest', () => {
   test('Test successful echo', () => {
     const res = request(
@@ -17,7 +18,9 @@ describe('HTTP tests using Jest', () => {
             {
               qs: {
                 echo: 'Hello',
-              }
+              },
+              // adding a timeout will help you spot when your server hangs
+              timeout: 100
             }
     );
     const bodyObj = JSON.parse(res.body as string);
@@ -31,7 +34,8 @@ describe('HTTP tests using Jest', () => {
             {
               qs: {
                 echo: 'echo',
-              }
+              },
+              timeout: 100
             }
     );
     const bodyObj = JSON.parse(res.body as string);
