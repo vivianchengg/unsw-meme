@@ -1,6 +1,6 @@
 # COMP1531 Major Project
 
-**✨ 🥜  UNSW Beans 🥜 ✨**
+**✨ 🥜  UNSW Memes 🥜 ✨**
 
 ## Contents
 
@@ -21,9 +21,9 @@ UNSW's revenue has been going down, despite the absolutely perfect MyExperience 
 
 Realising the bright potential of its students to recreate existing products they pay for, UNSW has tasked me (Hayden), and my army of COMP1531 students with recreating **<a href="https://www.microsoft.com/en-au/microsoft-teams/group-chat-software">Microsoft Teams</a>**.
 
-The 22T3 cohort of COMP1531 students will build the **backend Javascript server** for a new communication platform, **UNSW Beans** (or just **Beans** for short). We plan to task future COMP6080 students to build the frontend for Beans, something you won't have to worry about.
+The 22T3 cohort of COMP1531 students will build the **backend Javascript server** for a new communication platform, **UNSW Memes** (or just **Memes** for short). We plan to task future COMP6080 students to build the frontend for Memes, something you won't have to worry about.
 
-**UNSW Beans** is the questionably-named communication tool that allows you to share, communicate, and collaborate virtually on a bean-like budget.
+**UNSW Memes** is the questionably-named communication tool that allows you to share, communicate, and collaborate virtually on a meme-like budget.
 
 We have already specified a **common interface** for the frontend and backend to operate on. This allows both courses to go off and do their own development and testing under the assumption that both parties will comply with the common interface. This is the interface **you are required to use**.
 
@@ -90,7 +90,7 @@ In this iteration, you are expected to:
 
 4. Document the planning of new features.
 
-    * You are required to scope out 2-3 problems to solve for future iterations of Beans. You aren't required to build/code them, but you are required to go through SDLC steps of requirements analysis, conceptual modelling, and design.
+    * You are required to scope out 2-3 problems to solve for future iterations of Memes. You aren't required to build/code them, but you are required to go through SDLC steps of requirements analysis, conceptual modelling, and design.
 
     * Full detail of this can be found in `5.6`.
 
@@ -183,9 +183,9 @@ We have opted not to provide you with a sample structure - because we're not int
 
 #### [Requirements] Elicitation
 
-Find 2-3 people to interview as target users. Target users are people who currently use a tool like Beans, or intend to. Record their name and email address.
+Find 2-3 people to interview as target users. Target users are people who currently use a tool like Memes, or intend to. Record their name and email address.
 
-Develop a series of questions (at least 4) to ask these target users to understand what *problems* they might have with teamwork-driven communication tools that are currently unsolved by Beans. Give these questions to your target users and record their answers.
+Develop a series of questions (at least 4) to ask these target users to understand what *problems* they might have with teamwork-driven communication tools that are currently unsolved by Memes. Give these questions to your target users and record their answers.
 
 Once you have done this, think about how you would solve the target users' problem(s) and write down a brief description of a proposed solution.
 
@@ -1153,19 +1153,19 @@ All return values should be an object, with keys identically matching the names 
     </td>
   </tr>
   <tr>
-    <td><code>user/stats/v1</code><br /><br />Fetches the required statistics about this user's use of UNSW Beans.</td>
+    <td><code>user/stats/v1</code><br /><br />Fetches the required statistics about this user's use of UNSW Memes.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ userStats }</code></td>
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>users/stats/v1</code><br /><br />Fetches the required statistics about the workspace's use of UNSW Beans.</td>
+    <td><code>users/stats/v1</code><br /><br />Fetches the required statistics about the workspace's use of UNSW Memes.</td>
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ workspaceStats }</code></td>
     <td>N/A</td>
   </tr>
   <tr>
-    <td><code>admin/user/remove/v1</code><br /><br />Given a user by their <code>uId</code>, removes them from the Beans. This means they should be removed from all channels/DMs, and will not be included in the array of <code>users</code> returned by <code>users/all</code>. Beans owners can remove other Beans owners (including the original first owner). Once a user is removed, the contents of the messages they sent will be replaced by 'Removed user'. Their profile must still be retrievable with <code>user/profile</code>, however <code>nameFirst</code> should be 'Removed' and <code>nameLast</code> should be 'user'. The user's email and handle should be reusable.</td>
+    <td><code>admin/user/remove/v1</code><br /><br />Given a user by their <code>uId</code>, removes them from Memes. This means they should be removed from all channels/DMs, and will not be included in the array of <code>users</code> returned by <code>users/all</code>. Memes owners can remove other Memes owners (including the original first owner). Once a user is removed, the contents of the messages they sent will be replaced by 'Removed user'. Their profile must still be retrievable with <code>user/profile</code>, however <code>nameFirst</code> should be 'Removed' and <code>nameLast</code> should be 'user'. The user's email and handle should be reusable.</td>
     <td style="color: red; font-weight: bold;">DELETE</td>
     <td><b>Query Parameters:</b><br /><code>( uId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
     <td>
@@ -1231,7 +1231,7 @@ There are TWO different types of permissions: global permissions and channel/DM-
 
 Additional Rules:
 * Global permissions
-  * All Beans users are global members by default, except for the very first user who signs up, who is a global owner
+  * All Memes users are global members by default, except for the very first user who signs up, who is a global owner
 * Channel permissions
   * A global owner has the same permissions as a channel owner in every channel they're part of. They do not become a channel owner unless explicitly added as one (by a channel owner, or themselves). Hence, if they are removed as a global owner (and are not a channel owner), they will no longer have those channel owner permissions.
 * DM permissions
@@ -1336,7 +1336,7 @@ Tagging should also occur when messages are edited to contain tags and when the 
 There is no requirement to have tags notify users inside a standup or when the buffered standup messages are sent.
 
 ### 6.11. Analytics
-COMP6080 students have implemented analytics pages for users and for the Beans workspace on the frontend, and now these pages need data. Your task is to add backend functionality that keeps track of these metrics:
+COMP6080 students have implemented analytics pages for users and for the Memes workspace on the frontend, and now these pages need data. Your task is to add backend functionality that keeps track of these metrics:
 
 For users:
   * The number of channels the user is a part of
@@ -1344,7 +1344,7 @@ For users:
   * The number of messages the user has sent
   * The user's involvement, as defined by this pseudocode: `sum(numChannelsJoined, numDmsJoined, numMsgsSent)/sum(numChannels, numDms, numMsgs)`. If the denominator is 0, involvement should be 0. If the involvement is greater than 1, it should be capped at 1.
 
-For the Beans workspace:
+For the Memes workspace:
   * The number of channels that exist currently
   * The number of DMs that exist currently
   * The number of messages that exist currently
@@ -1384,7 +1384,7 @@ tam: my catfish ate a kmart toaster
 
 Standups can be started on the frontend by typing "/standup X" (where X is the number of seconds that the standup lasts for) into the message input and clicking send. E.g., to start a 90-second standup, type "/standup 90" and press send.
 
-You will not be tested on any behaviour involving the user who started a standup being removed from the channel or Beans while the standup is ongoing, therefore you can decide this behaviour yourself.
+You will not be tested on any behaviour involving the user who started a standup being removed from the channel or Memes while the standup is ongoing, therefore you can decide this behaviour yourself.
 
 ### 6.14. profileImgUrl & image uploads
 For outputs with data pertaining to a user, a `profileImgUrl` must be present. When images are uploaded for a user profile, after processing them you should store them on the server such that your server now locally has a copy of the cropped image of the original file linked. Then, the `profileImgUrl` should be a URL to the server, such as http://localhost:5001/imgurl/adfnajnerkn23k4234.jpg (a unique url you generate).
