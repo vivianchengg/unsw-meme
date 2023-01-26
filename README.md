@@ -50,11 +50,17 @@ Now complete!
 Now complete!
 
 ## 6. Iteration 4: Extending Functionality
-In iteration 4, you'll be working alone to implement a couple extended functionalities and bonus features of your choice!
+In iteration 4, you'll be working alone to implement:
+* 2 additional functionalities (in the same format as iteration 3)
+* Bonus features of your choice!
 
 Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students.
 
 A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.
+
+You will only be style-marked on these additional features (from section 6.2.4) and your custom bonus features in iteration 4, despite using the same repository as the rest of your group. For instructions on how to fork your own version of this repo, see section 6.1.
+
+If you wish to write bonus features that extend upon previous iteration’s functionality that is currently broken in your groups repo, please contact your tutor as assistance and advice will be handled on a case-by-case basis.
 
 Here are some suggestions for extra features.
 
@@ -76,12 +82,27 @@ Here are some suggestions for extra features.
 
 7. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
 
+### 6.1 Forking your group's repo
+The instructions for forking your group's repo to create your own version are as follows:
 
-## 6. Interface specifications
+1. Navigate to https://gitlab.cse.unsw.edu.au/COMP1531/22T3/groups/<YOUR-GROUP-HERE>/project-backend
+2. Click 'Fork' in the top right-corner
+3. Name the project <b>project-backend-z5555555<b> using your zID as a replacement. NOTE: it is important to name your repo exactly this for automarking purposes
+4. Select your zID as the namespace for the Project URL
+5. Leave the Project slug as is
+6. Leave the Visibility level as-is (Private)
+7. Click 'Fork project'
 
-### 6.1. Input/Output types
+You now have a personal version of your group's project! The next steps are to share this repo with 1531 staff, so we can mark your work.
+1. Go to Project Information > Members (left-hand sidebar of GitLab)
+< figure the rest out... >
 
-#### 6.1.1. Iteration 0+ Input/Output Types
+
+## 7. Interface specifications
+
+### 7.1. Input/Output types
+
+#### 7.1.1. Iteration 0+ Input/Output Types
 <table>
   <tr>
     <th>Variable name</th>
@@ -117,7 +138,7 @@ Here are some suggestions for extra features.
   </tr>
 </table>
 
-#### 6.1.2. Iteration 1+ Input/Output Types
+#### 7.1.2. Iteration 1+ Input/Output Types
 
 <table>
   <tr>
@@ -186,7 +207,7 @@ Here are some suggestions for extra features.
   </tr>
 </table>
 
-#### 6.1.4. Iteration 3+ Input/Output Types
+#### 7.1.4. Iteration 3+ Input/Output Types
 
 <table>
   <tr>
@@ -276,412 +297,8 @@ Here are some suggestions for extra features.
   </tr>
 </table>
 
-### 6.2. Interface
-
-### 6.2.3. Iteration 2 Interface (for iteration 3)
-
-**IMPORTANT NOTE**: All routes that require a `token` should raise a `403 Error` when the `token` passed in is invalid.
-
-CHANGELOG:
-* Error returns should be converted to the respective Exception (see table below and section 6.8.2)
-* Instead of passing `token` as a query or body parameter, you should pass it through a HTTP header (see section 6.9):
-  * You should remove `token` from query and body parameters for all routes.  
-  * You also need to increment the version of each route that previously accepted `token` as a query or body parameter, e.g. v2 --> v3.  
-* New error case for `channel/leave/v2`, added in table below.
-* Added functionality for `message/edit/v2` in regards to standups, in table below.
-
-<table>
-  <tr>
-    <th>Name & Description</th>
-    <th>HTTP Method</th>
-    <th style="width:18%">Data Types</th>
-    <th style="width:32%">Exceptions</th>
-  </tr>
-  <tr>
-    <td><code>auth/login/v3</code><br /><br />Given a registered user's <code>email</code> and <code>password</code>, returns their <code>authUserId</code> value.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>( email, password )</code><br /><br /><b>Return type if no error:</b><br /><code>{ token, authUserId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>email</code> entered does not belong to a user</li>
-        <li><code>password</code> is not correct</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>auth/register/v2</code><br /><br />Given a user's first and last name, email address, and password, creates a new account for them and returns a new <code>authUserId</code>.<br /><br />A unique handle will be generated for each registered user. The user handle is created as follows:
-      <ul>
-        <li>First, generate a concatenation of their casted-to-lowercase alphanumeric (a-z0-9) first name and last name (i.e. make lowercase then remove non-alphanumeric characters).</li>
-        <li>If the concatenation is longer than 20 characters, it is cut off at 20 characters.</li>
-        <li>If this handle is already taken by another user, append the concatenated names with the smallest number (starting from 0) that forms a new handle that isn't already taken.</li>
-        <li>The addition of this final number may result in the handle exceeding the 20 character limit (the handle 'abcdefghijklmnopqrst0' is allowed if the handle 'abcdefghijklmnopqrst' is already taken).</li>
-      </ul>
-    </td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>( email, password, nameFirst, nameLast )</code><br /><br /><b>Return type if no error:</b><br /><code>{ token, authUserId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>email</code> entered is not a valid email (more in section 6.3)</li>
-        <li><code>email</code> is already being used by another user</li>
-        <li>length of <code>password</code> is less than 6 characters</li>
-        <li>length of <code>nameFirst</code> is not between 1 and 50 characters inclusive</li>
-        <li>length of <code>nameLast</code> is not between 1 and 50 characters inclusive</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channels/create/v3</code><br /><br />Creates a new channel with the given name that is either a public or private channel. The user who created it automatically joins the channel.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>( name, isPublic )</code><br /><br /><b>Return type if no error:</b><br /><code>{ channelId }</code></td>
-    <td>
-      <b>400 Error</b> when:
-      <ul>
-        <li>length of <code>name</code> is less than 1 or more than 20 characters</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channels/list/v3</code><br /><br />Provides an array of all channels (and their associated details) that the authorised user is part of.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ channels }</code></td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td><code>channels/listAll/v3</code><br /><br />Provides an array of all channels, including private channels (and their associated details).</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ channels }</code></td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td><code>channel/details/v3</code><br /><br />Given a channel with ID <code>channelId</code> that the authorised user is a member of, provides basic details about the channel.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( channelId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ name, isPublic, ownerMembers, allMembers }</code></td>
-    <td>
-      <b>400 Error</b> when:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channel/join/v3</code><br /><br />Given a <code>channelId</code> of a channel that the authorised user can join, adds them to that channel.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>( channelId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li>the authorised user is already a member of the channel</li>
-        </ul>
-        <b>403 Error</b> when:
-        <ul>
-        <li><code>channelId</code> refers to a channel that is private and the authorised user is not already a channel member and is not a global owner</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channel/invite/v3</code><br /><br />Invites a user with ID <code>uId</code> to join a channel with ID <code>channelId</code>. Once invited, the user is added to the channel immediately. In both public and private channels, all members are able to invite users.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>( channelId, uId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li><code>uId</code> does not refer to a valid user</li>
-        <li><code>uId</code> refers to a user who is already a member of the channel</li>
-        </ul>
-        <b>403 Error</b> when:
-        <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channel/messages/v3</code><br /><br />Given a channel with ID <code>channelId</code> that the authorised user is a member of, returns up to 50 messages between index <code>start</code> and "<code>start</code> + 50". Message with index 0 (i.e. the first element in the returned array of <code>messages</code>) is the most recent message in the channel. This function returns a new index <code>end</code>. If there are more messages to return after this function call, <code>end</code> equals "<code>start</code> + 50". If this function has returned the least recent messages in the channel, <code>end</code> equals -1 to indicate that there are no more messages to load after this return.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( channelId, start )</code><br /><br /><b>Return type if no error:</b><br /><code>{ messages, start, end }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li><code>start</code> is greater than the total number of messages in the channel</li>
-      </ul>
-      <b>403 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>user/profile/v3</code><br /><br />For a valid user, returns information about their user ID, email, first name, last name, and handle
-    </td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( uId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ user }</code></td>
-    <td>
-      <b>400 Error</b> when:
-      <ul>
-        <li><code>uId</code> does not refer to a valid user</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>clear/v1</code><br /><br />Resets the internal data of the application to its initial state</td>
-    <td style="font-weight: bold; color: red;">DELETE</td>
-    <td><b>Parameters:</b><br /><code>()</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td><code>auth/logout/v2</code><br /><br />Given an active token, invalidates the token to log the user out.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td><code>channel/leave/v2</code><br /><br />Given a channel with ID <code>channelId</code> that the authorised user is a member of, removes them as a member of the channel. Their messages should remain in the channel. If the only channel owner leaves, the channel will remain.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ channelId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when:
-        <ul>
-          <li><code>channelId</code> does not refer to a valid channel</li>
-          <li>the authorised user is the starter of an active standup in the channel</li>
-        </ul>
-      <b>403 Error</b> when any of:
-        <ul>
-          <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channel/addowner/v2</code><br /><br />Makes user with user ID <code>uId</code> an owner of the channel.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ channelId, uId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code>
-    </td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li><code>uId</code> does not refer to a valid user</li>
-        <li><code>uId</code> refers to a user who is not a member of the channel</li>
-        <li><code>uId</code> refers to a user who is already an owner of the channel</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user does not have owner permissions in the channel</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>channel/removeowner/v2</code><br /><br />Removes user with user ID <code>uId</code> as an owner of the channel.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ channelId, uId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li><code>uId</code> does not refer to a valid user</li>
-        <li><code>uId</code> refers to a user who is not an owner of the channel</li>
-        <li><code>uId</code> refers to a user who is currently the only owner of the channel</li>
-      </ul>
-      <b>403 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user does not have owner permissions in the channel</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/send/v2</code><br /><br />Sends a message from the authorised user to the channel specified by <code>channelId</code>. Note: Each message should have its own unique ID, i.e. no messages should share an ID with another message, even if that other message is in a different channel or DM.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ channelId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
-        </ul>
-      <b>403 Error</b> when any of:
-        <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/edit/v2</code><br /><br />Given a message with ID <code>messageId</code>, updates its text with new text given in <code>message</code>. If the new message is an empty string, the message is deleted. <b>NEW IN ITERATION 3</b>: If a shared/standup message is edited, the entire contents will be edited as if it was a normal message.</td>
-    <td style="font-weight: bold; color: brown;">PUT</td>
-    <td><b>Body Parameters:</b><br /><code>{ messageId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>
-        <li>length of <code>message</code> is over 1000 characters</li>
-        <li><code>messageId</code> does not refer to a valid message within a channel/DM that the authorised user has joined</li>
-      </ul>
-      <b>403 Error</b> when any of:
-      <ul>
-        <li>If the authorised user does not have owner permissions, and the message was not sent by them</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/remove/v2</code><br /><br />Given a <code>messageId</code> for a message, removes the message from the channel/DM</td>
-    <td style="color: red; font-weight: bold;">DELETE</td>
-    <td><b>Query Parameters:</b><br /><code>( messageId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-        <li><code>messageId</code> does not refer to a valid message within a channel/DM that the authorised user has joined</li>
-        </ul>
-      <b>403 Error</b> when any of:
-        <ul>
-        <li>If the authorised user does not have owner permissions, and the message was not sent by them</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>dm/create/v2</code><br /><br /><code>uIds</code> contains the user(s) that this DM is directed to, and will not include the creator. The creator is the owner of the DM. <code>name</code> should be automatically generated based on the users that are in this DM. The name should be an alphabetically-sorted, comma-and-space-separated concatenation of user handles, e.g. 'ahandle1, bhandle2, chandle3'.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ uIds }</code><br /><br /><b>Return type if no error:</b><br /><code>{ dmId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-        <li>any <code>uId</code> in <code>uIds</code> does not refer to a valid user</li>
-        <li>there are duplicate <code>uId</code>'s in <code>uIds</code></li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>dm/list/v2</code><br /><br />Returns the array of DMs that the user is a member of.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ dms }</code></td>
-    <td> N/A </td>
-  </tr>
-  <tr>
-    <td><code>dm/remove/v2</code><br /><br />Removes an existing DM with ID <code>dmId</code>, so all members are no longer in the DM. This can only be done by the original creator of the DM.</td>
-    <td style="color: red; font-weight: bold;">DELETE</td>
-    <td><b>Query Parameters:</b><br /><code>( dmId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when:
-        <ul>  
-         <li><code>dmId</code> does not refer to a valid DM</li>
-        </ul>
-      <b>403 Error</b> when any of:
-        <ul>
-        <li><code>dmId</code> is valid and the authorised user is not the original DM creator</li>
-        <li><code>dmId</code> is valid and the authorised user is no longer in the DM</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>dm/details/v2</code><br /><br />Given a DM with ID <code>dmId</code> that the authorised user is a member of, provides basic details about the DM.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( dmId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ name, members }</code></td>
-    <td>
-      <b>400 Error</b> when:
-        <ul>  
-         <li><code>dmId</code> does not refer to a valid DM</li>
-        </ul>
-      <b>403 Error</b> when:
-        <ul>
-        <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>dm/leave/v2</code><br /><br />Given a DM with ID <code>dmId</code>, the authorised user is removed as a member of this DM. This does not update the name of the DM. The creator is allowed to leave and the DM will still exist if this happens.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ dmId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-          <li><code>dmId</code> does not refer to a valid DM</li>
-        </ul>
-      <b>403 Error</b> when any of:
-        <ul>
-          <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>dm/messages/v2</code><br /><br />Given a DM with ID <code>dmId</code> that the authorised user is a member of, returns up to 50 messages between index <code>start</code> and "<code>start</code> + 50". Message with index 0 (i.e. the first element in the returned array of <code>messages</code>) is the most recent message in the DM. This function returns a new index <code>end</code>. If there are more messages to return after this function call, <code>end</code> equals "<code>start</code> + 50". If this function has returned the least recent messages in the DM, <code>end</code> equals -1 to indicate that there are no more messages to load after this return.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( dmId, start )</code><br /><br /><b>Return type if no error:</b><br /><code>{ messages, start, end }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-          <li><code>dmId</code> does not refer to a valid DM</li>
-          <li><code>start</code> is greater than the total number of messages in the channel</li>
-        </ul>
-        <b>403 Error</b> when any of:
-        <ul>
-          <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
-        </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/senddm/v2</code><br /><br />Sends a message from authorised user to the DM specified by <code>dmId</code>. Note: Each message should have its own unique ID, i.e. no messages should share an ID with another message, even if that other message is in a different channel or DM.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ dmId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-          <li><code>dmId</code> does not refer to a valid DM</li>
-          <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
-        </ul>
-      <b>403 Error</b> when any of:
-        <ul>
-          <li><code>dmId</code> is valid and the authorised user is not a member of the DM</li>
-        </ul> 
-    </td>
-  </tr>
-  <tr>
-    <td><code>users/all/v2</code><br /><br />Returns an array of all users and their associated details.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ users }</code></td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td><code>user/profile/setname/v2</code><br /><br />Updates the authorised user's first and last name</td>
-    <td style="font-weight: bold; color: brown;">PUT</td>
-    <td><b>Body Parameters:</b><br /><code>{ nameFirst, nameLast }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-          <li>length of <code>nameFirst</code> is not between 1 and 50 characters inclusive</li>
-          <li>length of <code>nameLast</code> is not between 1 and 50 characters inclusive</li>
-        </ul>
-  </tr>
-  <tr>
-    <td><code>user/profile/setemail/v2</code><br /><br />Updates the authorised user's email address</td>
-    <td style="font-weight: bold; color: brown;">PUT</td>
-    <td><b>Body Parameters:</b><br /><code>{ email }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-          <li><code>email</code> entered is not a valid email (more in section 6.3)</li>
-          <li><code>email</code> is already being used by another user</li>
-        </ul>
-  </tr>
-  <tr>
-    <td><code>user/profile/sethandle/v2</code><br /><br />Updates the authorised user's handle (i.e. display name)</td>
-    <td style="font-weight: bold; color: brown;">PUT</td>
-    <td><b>Body Parameters:</b><br /><code>{ handleStr }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-        <ul>  
-          <li>length of <code>handleStr</code> is not between 3 and 20 characters inclusive</li>
-          <li><code>handleStr</code> contains non-alphanumeric characters</li>
-          <li><code>handleStr</code> is already used by another user</li> 
-        </ul>
-    </td>
-  </tr>
-</table>
-
-#### 6.2.4. Iteration 3 Interface
+### 7.2. Interface
+#### 7.2.4. Iteration 4 Interface
 All return values should be an object, with keys identically matching the names in the table below, along with their respective values.
 
 **IMPORTANT NOTE**: All of the following routes (except `auth/passwordreset/request` and `auth/passwordreset/reset`) require a `token` in their header. You should raise a `403 Error` when the `token` passed in is invalid.
@@ -953,7 +570,7 @@ All return values should be an object, with keys identically matching the names 
   </tr>
 </table>
 
-### 6.3. Valid email format
+### 7.3. Valid email format
 To check an email is valid, you may use the following package and function.
 
 ```javascript
@@ -961,10 +578,10 @@ import validator from 'validator';
 
 validator.isEmail('foo@bar.com');
 ```
-### 6.4. Testing
+### 7.4. Testing
 A common question asked throughout the project is usually "How can I test this?" or "Can I test this?". In any situation, most things can be tested thoroughly. However, some things can only be tested sparsely, and on some other rare occasions, some things can't be tested at all. A challenge of this project is for you to use your discretion to figure out what to test, and how much to test. Often, you can use the functions you've already written to test new functions in a black-box manner.
 
-### 6.5. Pagination
+### 7.5. Pagination
 The behaviour in which <code>channelMessages</code> returns data is called **pagination**. It's a commonly used method when it comes to getting theoretially unbounded amounts of data from a server to display on a page in chunks. Most of the timelines you know and love - Facebook, Instagram, LinkedIn - do this.
 
 For example, in iteration 1, if we imagine a user with `authUserId` 12345 is trying to read messages from channel with ID 6, and this channel has 124 messages in it, 3 calls from the client to the server would be made. These calls, and their corresponding return values would be:
@@ -972,7 +589,7 @@ For example, in iteration 1, if we imagine a user with `authUserId` 12345 is try
  * `channelMessages(12345, 6, 50) => { [messages], 50, 100 }`
  * `channelMessages(12345, 6, 100) => { [messages], 100, -1 }`
 
-### 6.6. Permissions
+### 7.6. Permissions
 There are TWO different types of permissions: global permissions and channel/DM-specific permissions. A user's primary permissions are their global permissions. Then the channel/DM permissions are layered on top.
 
 * Global permissions
@@ -990,7 +607,7 @@ Additional Rules:
 * DM permissions
   * A global owner does NOT gain owner permissions in DMs they're part of. The only users with owner permissions in DMs are the original creators of each DM.
 
-### 6.7. User Sessions
+### 7.7. User Sessions
 Iteration 2 introduces the concept of <b>sessions</b>. With sessions, when a user logs in or registers, they receive a "token" (think of it like a ticket to a concert). These tokens are stored on the web browser (something the frontend handles), and nearly every time that user wants to make a request to the server, they will pass this "token" as part of this request. In this way, the server is able to take this token, look at it (like checking a ticket), and figure out who the user is.
 
 The difference between an <code>authUserId</code> and a <code>token</code> is that an <code>authUserId</code> is a permanent identifier of a user, whereas a new token is generated upon each new login for a user.
@@ -1001,19 +618,19 @@ In this structure, this also means it's possible to "log out" a particular user'
 
 Don't worry about creating a secure method of session storage in iteration 2 - that is for iteration 3.
 
-### 6.8. Working with the frontend
-There is a SINGLE repository available for all students at https://gitlab.cse.unsw.edu.au/COMP1531/22T3/project-frontend. You can clone this frontend locally. If you'd like to modify the frontend repo (i.e. teach yourself some frontend), please FORK the repository.
+### 7.8. Working with the frontend
+There is a SINGLE repository available for all students at https://gitlab.cse.unsw.edu.au/COMP1531/23T1/project-frontend. You can clone this frontend locally. If you'd like to modify the frontend repo (i.e. teach yourself some frontend), please FORK the repository.
 
 If you run the frontend at the same time as your express server is running on the backend, then you can power the frontend via your backend.
 
 Please note: The frontend may have very slight inconsistencies with expected behaviour outlined in the specification. Our automarkers will be running against your compliance to the specification. The frontend is there for further testing and demonstration.
 
-#### 6.8.1. Example implementation
+#### 7.8.1. Example implementation
 A working example of the frontend can be used at http://treats-unsw.herokuapp.com/. This is not a gospel implementation that dictates the required behaviour for all possible occurrences. Our implementation will make reasonable assumptions just as yours will, and they might be different, and that's fine. However, you may use this implementation as a guide for how your backend should behave in the case of ambiguities in the spec.
 
 The data is reset occasionally, but you can use this link to play around and get a feel for how the application should behave.
 
-#### 6.8.2. Error raising
+#### 7.8.2. Error raising
 Either a `400 (Bad Request)` or `403 (Forbidden)` is thrown when something goes wrong. A `400` error refers to issues with user input, whereas a `403` error refers to issues with authorisation. All of these cases are listed in the **Interface** table. If input implies that both errors should be thrown, throw a `403` error.
 
 One exception is that even though it's not listed in the table, for all routes (except `auth/register`, `auth/login`, `auth/passwordreset/request` and `auth/passwordreset/reset`), a `403` error is thrown when the token passed in is invalid.
@@ -1034,7 +651,7 @@ There has also been a middleware handler added to your `server.ts` file to take 
 app.use(errorHandler());
 ```
 
-### 6.9. Secure Sessions & Passwords
+### 7.9. Secure Sessions & Passwords
 Passwords must be stored in an **encrypted** form.
 
 You must **hash** tokens in iteration 3, and pass them through a custom `token` HTTP Header (rather than passing them plainly as `GET/DELETE` parameters).
@@ -1067,15 +684,15 @@ While this safely protects sessions from server-side attacks (accessing our pers
 **You do not need to worry about mitigating client-side attacks**, but you can read more about industry-standard session management <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#secure-attribute">here</a>.
 
 
-### 6.10. Notifications and tagging users
-#### 6.10.1 Notifications
+### 7.10. Notifications and tagging users
+#### 7.10.1 Notifications
 If an action triggering a notification has been 'undone' (e.g. a message has been unreacted, or a tagged message has been edited/removed), the original notification should not be affected and will remain.
 
 A user should not be notified of any reactions to their messages if they are no longer in the channel/DM that the message was sent in.
 
 A user should be notified if they tag themselves in a message.
 
-#### 6.10.2 Tagging
+#### 7.10.2 Tagging
 A user is tagged when a message contains the @ symbol, followed immediately by the user’s handle. The end of the handle is signified by the end of the message, or a non-alphanumeric character. The message '`hi@handle`' contains a valid tag. '`@handle1@handle2 hello!`' contains two valid tags.
 
 Some additional requirements are:
@@ -1088,7 +705,7 @@ Tagging should also occur when messages are edited to contain tags and when the 
 
 There is no requirement to have tags notify users inside a standup or when the buffered standup messages are sent.
 
-### 6.11. Analytics
+### 7.11. Analytics
 COMP6080 students have implemented analytics pages for users and for the Memes workspace on the frontend, and now these pages need data. Your task is to add backend functionality that keeps track of these metrics:
 
 For users:
@@ -1111,10 +728,10 @@ For the workspace, `numMsgs` is the number of messages that exist at the current
 
 In addition to keeping track of these metrics, you are required to implement two new endpoints, `user/stats` and `users/stats`.
 
-### 6.12. Reacts
+### 7.12. Reacts
 The only React ID currently associated with the frontend is React ID 1, which is a thumbs up :thumbsup:. You are welcome to add more (this will require some frontend work).
 
-### 6.13. Standups
+### 7.13. Standups
 Once a standup is finished, all of the messages sent to `standup/send` are packaged together in *one single message* posted by *the user who started the standup*. This packaged message is sent as a message to the channel where the standup was started, timestamped at the moment the standup finished.
 
 The structure of the packaged message is like this:
@@ -1139,14 +756,14 @@ Standups can be started on the frontend by typing "/standup X" (where X is the n
 
 You will not be tested on any behaviour involving the user who started a standup being removed from the channel or Memes while the standup is ongoing, therefore you can decide this behaviour yourself.
 
-### 6.14. profileImgUrl & image uploads
+### 7.14. profileImgUrl & image uploads
 For outputs with data pertaining to a user, a `profileImgUrl` must be present. When images are uploaded for a user profile, after processing them you should store them on the server such that your server now locally has a copy of the cropped image of the original file linked. Then, the `profileImgUrl` should be a URL to the server, such as http://localhost:5001/imgurl/adfnajnerkn23k4234.jpg (a unique url you generate).
 
 For any given user, if they have yet to upload an image, there should be a site-wide default image used.
 
 Note: This is most likely the most challenging part of the project, so don't get lost in this. We would strongly recommend most teams complete this capability *last*.
 
-## 7. Due Dates and Weightings
+## 8. Due Dates and Weightings
 
 |Iteration|Due date                              |Demonstration to tutor(s)      |Assessment weighting of project (%)|
 |---------|--------------------------------------|-------------------------------|-----------------------------------|
@@ -1156,7 +773,7 @@ Note: This is most likely the most challenging part of the project, so don't get
 |   3     |10pm Monday 17th April (**week 10**)  |No demonstration               |30%                               |
 |   3     |10pm Friday 28th April (**week 11**)  |No demonstration               |15%                              |
 
-### 7.1. Submission & Late Penalties
+### 8.1. Submission & Late Penalties
 
 There is no late penalty, as we do not accept late submissions. You will be assessed on the most recent version of your work at the due date and time.
 
@@ -1172,11 +789,9 @@ Only one person per group needs to run this command. This will submit a copy of 
 
 NOTE: Our automarking will be run on your master branch at the time of submission, the `1531 submit` command is for record-keeping purposes only.
 
-Your tutor will also request you pull up this copy when marking you in the demonstration.
-
 If the deadline is approaching and you have features that are either untested or failing their tests, **DO NOT MERGE IN THOSE MERGE REQUESTS**. In some cases, your tutor will look at unmerged branches and may allocate some reduced marks for incomplete functionality, but `master` should only contain working code.
 
-Minor isolated fixes after the due date are allowed but carry a penalty to the automark, if the automark after re-running the autotests is greater than your initial automark. This penalty can be up to 30% of the automark for that iteration, depending on the number and nature of your fixes. Note that if the re-run automark after penalty is lower than your initial mark, we will keep your initial mark, meaning your automark cannot decrease after a re-run. E.g. imagine that your initial automark is 50%, on re-run you get a raw automark of 70%, and your fixes attract a 30% penalty: since the 30% penalty will reduce the mark of 70% to 49%, your final automark will still be 50% (i.e. your initial mark).
+Minor isolated fixes are not allowed for iteration 4.
 
 If you want to have your automarking re-run:  
 * create a branch, e.g. `iter1-fix`, based off the submission commit  
@@ -1184,12 +799,7 @@ If you want to have your automarking re-run:
 * push the changes to GitLab  
 * share the name of the branch with your tutor
 
-### 7.2. Demonstration
-The demonstrations in weeks 5 and 8 will take place during your lab sessions. All team members **must** attend these lab sessions. Team members who do not attend a demonstration may receive a mark of 0 for that iteration. If you are unable to attend a demonstration due to circumstances beyond your control, you must apply for special consideration.
-
-Demonstrations consist of a 15 minute Q&A in front of your tutor and potentially some other students in your tutorial. For online classes, webcams and audio are required to be on during this Q&A (your phone is a good alternative if your laptop/desktop doesn't have a webcam).
-
-## 8. Individual Contribution
+## 9. Individual Contribution
 While we do award a tentative mark to your group as a whole, your actual mark for each iteration is given to you individually. Your individual mark is determined by your tutor, with your group mark as a reference point. Your tutor will look at the following items each iteration to determine your mark:
  * Project check-in
  * Code contribution
@@ -1198,28 +808,12 @@ While we do award a tentative mark to your group as a whole, your actual mark fo
 
 In general, all team members will receive the same mark (a sum of the marks for each iteration), **but if you as an individual fail to meet these criteria, your final project mark may be scaled down**, most likely quite significantly.
 
-### 8.1. Project check-in
-During your lab class, you and your team will conduct a short standup in the presence of your tutor. Each member of the team will briefly state what they have done in the past week, what they intend to do over the next week, and what issues they have faced or are currently facing. This is so your tutor, who is acting as a representative of the client, is kept informed of your progress. They will make note of your presence and may ask you to elaborate on the work you've done.
+Iteration 4 is marked individually, and added onto your individually-scaled group project mark.
 
-Project check-ins are also excellent opportunities for your tutor to provide you with both technical and non-technical guidance.
+### 9.1. Project check-in
+There is no group check-in for iteration 4.
 
-Your attendance and participation at project check-ins will contribute to your individual mark component for the project. In addition, your tutor will note down any absences from team-organised standups.
-
-These are easy marks. They are marks assumed that you will receive automatically, and are yours to lose if you neglect them.
-
-The following serves as a baseline for expected progress during project check-ins, in the specified weeks. For groups which do not meet this baseline, teamwork marks and/or individual scaling may be impacted.
-|Iteration|Week/Check-in|Expected progress|
-|---------|-------------|-----------------|
-|   0     |**Week 2**   |Twice-weekly standup meeting times organised, iteration 0 specification has been discussed in a meeting, at least 1 task per person has been assigned |
-|   1     |**Week 3**   |Iteration 1 specification has been discussed in a meeting, at least 1 task per person has been assigned |
-|   1     |**Week 4**   |1x function per person complete (tests and implementation in master)|
-|   2     |**Week 5**   |Iteration 2 specification has been discussed in a meeting, at least 1 task per person has been assigned|
-|   2     |**Week 6**   |**(Checked by your tutor in week 7)** Server routes for all iteration 1 functions complete and in master|
-|   2     |**Week 7**   |1x iteration 2 route per person complete (HTTP tests and implementation in master)|
-|   3     |**Week 8**   |Iteration 3 specification has been discussed in a meeting, at least 1 task per person has been assigned|
-|   3     |**Week 9**   |Exceptions added across the project AND 1x iteration 3 route per person complete (HTTP tests and implementation in master)|
-
-### 8.2. Tutorial contributions
+### 9.2. Tutorial contributions
 From weeks 2 onward, your individual project mark may be reduced if you do not satisfy the following:
 * Attend all tutorials
 * Participate in tutorials by asking questions and offering answers
@@ -1229,14 +823,7 @@ We're comfortable with you missing or disengaging with 1 tutorial per term, but 
 
 These are easy marks. They are marks assumed that you will receive automatically, and are yours to lose if you neglect them.
 
-### 8.3. Code contribution
-All team members must contribute code to the project to a generally similar degree. Tutors will assess the degree to which you have contributed by looking at your **git history** and analysing lines of code, number of commits, timing of commits, etc. If you contribute significantly less code than your team members, your work will be closely examined to determine what scaling needs to be applied.
-
-Note that **contributing more code is not a substitute for not contributing documentation**.
-
-### 8.4. Documentation contribution
-All team members must contribute documentation to the project to a generally similar degree.
-
+### 9.3. Documentation contribution
 In terms of code documentation, your functions such as `authRegister`, `channelInvite`, `userProfile`, etc. are required to contain comments in JSDoc format, including paramters and return values:
 
 ```javascript
@@ -1254,76 +841,17 @@ In terms of code documentation, your functions such as `authRegister`, `channelI
 
 In each iteration you will be assessed on ensuring that every relevant function in the specification is appropriately documented.
 
-In terms of other documentation (such as reports and other notes in later iterations), we expect that group members will contribute equally.
-
-Note that, **contributing more documentation is not a substitute for not contributing code**.
-
-### 8.5. Peer Assessment
-At the end of each iteration, there will be a peer assessment survey where you will rate and leave comments about each team member's contribution to the project up until that point. 
-
-Your other team members will **not** be able to see how you rated them or what comments you left in either peer assessment. If your team members give you a less than satisfactory rating, your contribution will be scrutinised and you may find your final mark scaled down.
-
-<table>
-  <tr>
-    <th>Iteration</th>
-    <th>Link</th>
-    <th>Opens</th>
-    <th>Closes</th>
-  </tr>
-  <tr>
-    <td>1</td>
-    <td><a href="https://forms.office.com/Pages/ResponsePage.aspx?id=pM_2PxXn20i44Qhnufn7o_RvPhdrUs1DpZ0MlMs_Bf1UOFFIVDhFRk04SFpWVUE4WFBZUE5KS08xMi4u">Click here</a></td>
-    <td>10pm Friday 7th October</td>
-    <td>9am Monday 10th October</td>
-  </tr>
-  <tr>
-    <td>2</td>
-    <td><a href="https://forms.office.com/Pages/ResponsePage.aspx?id=pM_2PxXn20i44Qhnufn7o_RvPhdrUs1DpZ0MlMs_Bf1UMkxUTU1STFg3NVk2OEFGRDFVSDBRRzI5Vy4u">Click here</a></td>
-    <td>10pm Friday 28th October</td>
-    <td>9am Monday 31st October</td>
-  </tr>
-  <tr>
-    <td>3</td>
-    <td><a href="https://forms.office.com/Pages/ResponsePage.aspx?id=pM_2PxXn20i44Qhnufn7o_RvPhdrUs1DpZ0MlMs_Bf1UOUlaQklVN0I2TFNJUzBZMUpMOU1BSVlKVi4u">Click here</a></td>
-    <td>10pm Friday 18th November</td>
-    <td>9am Monday 21st November</td>
-  </tr>
-</table>
-
-### 8.6. Managing Issues
-
-When a group member does not contribute equally, we are aware it can implicitly have an impact on your own mark by pulling the group mark down (e.g. through not finishing a critical feature), etc.
-
-The first step of any disagreement or issue is always to talk to your team member(s) on the chats in MS Teams. Make sure you have:
-1. Been clear about the issue you feel exists
-2. Been clear about what you feel needs to happen and in what time frame to feel the issue is resolved
-3. Gotten clarity that your team member(s) want to make the change.
-
-If you don't feel that the issue is being resolved quickly, you should escalate the issue by talking to your tutor with your group in a project check-in, or alternatively by emailing your tutor privately outlining your issue.
-
-It's imperative that issues are raised to your tutor ASAP, as we are limited in the mark adjustments we can do when issues are raised too late (e.g. we're limited with what we can do if you email your tutor with iteration 2 issues after iteration 2 is due).
-
-## 9. Automarking & Leaderboard
-### 9.1. Automarking
+## 10. Automarking & Leaderboard
+### 10.1. Automarking
 
 Each iteration consists of an automarking component. The particular formula used to calculate this mark is specific to the iteration (and detailed above).
 
-When running your code or tests as part of the automarking, we place a 2.5 minute timer on the running of your group's tests. This is more than enough time to complete everything unless you're doing something very wrong or silly with your code. As long as your tests take under 2.5 minutes to run on the pipeline, you don't have to worry about it potentially taking longer when we run automarking.
+When running your code or tests as part of the automarking, we place a 2.5 minute timer on the running of your tests. This is more than enough time to complete everything unless you're doing something very wrong or silly with your code. As long as your tests take under 2.5 minutes to run on the pipeline, you don't have to worry about it potentially taking longer when we run automarking.
 
-### 9.2. Leaderboard
-In the days preceding iterations 1, 2, and 3's due date, we will be running your code against the actual automarkers (the same ones that determine your final mark) and publishing the results of every group on a leaderboard. [The leaderboard will be available here once released](http://cgi.cse.unsw.edu.au/~cs1531/22T3/leaderboard).
+### 10.2. Leaderboard
+There will be no leaderboard in iteration 4.
 
-You must have the code you wish to be tested in your `master` branch by **10pm** the night before leaderboard runs.
-
-The leaderboard will be run on Monday, Wednesday, and Friday afternoons during the week that the iteration is due.
-
-Your position and mark on the leaderboard will be referenced against an alias for your group (for privacy). This alias will be emailed to your group in week 3. You are welcome to share your alias with others if you choose! (Up to you.)
-
-The leaderboard gives you a chance to sanity check your automark (without knowing the details of what you did right and wrong), and is just a bit of fun.
-
-If the leaderboard isn't updating for you, try hard-refreshing your browser (Ctrl+R or Command+R), clearing your cache, or opening it in a private window. Also note the HTTP (not HTTPS) in the URL, as the site is only accessible via HTTP.
-
-## 10. Plagiarism
+## 11. Plagiarism
 
 The work you and your group submit must be your own work. Submission of work partially or completely derived from any other person or jointly written with any other person is not permitted. The penalties for such an offence may include negative marks, automatic failure of the course and possibly other academic discipline. Assignment submissions will be examined both automatically and manually for such submissions.
 
