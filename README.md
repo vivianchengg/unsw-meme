@@ -47,282 +47,35 @@ Now complete!
 
 ## 5. Iteration 3: Completing the Lifecycle
 
-Iteration 3 builds off all of the work you've completed in iteration 2.
+Now complete!
 
-If you haven't completed the implementation of iteration 2, you must complete it as part of this iteration. The automarking for iteration 3 will test on a fully completed interface.
+## 6. Iteration 4: Extending Functionality
+In iteration 4, you'll be working alone to implement a couple extended functionalities and bonus features of your choice!
 
-### 5.1. Task
+Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students.
 
-In this iteration, you are expected to:
+A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.
 
-1. Make adjustments to your existing code and tests as per any feedback given by your tutor for iteration 2. In particular, you should take time to ensure that your code is well-styled and complies with good software writing practices and software and test design principles discussed in lectures.
+Here are some suggestions for extra features.
 
-2. Implement and test the HTTP Express server according to the entire interface provided in the specification, including features that were added in iteration 3.
+1. Frontend - **Hangman on Frontend**
 
-    * Part of this section will be automarked.
+    * After a game of Hangman has been started, any user in the channel can type "/guess X" where X is an individual letter. If that letter is contained in the word or phrase they're trying to guess, the app should indicate where it occurs. If it does not occur, more of the hangman is drawn. 
+    
+    * There is a lot of flexibility in how you achieve this. It can be done only by modifying the backend and relying on messages to communicate the state of the game (e.g. after making a guess, the "Hangman" posts a message with a drawing of the hangman in ASCII/emoji art). Alternatively, you can modify the frontend, if you want to experiment with fancier graphics.
 
-    * It is required that your data is persistent, just like in iteration 2.
+    * The app should use words and phrases from an external source, not just a small handful hardcoded into the app. One suitable source is `/usr/share/dict/words` available on Unix-based systems
 
-    * `eslint` is assessed identically to iteration 2.
+    * Note that this part of the specification is deliberately open-ended. You're free to make your own creative choices in exactly how the game should work, as long as the end result is something that could be fairly described as Hangman.
 
-    * Good coverage for all files that aren't tests will be assessed: see section 5.4 for details.
+2. Frontend - **Dark Mode** - Modify the frontend code so that on the flip of a switch in the navbar, the website can change to "dark mode" with a colour scheme of your choosing.
 
-    * You can structure your test files however you choose, as long as they are appended with `.test.ts`. You may place them inside a `/tests` folder, if you wish. For this iteration, we will only be testing your HTTP layer of tests. 
+3. Frontend - **LaTEX / Markdown Support** - Modify the frontend code so that messages in channels and DMs can be rendered in LaTEX and/or Markdown.
 
-    * In iteration 2 and 3, we provide a frontend that can be powered by your backend: see section 6.8 for details. Note that the frontend will not work correctly with an incomplete backend. As part of this iteration, it is required that your backend code can correctly power the frontend.
-      * You can, if you wish, make changes to the frontend code, but it is not required for this course.
+4. **Databases** - Implementing persistence using a form of database via `typeorm`.
 
-    * You must comply with instructions laid out in `5.3`
+7. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
 
-    * Ensure that you correctly manage sessions (tokens) and passwords in terms of authentication and authorisation, as per requirements laid out in section 6.9.
-
-3. Continue demonstrating effective project management and git usage.
-
-    * You will be heavily marked on your thoughtful approach to project management and effective use of git. The degree to which your team works effectively will also be assessed.
-
-    * As for iteration 1 and 2, all task tracking and management will need to be done via the GitLab Taskboard or other tutor-approved tracking mechanism.
-
-    * As for iteration 1 and 2, regular group meetings must be documented with meeting minutes which should be stored at a timestamped location in your repo (e.g. uploading a word doc/pdf or writing in the GitLab repo wiki after each meeting).
-
-    * As for iteration 1 and 2, you must be able to demonstrate evidence of regular standups.
-
-    * You are required to regularly and thoughtfully make merge requests for the smallest reasonable units, and merge them into `master`.
-
-4. Document the planning of new features.
-
-    * You are required to scope out 2-3 problems to solve for future iterations of Memes. You aren't required to build/code them, but you are required to go through SDLC steps of requirements analysis, conceptual modelling, and design.
-
-    * Full detail of this can be found in `5.6`.
-
-5. Deploy your backend to the cloud.
-
-    * You are required to deploy your backend to a cloud provider so that your backend can be accessed from anywhere in the world. **Add the URL to your deployed backend** inside `deploy-url.md`.
-
-    * Full detail of this can be found in `5.7`
-
-### 5.2. Running the server
-
-To run the server, you can run the following command from the root directory of your project (e.g. `/project-backend`):
-
-```bash
-npm start
-```
-
-This will start the server on the port in the `src/server.ts` file, using `ts-node`.
-
-If you get an error stating that the address is already in use, you can change the port number in `config.json` to any number from 1024 to 49151. Is it likely that another student may be using your original port number.
-
-Please note: For routes such as `standup/start` and `message/sendlater`, you are not required to account for situations where the server process crashes or restarts while waiting. If the server ever restarts while these active "sessions" are ongoing, you can assume they are no longer happening after restart.
-
-### 5.3. Implementing and testing features
-
-Continue working on this project by making distinct "features". Each feature should add some meaningful functionality to the project, but still be as small as possible. You should aim to size features as the smallest amount of functionality that adds value without making the project more unstable. For each feature you should:
-
-1. Create a new branch.
-2. Write tests for that feature and commit them to the branch. These will fail as you have not yet implemented the feature.
-3. Implement that feature.
-4. Make any changes to the tests such that they pass with the given implementation. You should not have to do a lot here. If you find that you are, you're not spending enough time on your tests.
-5. Create a merge request for the branch.
-6. Get someone in your team who **did not** work on the feature to review the merge request. When reviewing, **not only should you ensure the new feature has tests that pass, but you should also check that the coverage percentage has not been significantly reduced.**
-7. Fix any issues identified in the review.
-8. Merge the merge request into master.
-
-For this project, a feature is typically sized somewhere between a single function, and a whole file of functions (e.g. `auth.ts`). It is up to you and your team to decide what each feature is.
-
-There is no requirement that each feature be implemented by only one person. In fact, we encourage you to work together closely on features.
-
-Please pay careful attention to the following:
-
-* We want to see **evidence that you wrote your tests before writing the implementation**. As noted above, the commits containing your initial tests should appear *before* your implementation for every feature branch. If we don't see this evidence, we will assume you did not write your tests first and your mark will be reduced.
-* You should have black-box tests for all tests required (i.e. testing each function/endpoint). However, you are also welcome to write white-box unit tests in this iteration if you see that as important.
-* Merging in merge requests with failing pipelines is **very bad practice**. Not only does this interfere with your team's ability to work on different features at the same time, and thus slow down development - it is something you will be penalised for in marking.
-* Similarly, merging in branches with untested features is also **very bad practice**. We will assume, and you should too, that any code without tests does not work.
-* Pushing directly to `master` is not possible for this repo. The only way to get code into `master` is via a merge request. If you discover you have a bug in `master` that got through testing, create a bugfix branch and merge that in via a merge request.
-
-### 5.4. Test coverage
-
-To get the coverage of your tests locally, you will need to have two terminals open. Run these commands from the root directory of your project (e.g. `/project-backend`).
-
-In the first terminal, run
-```bash
-npm run ts-node-coverage
-```
-
-In the second terminal, run jest as usual
-```bash
-npm run test
-```
-
-Back in the first terminal, stop the server with Ctrl+C or Command+C. There should now be a `/coverage` directory available. Open the `index.html` file in your web browser to see its output.
-
-### 5.5. Dryrun
-
-The dryrun for iteration 3 consists of 4 tests, one each for your implementation of `clear/v1`, `auth/register/v3`, `channels/create/v3`, and `channels/list/v3`. These only check whether your server wrapper functions accept requests correctly, the format of your return types and simple expected behaviour, so do not rely on these as an indicator for the correctness of your implementation or tests.
-
-To run the dryrun, you should be in the root directory of your project (e.g. `/project-backend`) and use the command:
-
-```bash
-1531 dryrun 3
-```
-
-To view the dryrun tests, you can run the following command on the CSE machines:  
-
-```bash
-cat ~cs1531/bin/iter3_test.py
-```
-
-### 5.6. Planning for the next problems to solve
-
-Software development is an iterative process - we're never truly finished. As we complete the development and testing of one feature, we're often then trying to understand the requirements and needs of our users to design the next set of features in our product.
-
-For iteration 3 you are going to produce a short report in `planning.pdf` and place it in the repository. The contents of this report will be a simplified approach to understanding user problems, developing requirements, and doing some early designs.
-
-N.B. If you don't know how to produce a PDF, you can easily make one in Google docs and then export to PDF.
-
-We have opted not to provide you with a sample structure - because we're not interested in any rigid structure. Structure it however you best see fit, as we will be marking content.
-
-#### [Requirements] Elicitation
-
-Find 2-3 people to interview as target users. Target users are people who currently use a tool like Memes, or intend to. Record their name and email address.
-
-Develop a series of questions (at least 4) to ask these target users to understand what *problems* they might have with teamwork-driven communication tools that are currently unsolved by Memes. Give these questions to your target users and record their answers.
-
-Once you have done this, think about how you would solve the target users' problem(s) and write down a brief description of a proposed solution.
-
-#### [Requirements] Analysis & Specification - Use Cases
-
-Once you've elicited this information, it's time to consolidate it.
-
-Take the responses from the elicitation step and express these requirements as **user stories** (at least 3). Document these user stories. For each user story, add user acceptance criteria as notes so that you have a clear definition of when a story has been completed.
-
-Once the user stories have been documented, generate at least ONE use case that attempts to describe a solution that satifies some of or all the elicited requirements. You can generate a visual diagram or a more written-recipe style, as per lectures.
-
-#### [Requirements] Validation
-
-With your completed use case work, reach out to the 2-3 people you interviewed originally and inquire as to the extent to which these use cases would adequately describe the problem they're trying to solve. Ask them for a comment on this, and record their comments in the PDF.
-
-#### [Design] Interface Design
-
-Now that we've established our *problem* (described as requirements), it's time to think about our *solution* in terms of what capabilities would be necessary. You will specify these capabilities as HTTP endpoints, similar to what is described in `6.2`. There is no minimum or maximum of what is needed - it will depend on what problem you're solving.
-
-#### [Design] Conceptual Modelling - State Diagrams
-
-Now that you have a sense of the problem to solve, and what capabilities you will need to provide to solve it, add at least ONE state diagram to your PDF to show how the state of the application would change based on user actions. The aim of this diagram is to help a developer understand the different states of the application.
-
-### 5.7. Deployment
-
-You and your team are to host your backend on a cloud provider. Once your backend has been deployed to the cloud, you will be able to point the frontend to use the new URL of where the backend is deployed and use your backend from anywhere in the world. In summary:
- * You get your server (that you wrote) deployed to the internet at a public URL
- * You still run your frontend locally (which can connect to that server)
-
-Depending on how you and your team have structured your project, your current method of using data may have to be rethought. Deploying to cloud and developing locally require two different mindsets and you and your team may find that you held some assumptions that are valid when developing locally but do not hold when being hosted on the cloud.
-
-We have written a guide on how to deploy to a free cloud provider <a href="https://www.alwaysdata.com/en/">AlwaysData</a>. [Click here to view the guide](docs/DEPLOY.md).
-
-Note that if you choose to use a different cloud provider, your tutor will not be able to assist you.
-
-You must add the URL to your deployed backend inside `deploy-url.md`.
-
-### 5.8. Marking Criteria
-
-<table>
-  <tr>
-    <th>Section</th>
-    <th>Weighting</th>
-    <th>Criteria</th>
-  </tr>
-  <tr>
-    <td>Automarking (Testing & Implementation)</td>
-    <td>55%</td>
-    <td><ul>
-      <li>Correct implementation of specified functions</li>
-      <li>Correctly written tests based on the specification requirements</li>
-      <li>Code coverage (99% coverage gives full marks for the coverage component)</li>
-      <li>Correctly linted code (worth 5% of this iteration)</li>
-    </ul></td>
-  </tr>
-  <tr>
-    <td>Code Quality</td>
-    <td>10%</td>
-    <td><ul>
-      <li>Demonstrated an understanding of good test <b>coverage</b></li>
-      <li>Demonstrated an understanding of the importance of <b>clarity</b> in communicating the purpose of tests and code</li>
-      <li>Demonstrated an understanding of thoughtful test <b>design</b></li>
-      <li>Appropriate use of Javascript data structures (arrays, objects, etc.)</li>
-      <li>Appropriate style and documentation, as described in section 8.4</li>
-      <li>Appropriate application of good software design practices</li>
-      <li>Implementation of persistent state</li>
-    </ul>
-  </td>
-  </tr>
-  <tr>
-    <td>Feature demonstrations</td>
-    <td>10%</td>
-    <td><ul>
-      <li>Backend works with the supplied frontend</li>
-      <li>Successful implementation of <code>user/profile/uploadphoto</code> and <code>auth/passwordreset</code></li>
-      <li>Successful deployment to a cloud provider</li>
-    </ul>
-  </td>
-  </tr>
-  <tr>
-    <td>Git & Project Management</td>
-    <td>10%</td>
-    <td><ul>
-      <li>Meaningful and informative git commit names being used</li>
-      <li>At least 12 merge requests into master made</li>
-      <li>A generally equal contribution between team members</li>
-      <li>Clear evidence of reflection on group's performance and state of the team</li>
-      <li>Effective use of course-provided MS Teams for communication, demonstrating an ability to competently manage teamwork online</li>
-      <li>Use of issue board on GitLab or other approved tracking mechanism to manage tasks</li>
-      <li>Effective use of agile methods such as standups</li>
-      <li>Minutes/notes taken from group meetings (and stored in a logical place in the repo)</li>
-    </ul>
-  </td>
-  </tr>
-  <tr>
-    <td>Requirements & Design for future work</td>
-    <td>15%</td>
-    <td><ul>
-      <li>Requirements elicited from potential users, recorded as user stories with acceptance criteria for each</li>
-      <li>User journey justified and expressed as use case(s)</li>
-      <li>Interface proposed as a potential solution to provide capabilities</li>
-      <li>State diagram(s) drawn to demonstrate how application responds to actions</li>
-    </ul>
-  </td>
-  </tr>
-  <tr>
-    <td>(Bonus Marks) Typescript</td>
-    <td>10%</td>
-    <td><ul>
-      <li>Up to 10% extra marks can be gained by ensuring your code is Typescript compliant using <code>npm run tsc</code>.</li>
-    </ul>
-  </td>
-  </tr>
-</table>
-
-The formula used for automarking in this iteration is:
-
-`Mark = 95*(t * i * min(c + 1, 100)^3) + 5*e`
-(Mark equals 95% of `t` multiplied by `i` multiplied by the minimum of `c + 1` and 100 to the power of three, plus 5% of `e`)
-
-Where:
- * `t` is the mark you receive for your tests running against your code (100% = your implementation passes all of your tests).
- * `i` is the mark you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
- * `c` is the score achieved by running coverage on your entire codebase. Note that 99% coverage is enough to give you full marks for this part.
- * `e` is the score between 0-1 achieved by running <code>eslint</code> against your code and the provided configuration.
-
-### 5.9. Submission
-
-This iteration's due date described in section 7. Note there will be no demonstration for iteration 3.
-
-### 5.10. Typescript
-
-You can gain 10 bonus marks by ensuring your code is Typescript compliant. You can run `npm run tsc` to check this: if no output is produced, then all your files are typechecked correctly.
-
-### 5.11. Peer Assessment
-
-Reference 8.5.
 
 ## 6. Interface specifications
 
@@ -1397,10 +1150,11 @@ Note: This is most likely the most challenging part of the project, so don't get
 
 |Iteration|Due date                              |Demonstration to tutor(s)      |Assessment weighting of project (%)|
 |---------|--------------------------------------|-------------------------------|-----------------------------------|
-|   0     |10pm Friday 23rd September (**week 2**)    |No demonstration               |5%                                 |
-|   1     |10pm Friday 7th October  (**week 4**)   |In YOUR **week 5** laboratory  |30%                                |
-|   2     |10pm Friday 28th October (**week 7**)    |In YOUR **week 8** laboratory  |35%                                |
-|   3     |10pm Friday 18th November (**week 10**)  |No demonstration               |30%                               |
+|   0     |10pm Friday 24th February (**week 2**)    |No demonstration               |5%                                 |
+|   1     |10pm Friday 10th March  (**week 4**)   |In YOUR **week 5** laboratory  |20%                                |
+|   2     |10pm Friday 31st March (**week 7**)    |In YOUR **week 8** laboratory  |30%                                |
+|   3     |10pm Monday 17th April (**week 10**)  |No demonstration               |30%                               |
+|   3     |10pm Friday 28th April (**week 11**)  |No demonstration               |15%                              |
 
 ### 7.1. Submission & Late Penalties
 
