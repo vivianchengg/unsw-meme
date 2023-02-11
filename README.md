@@ -82,20 +82,16 @@ Here are some suggestions for extra features.
 
 7. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
 
-### 6.1 Forking your group's repo
-The instructions for forking your group's repo to create your own version are as follows:
+8. **Deployment** - Deploy your project to the cloud. Specifically, you would be deploying the backend server that you wrote to the internet at a public URL. You still run your frontend locally using this method, which can connect to that server. 
 
-1. Navigate to https://gitlab.cse.unsw.edu.au/COMP1531/22T3/groups/<YOUR-GROUP-HERE>/project-backend
-2. Click 'Fork' in the top right-corner
-3. Name the project <b>project-backend-z5555555<b> using your zID as a replacement. NOTE: it is important to name your repo exactly this for automarking purposes
-4. Select your zID as the namespace for the Project URL
-5. Leave the Project slug as is
-6. Leave the Visibility level as-is (Private)
-7. Click 'Fork project'
+    * Depending on how you and your team have structured your project, your current method of using data may have to be rethought. Deploying to cloud and developing locally require two different mindsets and you and your team may find that you held some assumptions that are valid when developing locally but do not hold when being hosted on the cloud.
 
-You now have a personal version of your group's project! The next steps are to share this repo with 1531 staff, so we can mark your work.
-1. Go to Project Information > Members (left-hand sidebar of GitLab)
-< figure the rest out... >
+    * If you choose this feature, you need to add the URL of your deployed backend inside of `extra.md`.
+
+    * We have written a guide you can optionally follow to deploy your project using a free cloud provider <a href="https://www.alwaysdata.com/en/">AlwaysData</a>. [Click here to view the guide](docs/DEPLOY.md).
+
+### 6.1 Your new repo
+At the start of iteration 4, you will be given a new repo, which is just a forked version of your group's repo (essentially a direct copy of it). Since this iteration is individual, you will be completing iteration 4 in this newly created, personal repo.
 
 
 ## 7. Interface specifications
