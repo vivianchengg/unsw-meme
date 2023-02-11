@@ -54,17 +54,29 @@ In iteration 4, you'll be working alone to implement:
 * 2 additional functionalities (in the same format as iteration 3)
 * Bonus features of your choice!
 
-Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students.
+Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students. However, it is recommended you seek approval from your tutor during week 10 on whether your chosen additional feature is suitable. 
 
-A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.
+You will be style-marked on these additional features (from section 6.2.4) and your custom bonus features in iteration 4, despite using the same repository as the rest of your group (see section 6.1). You should create any new features using TypeScript, but you do not need to ensure the code produces no typechecking errors. 
 
-You will only be style-marked on these additional features (from section 6.2.4) and your custom bonus features in iteration 4, despite using the same repository as the rest of your group. For instructions on how to fork your own version of this repo, see section 6.1.
+If you wish to implement **new** bonus features that extend upon previous iteration’s functionality that is currently broken in your groups repo, please contact your tutor as assistance and advice will be handled on a case-by-case basis. 
 
-If you wish to write bonus features that extend upon previous iteration’s functionality that is currently broken in your groups repo, please contact your tutor as assistance and advice will be handled on a case-by-case basis.
+As a rough guide, if you would like high marks in this section you should expect to spend at least 20 hours on your additional functionality. 
 
-Here are some suggestions for extra features.
+**PLEASE NOTE:** A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.
 
-1. Frontend - **Hangman on Frontend**
+Here are some ideas for extra features. Depending on the complexity of your features chosen, you may choose to do multiple.
+
+1. **Deployment** - Deploy your project to the cloud. Specifically, you would be deploying the backend server that you wrote to the internet at a public URL. You still run your frontend locally using this method, which can connect to that server. 
+
+    * Depending on how you and your team have structured your project, your current method of using data may have to be rethought. Deploying to cloud and developing locally require two different mindsets and you and your team may find that you held some assumptions that are valid when developing locally but do not hold when being hosted on the cloud.
+
+    * If you choose this feature, you need to add the URL of your deployed backend inside of `extra.md`.
+
+    * We have written a guide you can optionally follow to deploy your project using a free cloud provider <a href="https://www.alwaysdata.com/en/">AlwaysData</a>. [Click here to view the guide](docs/DEPLOY.md).
+
+2. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
+
+3. Frontend - **Hangman on Frontend**
 
     * After a game of Hangman has been started, any user in the channel can type "/guess X" where X is an individual letter. If that letter is contained in the word or phrase they're trying to guess, the app should indicate where it occurs. If it does not occur, more of the hangman is drawn. 
     
@@ -74,25 +86,80 @@ Here are some suggestions for extra features.
 
     * Note that this part of the specification is deliberately open-ended. You're free to make your own creative choices in exactly how the game should work, as long as the end result is something that could be fairly described as Hangman.
 
-2. Frontend - **Dark Mode** - Modify the frontend code so that on the flip of a switch in the navbar, the website can change to "dark mode" with a colour scheme of your choosing.
+4. Frontend - **Dark Mode** - Modify the frontend code so that on the flip of a switch in the navbar, the website can change to "dark mode" with a colour scheme of your choosing.
 
-3. Frontend - **LaTEX / Markdown Support** - Modify the frontend code so that messages in channels and DMs can be rendered in LaTEX and/or Markdown.
+5. Frontend - **LaTEX / Markdown Support** - Modify the frontend code so that messages in channels and DMs can be rendered in LaTEX and/or Markdown.
 
-4. **Databases** - Implementing persistence using a form of database via `typeorm`.
+6. **Databases** - Implementing persistence using a form of database via `typeorm`.
 
-7. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
+### 6.1 Your New Repo - What Has Changed?
+At the start of iteration 4, you will be given a new repo (this one!), which is just a forked version of your group's repo (essentially a direct copy of it). Since this iteration is individual, you will be completing iteration 4 in this newly created, personal repo.
 
-8. **Deployment** - Deploy your project to the cloud. Specifically, you would be deploying the backend server that you wrote to the internet at a public URL. You still run your frontend locally using this method, which can connect to that server. 
+In this iteration, you may approve your own merge requests after a self-review and a passing pipeline, since you are unable to share code with your peers for review.
 
-    * Depending on how you and your team have structured your project, your current method of using data may have to be rethought. Deploying to cloud and developing locally require two different mindsets and you and your team may find that you held some assumptions that are valid when developing locally but do not hold when being hosted on the cloud.
+Any backend bonus features added do not need to work with the supplied frontend, i.e. editing the supplied frontend to integrate your new backend features is not necessary.
 
-    * If you choose this feature, you need to add the URL of your deployed backend inside of `extra.md`.
+In addition, your code does not need to be linted or meet a minimum coverage checking requirement, however it is recommended you continue to use these tools as they will be considered in the manual style marking of iteration 4.
 
-    * We have written a guide you can optionally follow to deploy your project using a free cloud provider <a href="https://www.alwaysdata.com/en/">AlwaysData</a>. [Click here to view the guide](docs/DEPLOY.md).
+### 5.8. Marking Criteria
 
-### 6.1 Your new repo
-At the start of iteration 4, you will be given a new repo, which is just a forked version of your group's repo (essentially a direct copy of it). Since this iteration is individual, you will be completing iteration 4 in this newly created, personal repo.
+<table>
+  <tr>
+    <th>Section</th>
+    <th>Weighting</th>
+    <th>Criteria</th>
+  </tr>
+  <tr>
+    <td>Automarking (Testing & Implementation)</td>
+    <td>50%</td>
+    <td><ul>
+      <li>Correct implementation of specified functions</li>
+      <li>Correctly written tests based on the specification requirements</li>
+    </ul></td>
+  </tr>
+  <tr>
+    <td>Code Quality</td>
+    <td>10%</td>
+    <td><ul>
+      <li>Demonstrated an understanding of good test coverage</li>
+      <li>Demonstrated an understanding of the importance of <b>clarity</b> in communicating the purpose of tests and code</li>
+      <li>Demonstrated an understanding of thoughtful test <b>design</b></li>
+      <li>Appropriate use of Javascript data structures (arrays, objects, etc.)</li>
+      <li>Appropriate style and documentation, as described in section 8.4</li>
+      <li>Appropriate application of good software design practices</li>
+      <li>Implementation of persistent state</li>
+    </ul>
+  </td>
+  </tr>
+  <tr>
+    <td>Git & Project Management</td>
+    <td>10%</td>
+    <td><ul>
+      <li>Meaningful and informative git commit names being used</li>
+      <li>At least 2 merge requests into master made</li>
+      <li>A generally equal contribution between team members</li>
+      <li>Clear evidence of reflection on group's performance and state of the team</li>
+      <li>Effective use of course-provided MS Teams for communication, demonstrating an ability to competently manage teamwork online</li>
+      <li>Use of issue board on GitLab or other approved tracking mechanism to manage tasks</li>
+      <li>Effective use of agile methods such as standups</li>
+      <li>Minutes/notes taken from group meetings (and stored in a logical place in the repo)</li>
+    </ul>
+  </td>
+  </tr>
+</table>
 
+The formula used for automarking in this iteration is:
+
+`Mark = 50*i + 50*b`
+(Mark equals 50% of `i` plus 50% of `b`)
+
+Where:
+ * `i` is the mark you receive for our course tests (hidden) running against your code (100% = your implementation passes all of our tests).
+ * `b` is the score you recieve for your bonus features, which are manual marked.
+
+### 5.9. Submission
+
+This iteration's due date described in section 7. Note there will be no demonstration for iteration 3.
 
 ## 7. Interface specifications
 
@@ -227,26 +294,6 @@ At the start of iteration 4, you will be given a new repo, which is just a forke
     <td>float between 0 and 1 inclusive</td>
   </tr>
   <tr>
-    <td>(outputs only) named exactly <b>userStats</b></td>
-    <td> Object of shape {<br />
-    &emsp;channelsJoined: [{numChannelsJoined, timeStamp}],<br/>
-    &emsp;dmsJoined: [{numDmsJoined, timeStamp}], <br />
-    &emsp;messagesSent: [{numMessagesSent, timeStamp}], <br />
-    &emsp;involvementRate <br />
-    }
-    </td>
-  </tr>
-  <tr>
-    <td>(outputs only) named exactly <b>workspaceStats</b></td>
-    <td> Object of shape {<br />
-    &emsp;channelsExist: [{numChannelsExist, timeStamp}], <br />
-    &emsp;dmsExist: [{numDmsExist, timeStamp}], <br />
-    &emsp;messagesExist: [{numMessagesExist, timeStamp}], <br />
-    &emsp;utilizationRate <br />
-    }
-    </td>
-  </tr>
-  <tr>
     <td>has suffix <b>End</b></td>
     <td>integer</td>
   </tr>
@@ -284,12 +331,40 @@ At the start of iteration 4, you will be given a new repo, which is just a forke
     </td>
   </tr>
   <tr>
-    <td>(Iteration 3) (outputs only) named exactly <b>user</b></td>
+    <td>(Iteration 3+) (outputs only) named exactly <b>user</b></td>
     <td>Object containing uId, email, nameFirst, nameLast, handleStr, profileImgUrl</td>
   </tr>
   <tr>
-    <td>(Iteration 3) (outputs only) named exactly <b>messages</b></td>
+    <td>(Iteration 3+) (outputs only) named exactly <b>messages</b></td>
     <td>Array of objects, where each object contains types { messageId, uId, message, timeSent, reacts, isPinned  }</td>
+  </tr>
+</table>
+
+#### 7.1.5. Iteration 4 Input/Output Types
+<table>
+  <tr>
+    <th>Variable name</th>
+    <th>Type</th>
+  </tr>
+  <tr>
+    <td>(outputs only) named exactly <b>userStats</b></td>
+    <td> Object of shape {<br />
+    &emsp;channelsJoined: [{numChannelsJoined, timeStamp}],<br/>
+    &emsp;dmsJoined: [{numDmsJoined, timeStamp}], <br />
+    &emsp;messagesSent: [{numMessagesSent, timeStamp}], <br />
+    &emsp;involvementRate <br />
+    }
+    </td>
+  </tr>
+  <tr>
+    <td>(outputs only) named exactly <b>workspaceStats</b></td>
+    <td> Object of shape {<br />
+    &emsp;channelsExist: [{numChannelsExist, timeStamp}], <br />
+    &emsp;dmsExist: [{numDmsExist, timeStamp}], <br />
+    &emsp;messagesExist: [{numMessagesExist, timeStamp}], <br />
+    &emsp;utilizationRate <br />
+    }
+    </td>
   </tr>
 </table>
 
@@ -297,7 +372,7 @@ At the start of iteration 4, you will be given a new repo, which is just a forke
 #### 7.2.4. Iteration 4 Interface
 All return values should be an object, with keys identically matching the names in the table below, along with their respective values.
 
-**IMPORTANT NOTE**: All of the following routes (except `auth/passwordreset/request` and `auth/passwordreset/reset`) require a `token` in their header. You should raise a `403 Error` when the `token` passed in is invalid.
+**IMPORTANT NOTE**: All of the following routes require a `token` in their header. You should raise a `403 Error` when the `token` passed in is invalid.
 
 <table>
   <tr>
@@ -305,218 +380,6 @@ All return values should be an object, with keys identically matching the names 
     <th>HTTP Method</th>
     <th style="width:18%">Data Types</th>
     <th style="width:32%">Exceptions</th>
-  </tr>
-  <tr>
-    <td><code>notifications/get/v1</code><br /><br />Returns the user's most recent 20 notifications, ordered from most recent to least recent.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ notifications }</code></td>
-    <td>N/A</td>
-  </tr>
-  <tr>
-    <td><code>search/v1</code><br /><br />Given a query substring, returns a collection of messages in all of the channels/DMs that the user has joined that contain the query (case-insensitive). There is no expected order for these messages.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( queryStr )</code><br /><br /><b>Return type if no error:</b><br /><code>{ messages }</code></td>
-    <td>
-      <b>400 Error</b> when:
-      <ul>
-        <li>length of <code>queryStr</code> is less than 1 or over 1000 characters</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/share/v1</code><br /><br /><code>ogMessageId</code> is the ID of the original message. <code>channelId</code> is the channel that the message is being shared to, and is <code>-1</code> if it is being sent to a DM. <code>dmId</code> is the DM that the message is being shared to, and is <code>-1</code> if it is being sent to a channel. <code>message</code> is the optional message in addition to the shared message, and will be an empty string <code>''</code> if no message is given.<br /><br />
-    A new message containing the contents of both the original message and the optional message should be sent to the channel/DM identified by the <code>channelId</code>/<code>dmId</code>. The format of the new message does not matter as long as both the original and optional message exist as a substring within the new message. Once sent, this new message has no link to the original message, so if the original message is edited/deleted, no change will occur for the new message.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ ogMessageId, message, channelId, dmId }</code><br /><br /><b>Return type if no error:</b><br /><code>{ sharedMessageId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li>both <code>channelId</code> and <code>dmId</code> are invalid</li>
-        <li>neither <code>channelId</code> nor <code>dmId</code> are -1
-        <li><code>ogMessageId</code> does not refer to a valid message within a channel/DM that the authorised user has joined</li>
-        <li>length of optional <code>message</code> is more than 1000 characters</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li>the pair of <code>channelId</code> and <code>dmId</code> are valid (i.e. one is -1, the other is valid) and the authorised user has not joined the channel or DM they are trying to share the message to</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/react/v1</code><br /><br />Given a message within a channel or DM the authorised user is part of, adds a "react" to that particular message.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ messageId, reactId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
-        <li><code>reactId</code> is not a valid react ID - currently, the only valid react ID the frontend has is 1</li>
-        <li>the message already contains a react with ID <code>reactId</code> from the authorised user</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/unreact/v1</code><br /><br />Given a message within a channel or DM the authorised user is part of, removes a "react" to that particular message.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ messageId, reactId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
-        <li><code>reactId</code> is not a valid react ID</li>
-        <li>the message does not contain a react with ID <code>reactId</code> from the authorised user</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/pin/v1</code><br /><br />Given a message within a channel or DM, marks it as "pinned".</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ messageId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
-        <li>the message is already pinned</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>messageId</code> refers to a valid message in a joined channel/DM and the authorised user does not have owner permissions in the channel/DM</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/unpin/v1</code><br /><br />Given a message within a channel or DM, removes its mark as "pinned".</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ messageId }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>messageId</code> is not a valid message within a channel or DM that the authorised user is part of</li>
-        <li>the message is not already pinned</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>messageId</code> refers to a valid message in a joined channel/DM and the authorised user does not have owner permissions in the channel/DM</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/sendlater/v1</code><br /><br />Sends a message from the authorised user to the channel specified by <code>channelId</code> automatically at a specified time in the future. The returned <code>messageId</code> will only be considered valid for other actions (editing/deleting/reacting/etc) once it has been sent (i.e. after <code>timeSent</code>).</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ channelId, message, timeSent }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
-        <li><code>timeSent</code> is a time in the past</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel they are trying to post to</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>message/sendlaterdm/v1</code><br /><br />Sends a message from the authorised user to the DM specified by <code>dmId</code> automatically at a specified time in the future. The returned <code>messageId</code> will only be considered valid for other actions (editing/deleting/reacting/etc) once it has been sent (i.e. after <code>timeSent</code>). If the DM is removed before the message has sent, the message will not be sent.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ dmId, message, timeSent }</code><br /><br /><b>Return type if no error:</b><br /><code>{ messageId }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>dmId</code> does not refer to a valid DM</li>
-        <li>length of <code>message</code> is less than 1 or over 1000 characters</li>
-        <li><code>timeSent</code> is a time in the past</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>dmId</code> is valid and the authorised user is not a member of the DM they are trying to post to</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>standup/start/v1</code><br /><br />For a given channel, starts a standup period lasting <code>length</code> seconds. <br /><br />
-    During this standup period, if someone calls <code>standup/send</code> with a message, it will be buffered during the <code>length</code>-second window. Then, at the end of the standup, all buffered messages are packaged into one message, and this packaged message is sent to the channel from the user who started the standup: see section 6.13. for more details. If no standup messages are sent during the standup, no message should be sent at the end.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ channelId, length }</code><br /><br /><b>Return type if no error:</b><br /><code>{ timeFinish }</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li><code>length</code> is a negative integer</li>
-        <li>an active standup is currently running in the channel</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>standup/active/v1</code><br /><br />For a given channel, returns whether a standup is active in it, and what time the standup finishes. If no standup is active, then <code>timeFinish</code> should be <code>null</code>.</td>
-    <td style="font-weight: bold; color: green;">GET</td>
-    <td><b>Query Parameters:</b><br /><code>( channelId )</code><br /><br /><b>Return type if no error:</b><br /><code>{ isActive, timeFinish }</code></td>
-    <td>
-      <b>400 Error</b> when:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>standup/send/v1</code><br /><br />For a given channel, if a standup is currently active in the channel, sends a message to get buffered in the standup queue. Note: @ tags should not be parsed as proper tags (i.e. no notification should be triggered on send, or when the standup finishes)</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ channelId, message }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>channelId</code> does not refer to a valid channel</li>
-        <li>length of <code>message</code> is over 1000 characters</li>
-        <li>an active standup is not currently running in the channel</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li><code>channelId</code> is valid and the authorised user is not a member of the channel</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>auth/passwordreset/request/v1</code><br /><br />Given an email address, if the email address belongs to a registered user, sends them an email containing a secret password reset code. This code, when supplied to <code>auth/passwordreset/reset</code>, shows that the user trying to reset the password is the same user who got sent the email contaning the code. No error should be raised when given an invalid email, as that would pose a security/privacy concern. When a user requests a password reset, they should be logged out of all current sessions.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ email }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      N/A
-    </td>
-  </tr>
-  <tr>
-    <td><code>auth/passwordreset/reset/v1</code><br /><br />Given a reset code for a user, sets that user's new password to the password provided. Once a reset code has been used, it is then invalidated.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ resetCode, newPassword }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>resetCode</code> is not a valid reset code</li>
-        <li><code>newPassword</code> is less than 6 characters long</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>user/profile/uploadphoto/v1</code><br /><br />Given a URL of an image on the internet, crops the image within bounds (<code>xStart</code>, <code>yStart</code>) and (<code>xEnd</code>, <code>yEnd</code>). Position (0,0) is the top left. Please note: the URL needs to be a non-https URL (it should just have "http://" in the URL). We will only test with non-https URLs.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>{ imgUrl, xStart, yStart, xEnd, yEnd }</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>imgUrl</code> returns an HTTP status other than 200, or any other errors occur when attempting to retrieve the image</li>
-        <li>any of <code>xStart</code>, <code>yStart</code>, <code>xEnd</code>, <code>yEnd</code> are not within the dimensions of the image at the URL</li>
-        <li><code>xEnd</code> is less than or equal to <code>xStart</code> or <code>yEnd</code> is less than or equal to <code>yStart</code></li>
-        <li>image uploaded is not a JPG</li>
-      </ul>
-    </td>
   </tr>
   <tr>
     <td><code>user/stats/v1</code><br /><br />Fetches the required statistics about this user's use of UNSW Memes.</td>
@@ -529,40 +392,6 @@ All return values should be an object, with keys identically matching the names 
     <td style="font-weight: bold; color: green;">GET</td>
     <td><b>Query Parameters:</b><br /><code>( )</code><br /><br /><b>Return type if no error:</b><br /><code>{ workspaceStats }</code></td>
     <td>N/A</td>
-  </tr>
-  <tr>
-    <td><code>admin/user/remove/v1</code><br /><br />Given a user by their <code>uId</code>, removes them from Memes. This means they should be removed from all channels/DMs, and will not be included in the array of <code>users</code> returned by <code>users/all</code>. Memes owners can remove other Memes owners (including the original first owner). Once a user is removed, the contents of the messages they sent will be replaced by 'Removed user'. Their profile must still be retrievable with <code>user/profile</code>, however <code>nameFirst</code> should be 'Removed' and <code>nameLast</code> should be 'user'. The user's email and handle should be reusable.</td>
-    <td style="color: red; font-weight: bold;">DELETE</td>
-    <td><b>Query Parameters:</b><br /><code>( uId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>uId</code> does not refer to a valid user</li>
-        <li><code>uId</code> refers to a user who is the only global owner</li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li>the authorised user is not a global owner</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td><code>admin/userpermission/change/v1</code><br /><br />Given a user by their <code>uID</code>, sets their permissions to new permissions described by <code>permissionId</code>.</td>
-    <td style="font-weight: bold; color: blue;">POST</td>
-    <td><b>Body Parameters:</b><br /><code>( uId, permissionId )</code><br /><br /><b>Return type if no error:</b><br /><code>{}</code></td>
-    <td>
-      <b>400 Error</b> when any of:
-      <ul>
-        <li><code>uId</code> does not refer to a valid user</li>
-        <li><code>uId</code> refers to a user who is the only global owner and they are being demoted to a user</li>
-        <li><code>permissionId</code> is invalid</li>
-        <li>the user already has the permissions level of <code>permissionId</code></li>
-      </ul>
-      <b>403 Error</b> when:
-      <ul>
-        <li>the authorised user is not a global owner</li>
-      </ul>
-    </td>
   </tr>
 </table>
 
@@ -615,14 +444,14 @@ In this structure, this also means it's possible to "log out" a particular user'
 Don't worry about creating a secure method of session storage in iteration 2 - that is for iteration 3.
 
 ### 7.8. Working with the frontend
-There is a SINGLE repository available for all students at https://gitlab.cse.unsw.edu.au/COMP1531/23T1/project-frontend. You can clone this frontend locally. If you'd like to modify the frontend repo (i.e. teach yourself some frontend), please FORK the repository.
+There is a SINGLE repository available for all students at https://gitlab.cse.unsw.edu.au/COMP1531/23T1/project-frontend. You can clone this frontend locally. If you'd like to modify the frontend repo (i.e. teach yourself some frontend), please FORK the repository (this includes for bonus features).
 
 If you run the frontend at the same time as your express server is running on the backend, then you can power the frontend via your backend.
 
 Please note: The frontend may have very slight inconsistencies with expected behaviour outlined in the specification. Our automarkers will be running against your compliance to the specification. The frontend is there for further testing and demonstration.
 
 #### 7.8.1. Example implementation
-A working example of the frontend can be used at http://treats-unsw.herokuapp.com/. This is not a gospel implementation that dictates the required behaviour for all possible occurrences. Our implementation will make reasonable assumptions just as yours will, and they might be different, and that's fine. However, you may use this implementation as a guide for how your backend should behave in the case of ambiguities in the spec.
+A working example of the frontend can be used at http://memes-unsw.herokuapp.com/. This is not a gospel implementation that dictates the required behaviour for all possible occurrences. Our implementation will make reasonable assumptions just as yours will, and they might be different, and that's fine. However, you may use this implementation as a guide for how your backend should behave in the case of ambiguities in the spec.
 
 The data is reset occasionally, but you can use this link to play around and get a feel for how the application should behave.
 
@@ -679,29 +508,7 @@ While this safely protects sessions from server-side attacks (accessing our pers
 
 **You do not need to worry about mitigating client-side attacks**, but you can read more about industry-standard session management <a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html#secure-attribute">here</a>.
 
-
-### 7.10. Notifications and tagging users
-#### 7.10.1 Notifications
-If an action triggering a notification has been 'undone' (e.g. a message has been unreacted, or a tagged message has been edited/removed), the original notification should not be affected and will remain.
-
-A user should not be notified of any reactions to their messages if they are no longer in the channel/DM that the message was sent in.
-
-A user should be notified if they tag themselves in a message.
-
-#### 7.10.2 Tagging
-A user is tagged when a message contains the @ symbol, followed immediately by the user’s handle. The end of the handle is signified by the end of the message, or a non-alphanumeric character. The message '`hi@handle`' contains a valid tag. '`@handle1@handle2 hello!`' contains two valid tags.
-
-Some additional requirements are:
-* If the handle is invalid, or the user is not a member of the channel or DM, no one is tagged.
-* A user should be able to tag themselves.
-* A message can contain multiple tags.
-* If the same valid tag appears multiple times in one message, the user is only notified once.
-
-Tagging should also occur when messages are edited to contain tags and when the message/share optional message contains tags.
-
-There is no requirement to have tags notify users inside a standup or when the buffered standup messages are sent.
-
-### 7.11. Analytics
+### 7.10. Analytics
 COMP6080 students have implemented analytics pages for users and for the Memes workspace on the frontend, and now these pages need data. Your task is to add backend functionality that keeps track of these metrics:
 
 For users:
@@ -724,41 +531,6 @@ For the workspace, `numMsgs` is the number of messages that exist at the current
 
 In addition to keeping track of these metrics, you are required to implement two new endpoints, `user/stats` and `users/stats`.
 
-### 7.12. Reacts
-The only React ID currently associated with the frontend is React ID 1, which is a thumbs up :thumbsup:. You are welcome to add more (this will require some frontend work).
-
-### 7.13. Standups
-Once a standup is finished, all of the messages sent to `standup/send` are packaged together in *one single message* posted by *the user who started the standup*. This packaged message is sent as a message to the channel where the standup was started, timestamped at the moment the standup finished.
-
-The structure of the packaged message is like this:
-
-```txt
-[messageSender1Handle]: [message1]
-[messageSender2Handle]: [message2]
-[messageSender3Handle]: [message3]
-[messageSender4Handle]: [message4]
-```
-
-For example:
-
-```txt
-hayden: I ate a catfish
-giuliana: I went to kmart
-rani: I ate a toaster
-tam: my catfish ate a kmart toaster
-```
-
-Standups can be started on the frontend by typing "/standup X" (where X is the number of seconds that the standup lasts for) into the message input and clicking send. E.g., to start a 90-second standup, type "/standup 90" and press send.
-
-You will not be tested on any behaviour involving the user who started a standup being removed from the channel or Memes while the standup is ongoing, therefore you can decide this behaviour yourself.
-
-### 7.14. profileImgUrl & image uploads
-For outputs with data pertaining to a user, a `profileImgUrl` must be present. When images are uploaded for a user profile, after processing them you should store them on the server such that your server now locally has a copy of the cropped image of the original file linked. Then, the `profileImgUrl` should be a URL to the server, such as http://localhost:5001/imgurl/adfnajnerkn23k4234.jpg (a unique url you generate).
-
-For any given user, if they have yet to upload an image, there should be a site-wide default image used.
-
-Note: This is most likely the most challenging part of the project, so don't get lost in this. We would strongly recommend most teams complete this capability *last*.
-
 ## 8. Due Dates and Weightings
 
 |Iteration|Due date                              |Demonstration to tutor(s)      |Assessment weighting of project (%)|
@@ -775,13 +547,13 @@ There is no late penalty, as we do not accept late submissions. You will be asse
 
 To submit your work, open up a CSE terminal and run:
 
-` $ 1531 submit [iteration] [groupname]`
+` $ 1531 submit [iteration] [zID]`
 
 For example:
 
-` $ 1531 submit iteration1 W11A_EGGS`
+` $ 1531 submit iteration1 z5555555`
 
-Only one person per group needs to run this command. This will submit a copy of your latest git commit to our systems for automarking. 
+This will submit a copy of your latest git commit to our systems for automarking. 
 
 NOTE: Our automarking will be run on your master branch at the time of submission, the `1531 submit` command is for record-keeping purposes only.
 
@@ -789,22 +561,8 @@ If the deadline is approaching and you have features that are either untested or
 
 Minor isolated fixes are not allowed for iteration 4.
 
-If you want to have your automarking re-run:  
-* create a branch, e.g. `iter1-fix`, based off the submission commit  
-* make the minimal number of necessary changes (i.e. only fix the trivial bugs that cost you many automarks)  
-* push the changes to GitLab  
-* share the name of the branch with your tutor
-
 ## 9. Individual Contribution
-While we do award a tentative mark to your group as a whole, your actual mark for each iteration is given to you individually. Your individual mark is determined by your tutor, with your group mark as a reference point. Your tutor will look at the following items each iteration to determine your mark:
- * Project check-in
- * Code contribution
- * Tutorial contributions
- * Peer assessment
-
-In general, all team members will receive the same mark (a sum of the marks for each iteration), **but if you as an individual fail to meet these criteria, your final project mark may be scaled down**, most likely quite significantly.
-
-Iteration 4 is marked individually, and added onto your individually-scaled group project mark.
+Iteration 4 is marked individually, there is no group contribution mark for this iteration.
 
 ### 9.1. Project check-in
 There is no group check-in for iteration 4.
