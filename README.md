@@ -54,15 +54,15 @@ In iteration 4, you'll be working alone to implement:
 * 2 additional functionalities (in the same format as iteration 3)
 * Bonus features of your choice!
 
-Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students. However, it is recommended you seek approval from your tutor during week 10 on whether your chosen additional feature is suitable. 
+Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students. However, you **MUST** get approval from your tutor before **Friday 10pm** of week 10 to ensure your chosen additional feature is suitable. 
 
-You will be style-marked on these additional features (from section 6.2.4) and your custom bonus features in iteration 4, despite using the same repository as the rest of your group (see section 6.1). You should create any new features using TypeScript, but you do not need to ensure the code produces no typechecking errors. 
+You should create any new features using TypeScript, but you do not need to ensure the code produces no typechecking errors. 
 
-If you wish to implement **new** bonus features that extend upon previous iteration’s functionality that is currently broken in your groups repo, please contact your tutor as assistance and advice will be handled on a case-by-case basis. 
+If you wish to implement new bonus features that extend upon previous iteration’s functionality that is currently broken in your groups repo, please contact your tutor as assistance and advice will be handled on a case-by-case basis.
 
 As a rough guide, if you would like high marks in this section you should expect to spend at least 20 hours on your additional functionality. 
 
-**PLEASE NOTE:** A brief explanation of your additions must be written in a file <code>extra.md</code> that you need to add to your repo.
+**NOTE:** A brief explanation of your additions must be written in a file <code>extra.md</code>, please fill out the given template to ensure your tutor can mark your bonus features correctly.
 
 Here are some ideas for extra features. Depending on the complexity of your features chosen, you may choose to do multiple.
 
@@ -92,6 +92,10 @@ Here are some ideas for extra features. Depending on the complexity of your feat
 
 6. **Databases** - Implementing persistence using a form of database via `typeorm`.
 
+7. **Docker** - Dockerise this repo (backend) and the frontend repo, ensuring data is persistent. There is no need to deploy your project if this is successful.
+
+8. **New Idea!** - Something you've thought of that doesn't fit into any of the suggestions above. Please email/talk to your tutor for approval on this first.
+
 ### 6.1 Your New Repo - What Has Changed?
 At the start of iteration 4, you will be given a new repo (this one!), which is just a forked version of your group's repo (essentially a direct copy of it). Since this iteration is individual, you will be completing iteration 4 in this newly created, personal repo.
 
@@ -100,6 +104,24 @@ In this iteration, you may approve your own merge requests after a self-review a
 Any backend bonus features added do not need to work with the supplied frontend, i.e. editing the supplied frontend to integrate your new backend features is not necessary.
 
 In addition, your code does not need to be linted or meet a minimum coverage checking requirement, however it is recommended you continue to use these tools as they will be considered in the manual style marking of iteration 4.
+
+New code added in iteration 4 will be style marked, and any old code (from iteration 3 or earlier) will not impact this marking.
+
+### 6.2 Video presentation
+As part of the bonus features section of this iteration, you are required to film a 2 minute video demonstrating what you have created.
+
+In this video, you should: 
+* Explain what you have implemented and how it works
+* Why you chose that feature
+* Include a demonstration of it working/running successfully
+
+We recommend submitting a screen-recording - it's a bonus if your face is in it! E.g. using <a href="https://www.canva.com/en_au/help/talking-presentations/">Canva's Present and record mode</a>.
+
+You should upload your video to the <a href="https://flip.com/c6ba723b">COMP1531 Flipgrid</a>. When submitting a response, use the 'Upload Clip' button in the top right-hand corner of the recording screen to submit your own video. 
+
+**NOTE:** Please add your zID in the caption section of the video upload process for marking purposes.
+
+You should have received an email invite to join this Flipgrid group - you should select login with Microsoft and use your zID. If you have access troubles, please post on the forum.
 
 ### 5.8. Marking Criteria
 
@@ -543,7 +565,7 @@ In addition to keeping track of these metrics, you are required to implement two
 |   1     |10pm Friday 10th March  (**week 4**)   |In YOUR **week 5** laboratory  |20%                                |
 |   2     |10pm Friday 31st March (**week 7**)    |In YOUR **week 8** laboratory  |30%                                |
 |   3     |10pm Monday 17th April (**week 10**)  |No demonstration               |30%                               |
-|   3     |10pm Friday 28th April (**week 11**)  |No demonstration               |15%                              |
+|   4     |10pm Friday 28th April (**week 11**)  |No demonstration               |15%                              |
 
 ### 8.1. Submission & Late Penalties
 
