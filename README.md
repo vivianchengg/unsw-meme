@@ -121,15 +121,15 @@ We recommend submitting a screen-recording - it's a bonus if your face is in it!
 
 You should upload your video to the <a href="https://flip.com/c6ba723b">COMP1531 Flipgrid</a>. Please login using Microsoft, with your zID email.
 
-![Login](/images/login.png)
+<img src="images/login.png" width="270">
 
 When submitting a response, use the 'Upload Clip' button in the top right-hand corner of the recording screen to submit your own video. 
 
-![Upload](/images/upload.png)
+<img src="images/upload.png" width="200">
 
 **NOTE:** Please add your zID in the caption section of the video upload process for marking purposes.
 
-![Caption](/images/caption.png)
+<img src="images/caption.png" width="400">
 
 You should have received an email invite to join this Flipgrid group - you should select login with Microsoft and use your zID. If you have access troubles, please post on the forum.
 
