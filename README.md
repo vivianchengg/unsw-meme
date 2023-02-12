@@ -123,7 +123,7 @@ You should upload your video to the <a href="https://flip.com/c6ba723b">COMP1531
 
 <img src="images/login.png" width="300">
 
-When submitting a response, use the 'Upload Clip' button in the top right-hand corner of the recording screen to submit your own video. 
+When submitting a response to the 'Bonus Features' topic in Flipgrid, use the 'Upload Clip' button in the top right-hand corner of the recording screen to submit your own video. 
 
 <img src="images/upload.png" width="200">
 
