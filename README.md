@@ -54,17 +54,17 @@ In iteration 4, you'll be working alone to implement:
 * 2 additional functionalities (in the same format as iteration 3)
 * Bonus features of your choice!
 
-Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students. However, you **MUST** get approval from your tutor before **Friday 10pm** of week 10 to ensure your chosen additional feature is suitable. 
+Your tutor is not required to provide any assistance with the bonus features section, as it's intended for high-achieving students.
 
 You should create any new features using TypeScript, but you do not need to ensure the code produces no typechecking errors. 
 
 If you wish to implement new bonus features that extend upon previous iteration’s functionality that is currently broken in your groups repo, please contact your tutor as assistance and advice will be handled on a case-by-case basis.
 
-As a rough guide, if you would like high marks in this section you should expect to spend at least 20 hours on your additional functionality. 
+As a rough guide, if you would like high marks in this section you should expect to spend at least 20 hours on your bonus functionality (not including the 2 additional functionalities). 
 
 **NOTE:** A brief explanation of your additions must be written in a file <code>extra.md</code>, please fill out the given template to ensure your tutor can mark your bonus features correctly.
 
-Here are some ideas for extra features. Depending on the complexity of your features chosen, you may choose to do multiple.
+Here are some suggestions for extra features. Depending on the complexity of your features chosen, you may choose to do multiple. If you come up with a new idea which is not one of the suggestions, you **MUST** get approval from your tutor before **Friday 10pm** of week 10.
 
 1. **Deployment** - Deploy your project to the cloud. Specifically, you would be deploying the backend server that you wrote to the internet at a public URL. You still run your frontend locally using this method, which can connect to that server. 
 
@@ -73,6 +73,8 @@ Here are some ideas for extra features. Depending on the complexity of your feat
     * If you choose this feature, you need to add the URL of your deployed backend inside of `extra.md`.
 
     * We have written a guide you can optionally follow to deploy your project using a free cloud provider <a href="https://www.alwaysdata.com/en/">AlwaysData</a>. [Click here to view the guide](docs/DEPLOY.md).
+
+    * If you're aiming for high marks in this section, we recommend choosing a second bonus feature to do in addition to deployment.
 
 2. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
 
@@ -559,13 +561,13 @@ In addition to keeping track of these metrics, you are required to implement two
 
 ## 8. Due Dates and Weightings
 
-|Iteration|Due date                              |Demonstration to tutor(s)      |Assessment weighting of project (%)|
+|Iteration|Due date                              |Demonstration to tutor(s)      |Assessment weighting (%)|
 |---------|--------------------------------------|-------------------------------|-----------------------------------|
-|   0     |10pm Friday 24th February (**week 2**)    |No demonstration               |5%                                 |
-|   1     |10pm Friday 10th March  (**week 4**)   |In YOUR **week 5** laboratory  |20%                                |
-|   2     |10pm Friday 31st March (**week 7**)    |In YOUR **week 8** laboratory  |30%                                |
-|   3     |10pm Monday 17th April (**week 10**)  |No demonstration               |30%                               |
-|   4     |10pm Friday 28th April (**week 11**)  |No demonstration               |15%                              |
+|   0     |10pm Friday 24th February (**week 2**) |No demonstration           |5% of project mark                 |
+|   1     |10pm Friday 10th March  (**week 4**)   |In YOUR **week 5** laboratory |30% of project mark                |
+|   2     |10pm Friday 31st March (**week 7**)    |In YOUR **week 8** laboratory |35% of project mark                |
+|   3     |10pm Monday 17th April (**week 10**)  |No demonstration               |30% of project mark                |
+|   4     |10pm Friday 28th April (**week 11**)  |Video presentation             |30% of course mark                 |
 
 ### 8.1. Submission & Late Penalties
 
@@ -592,6 +594,8 @@ Iteration 4 is marked individually, there is no group contribution mark for this
 
 ### 9.1. Project check-in
 There is no group check-in for iteration 4.
+
+You will instead have an individual check-in with your tutor (5-10min) where you discuss your choice of bonus feature(s), if any. Remember, your tutor must approve bonus features that aren't from the suggested list in section 6.
 
 ### 9.2. Tutorial contributions
 From weeks 2 onward, your individual project mark may be reduced if you do not satisfy the following:
