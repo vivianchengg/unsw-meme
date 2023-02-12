@@ -105,7 +105,7 @@ In this iteration, you may approve your own merge requests after a self-review a
 
 Any backend bonus features added do not need to work with the supplied frontend, i.e. editing the supplied frontend to integrate your new backend features is not necessary.
 
-In addition, your code does not need to be linted or meet a minimum coverage checking requirement, however it is recommended you continue to use these tools as they will be considered in the manual style marking of iteration 4.
+In addition, no specific marks will be awarded for linting or meet a minimum coverage checking requirement, however it is recommended you continue to use these tools as they will be considered in the manual style marking of iteration 4.
 
 New code added in iteration 4 will be style marked, and any old code (from iteration 3 or earlier) will not impact this marking.
 
