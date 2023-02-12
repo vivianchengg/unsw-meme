@@ -111,10 +111,20 @@ In addition, your code does not need to be linted or meet a minimum coverage che
   </tr>
   <tr>
     <td>Automarking (Testing & Implementation)</td>
-    <td>50%</td>
+    <td>25%</td>
     <td><ul>
       <li>Correct implementation of specified functions</li>
       <li>Correctly written tests based on the specification requirements</li>
+    </ul></td>
+  </tr>
+  <tr>
+    <td>Bonus features</td>
+    <td>60%</td>
+    <td><ul>
+      <li>Features chosen demonstrate adequate technical difficulty (at least 20 hours of work)</li>
+      <li>Bonus featues are creative and are not decided as a group but worked on independently</li>
+      <li>Features chosen are relevant to software engineering concepts and theory learnt in the course</li>
+      <li>Engaging presentation of bonus features, within the 2 minute time limit</li>
     </ul></td>
   </tr>
   <tr>
@@ -133,16 +143,11 @@ In addition, your code does not need to be linted or meet a minimum coverage che
   </tr>
   <tr>
     <td>Git & Project Management</td>
-    <td>10%</td>
+    <td>5%</td>
     <td><ul>
       <li>Meaningful and informative git commit names being used</li>
       <li>At least 2 merge requests into master made</li>
-      <li>A generally equal contribution between team members</li>
-      <li>Clear evidence of reflection on group's performance and state of the team</li>
-      <li>Effective use of course-provided MS Teams for communication, demonstrating an ability to competently manage teamwork online</li>
       <li>Use of issue board on GitLab or other approved tracking mechanism to manage tasks</li>
-      <li>Effective use of agile methods such as standups</li>
-      <li>Minutes/notes taken from group meetings (and stored in a logical place in the repo)</li>
     </ul>
   </td>
   </tr>
@@ -271,7 +276,6 @@ This iteration's due date described in section 7. Note there will be no demonstr
 </table>
 
 #### 7.1.4. Iteration 3+ Input/Output Types
-
 <table>
   <tr>
     <th>Variable name</th>
