@@ -13,7 +13,7 @@
 3. Understand key characteristics of a functioning team in terms of understanding professional expectations, maintaining healthy relationships, and managing conflict.
 4. Demonstrate an ability to analyse complex software systems in terms of their data model, state model, and more.
 5. Understand the software engineering life cycle in the context of modern and iterative software development practices in order to elicit requirements, design systems thoughtfully, and implement software correctly.
-6. Demonstrate an understanding of how to use version control, continuous integration, and deployment tooling to sustainably integrate code from multiple parties.
+6. Demonstrate an understanding of how to use version control and continuous integration to sustainably integrate code from multiple parties.
 
 ## 1. Overview
 
@@ -66,19 +66,9 @@ As a rough guide, if you would like high marks in this section you should expect
 
 Here are some suggestions for extra features. Depending on the complexity of your features chosen, you may choose to do multiple. If you come up with a new idea which is not one of the suggestions, you **MUST** get approval from your tutor before **Friday 10pm** of week 10.
 
-1. **Deployment** - Deploy your project to the cloud. Specifically, you would be deploying the backend server that you wrote to the internet at a public URL. You still run your frontend locally using this method, which can connect to that server. 
+1. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
 
-    * Depending on how you and your team have structured your project, your current method of using data may have to be rethought. Deploying to cloud and developing locally require two different mindsets and you and your team may find that you held some assumptions that are valid when developing locally but do not hold when being hosted on the cloud.
-
-    * If you choose this feature, you need to add the URL of your deployed backend inside of `extra.md`.
-
-    * We have written a guide you can optionally follow to deploy your project using a free cloud provider <a href="https://www.alwaysdata.com/en/">AlwaysData</a>. [Click here to view the guide](docs/DEPLOY.md).
-
-    * If you're aiming for high marks in this section, we recommend choosing a second bonus feature to do in addition to deployment.
-
-2. **New Features** - Implement one or more of the features you have elicited in your Requirements & Design document from iteration 3.
-
-3. Frontend - **Hangman on Frontend**
+2. Frontend - **Hangman on Frontend**
 
     * After a game of Hangman has been started, any user in the channel can type "/guess X" where X is an individual letter. If that letter is contained in the word or phrase they're trying to guess, the app should indicate where it occurs. If it does not occur, more of the hangman is drawn. 
     
@@ -88,15 +78,15 @@ Here are some suggestions for extra features. Depending on the complexity of you
 
     * Note that this part of the specification is deliberately open-ended. You're free to make your own creative choices in exactly how the game should work, as long as the end result is something that could be fairly described as Hangman.
 
-4. Frontend - **Dark Mode** - Modify the frontend code so that on the flip of a switch in the navbar, the website can change to "dark mode" with a colour scheme of your choosing.
+3. Frontend - **Dark Mode** - Modify the frontend code so that on the flip of a switch in the navbar, the website can change to "dark mode" with a colour scheme of your choosing.
 
-5. Frontend - **LaTEX / Markdown Support** - Modify the frontend code so that messages in channels and DMs can be rendered in LaTEX and/or Markdown.
+4. Frontend - **LaTEX / Markdown Support** - Modify the frontend code so that messages in channels and DMs can be rendered in LaTEX and/or Markdown.
 
-6. **Databases** - Implementing persistence using a form of database via `typeorm`.
+5. **Databases** - Implementing persistence using a form of database via `typeorm`.
 
-7. **Docker** - Dockerise this repo (backend) and the frontend repo, ensuring data is persistent. There is no need to deploy your project if this is successful.
+6. **Docker** - Dockerise this repo (backend) and the frontend repo, ensuring data is persistent. There is no need to deploy your project if this is successful.
 
-8. **New Idea!** - Something you've thought of that doesn't fit into any of the suggestions above. Please email/talk to your tutor for approval on this first.
+7. **New Idea!** - Something you've thought of that doesn't fit into any of the suggestions above. Please email/talk to your tutor for approval on this first.
 
 ### 6.1 Your New Repo - What Has Changed?
 At the start of iteration 4, you will be given a new repo (this one!), which is just a forked version of your group's repo (essentially a direct copy of it). Since this iteration is individual, you will be completing iteration 4 in this newly created, personal repo.
