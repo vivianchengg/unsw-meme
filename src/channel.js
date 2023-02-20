@@ -1,4 +1,4 @@
-// Function that lists details of members in channel
+// Function that lists details of members in the channel
 
 function channelDetailsV1 (authUserId, channelId) {
     return {
