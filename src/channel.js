@@ -1,3 +1,5 @@
+// Function that lists details of members in channel
+
 function channelDetailsV1 (authUserId, channelId) {
     return {
         name: 'Hayden',
