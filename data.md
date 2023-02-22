@@ -1,4 +1,5 @@
 ```javascript
+// Lists data structures for users and channels
 let data = {
   users: [
     {
@@ -31,5 +32,3 @@ let data = {
   ],
 }
 ```
-
-[Optional] short description: 
