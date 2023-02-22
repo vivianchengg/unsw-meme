@@ -1,5 +1,6 @@
+
 //channelJoinV1 stub function 
-function channelJoinV1(authUserId, channelId)    {
+function channelJoinV1(authUserId, channelId) {
   return {
   }
 }
@@ -10,21 +11,20 @@ function channelInviteV1(authUserId, channelId, uId) {
   }
 }
 
-
 //channelMessagesV1 stub function
 function channelMessagesV1(authUserId, channelId, start) {
-    return {
-        messages: [
-            {
-                messageId: 1,
-                uId: 1,
-                message: 'Hello world',
-                timeSent: 1582426789,
-            }
+  return {
+    messages: [
+      {  
+        messageId: 1,
+        uId: 1,
+        message: 'Hello world',
+        timeSent: 1582426789,
+      }
     ],
     start: 0,
     end: 50,
-    }             
+  }             
 }
 
 
