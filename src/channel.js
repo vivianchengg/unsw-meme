@@ -3,9 +3,6 @@ import {getData} from './dataStore.js'
 /* Function that lists details of members in the channel given that:
 - authUserId is valid
 - channelId is valid and user is member of channel
-
-Assumptions:
-- Keys of user and channel array in dataStore.js exists, named userId, allMembers and channelId
 */
 
 function channelDetailsV1 (authUserId, channelId) {
