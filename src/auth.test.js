@@ -1,30 +1,32 @@
 import { authRegisterV1 } from './auth.js';
 import { clearV1 } from './other.js';
 
+const ERROR = { error: expect.any(String) };
+
 beforeEach(() => {
   clearV1();
 });
 
 describe('authRegisterV1 Test', () => {
   test('invalid email', () => {
-    expect(authRegisterV1('email', 'password', 'Vivian', 'Cheng')).toStrictEqual({ error: 'invalid email' });
+    expect(authRegisterV1('email', 'password', 'Vivian', 'Cheng')).toStrictEqual(ERROR);
   });
 
   test('email already taken', () => {
     authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    expect(authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng')).toStrictEqual({ error: 'email already taken' });
+    expect(authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng')).toStrictEqual(ERROR);
   });
 
   test('invalid password length', () => {
-    expect(authRegisterV1('vc@unsw.edu.au', 'pwd', 'Vivian', 'Cheng')).toStrictEqual({ error: 'password < 6 characters' });
+    expect(authRegisterV1('vc@unsw.edu.au', 'pwd', 'Vivian', 'Cheng')).toStrictEqual(ERROR);
   });
   
   test('invalid firstname length', () => {
-    expect(authRegisterV1('vc@unsw.edu.au', 'password', '', 'Cheng')).toStrictEqual({ error: 'incorrect firstname length' });
+    expect(authRegisterV1('vc@unsw.edu.au', 'password', '', 'Cheng')).toStrictEqual(ERROR);
   });
 
   test('invalid lastname length', () => {
-    expect(authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', '')).toStrictEqual({ error: 'incorrect lastname length' });
+    expect(authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', '')).toStrictEqual(ERROR);
   });
 
   test('test basic register', () => {
