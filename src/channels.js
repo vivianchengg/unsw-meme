@@ -52,7 +52,10 @@ function channelsListAllV1 (authUserId) {
   return channels_list;
 }
 
-// Function that checks if user ID given is valid
+/** Function that checks if user ID given is valid
+ *  @param {number} user_id
+ *  @returns {boolean}
+*/
 function validate_user (user_id) {
   const data = getData();
   for (const user of data.users) {
@@ -64,7 +67,28 @@ function validate_user (user_id) {
   return false;
 }
 
-// Function that checks if user is member of given channel
+/** Function that checks if user is member of given channel
+ *  @param {channel, number}
+ *  @returns {boolean}
+ *  
+ * Here, channel: {
+ *  channelId: number,
+ *  name: string,
+ *  isPublic: boolean,
+ *  ownerMembers: user[],
+ *  allMembers: user[]
+ * }
+ * 
+ * user: {
+ *  userId: number,
+ *  email: string,
+ *  password: string,
+ *  nameFirst: string,
+ *  nameLast: string,
+ *  handleStr: string,
+ * 
+ * }
+*/
 function channel_member (channel, user_id) {
   for (const member of channel.allMembers) {
     if (member.userId === user_id) {
