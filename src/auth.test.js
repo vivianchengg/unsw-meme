@@ -19,10 +19,6 @@ describe('authRegisterV1 Test', () => {
     expect(authRegisterV1('vc@unsw.edu.au', 'pwd', 'Vivian', 'Cheng')).toStrictEqual({ error: 'password < 6 characters' });
   });
   
-  test('invalid password length', () => {
-    expect(authRegisterV1('vc@unsw.edu.au', 'pwd', 'Vivian', 'Cheng')).toStrictEqual({ error: 'password < 6 characters' });
-  });
-  
   test('invalid firstname length', () => {
     expect(authRegisterV1('vc@unsw.edu.au', 'password', '', 'Cheng')).toStrictEqual({ error: 'incorrect firstname length' });
   });
