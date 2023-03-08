@@ -7,7 +7,7 @@ import {getData} from './dataStore.js'
 * @returns {channel: {
 *  name: string, 
 *  isPublic: boolean, 
-*  ownerMembers: user[]
+*  ownerMembers: user[]c
 *  allMembers: user[]
 *  }}
 *
@@ -17,10 +17,7 @@ import {getData} from './dataStore.js'
 *  password: string,
 *  nameFirst: string,
 *  nameLast: string,
-*  handle: string
-*  messages: string[],
-*  start: number,
-*  end: number
+*  handleStr: string
 *  }
 *
 *  To return the above:
@@ -42,7 +39,7 @@ function channelDetailsV1 (authUserId, channelId) {
 
   for (const channel of data.channels) {
     if (channel.channelId === channelId) {
-      if (channel_member(authUserId, channel.allMembers) === false) {
+      if (channel_member(channel, authUserId) === false) {
         return {error: 'user not member of channel'};
       }
 
@@ -65,7 +62,7 @@ function channelDetailsV1 (authUserId, channelId) {
 function validate_user(user_id) {
   const data = getData();
   for (const user of data.users) {
-    if (user.userId === user_id) {
+    if (user.uId === user_id) {
       return true;
     }
   }
@@ -84,6 +81,36 @@ function validate_channel(channel_id) {
   const data = getData()
   for (const channel of data.channels) {
     if (channel.channelId === channel_id) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/** Function that checks if given user is member of channel
+ * 
+ * @param channel: {
+*  name: string, 
+*  isPublic: boolean, 
+*  ownerMembers: user[]
+*  allMembers: user[]
+*  }}
+*
+*  - Here, user: {
+*  userId: number,
+*  email: string,
+*  password: string,
+*  nameFirst: string,
+*  nameLast: string,
+*  handleStr: string
+*  }
+ * @param {number} user_id 
+ * @returns {boolean} 
+ */
+function channel_member (channel, user_id) {
+  for (const member of channel.allMembers) {
+    if (member.userId === user_id) {
       return true;
     }
   }
