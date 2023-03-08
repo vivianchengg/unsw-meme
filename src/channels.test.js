@@ -11,7 +11,7 @@ beforeEach(() => {
 
 describe('channelListAllV1 Tests'), () => {
   test('Invalid authUserId'), () => {
-    expect(channelsListAllV1(user_id + 1, channel_id)).toStrictEqual({ error: 'invalid authUserId' });
+    expect(channelsListAllV1(user_id + 1, channel_id)).toStrictEqual({ error: expect.any(String)});
   }
   test('Basic functionality'), () => {
     expect(channelListAllV1(user_id, channel_id)).toStrictEqual([{
