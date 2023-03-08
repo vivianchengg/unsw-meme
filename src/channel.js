@@ -1,69 +1,27 @@
-import {getData} from './dataStore.js'
-
-/* Function that lists details of members in the channel given that:
-- authUserId is valid
-- channelId is valid and user is member of channel
-*/
+// Function that lists details of members in the channel
 
 function channelDetailsV1 (authUserId, channelId) {
-  const data = getData()
-  if (validate_user(authUserId) === false) {
-    return {error: 'invalid authUserId'}
-  }
-
-  if (validate_channel(channelId) === false) {
-    return {error: 'invalid channelId'}
-  }
-
-  for (const channel of data.channels) {
-    if (channel.channelId === channelId) {
-      if (channel_member(authUserId, channel.allMembers) === false) {
-        return {error: 'user not member of channel'}
+  return {
+    name: 'Hayden',
+    ownerMembers: [
+      {
+          uId: 1,
+          email: 'example@gmail.com',
+          nameFirst: 'Hayden',
+          nameLast: 'Jacobs',
+          handleStr: 'haydenjacobs',
       }
-
-      return {
-        name: channel.name,
-        isPublic: channel.isPublic,
-        ownerMembers: channel.ownerMembers,
-        allMembers: channel.allMembers
+    ],
+    allMembers: [
+      {
+        uId: 1,
+        email: 'example@gmail.com',
+        nameFirst: 'Hayden',
+        nameLast: 'Jacobs',
+        handleStr: 'haydenjacobs',
       }
-    }
+    ],
   }
-}
-
-// Function that checks if user id is valid
-function validate_user(user_id) {
-  const data = getData()
-  for (const user of data.users) {
-    if (user.userId === user_id) {
-      return true
-    }
-  }
-
-  return false
-}
-
-// Function that checks if channel id is valid
-function validate_channel(channel_id) {
-  const data = getData()
-  for (const channel of data.channels) {
-    if (channel.channelId === channel_id) {
-      return true
-    }
-  }
-
-  return false
-}
-
-// Function that checks if user with given ID is member of channel
-function channel_member(user_id, member_array) {
-  for (const member of member_array) {
-    if (member.userId === user_id) {
-      return true
-    }
-  }
-
-  return false
 }
 
 //channelJoinV1 stub function 
