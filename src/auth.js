@@ -11,7 +11,7 @@ function isEmailFromUser(email) {
   const data = getData();
   let user = undefined;
   if (data.users !== undefined) {
-    user = data.users.find(a => a.email === email);
+    user = data.users.find(person => person.email === email);
   }
 
   if (user === undefined) {
@@ -28,7 +28,7 @@ function isEmailFromUser(email) {
 */
 function isHandleTaken(handle) {
   const data = getData();
-  const user = data.users.find(a => a.handleStr === handle);
+  const user = data.users.find(person => person.handleStr === handle);
   if (user === undefined) {
     return false;
   } 
