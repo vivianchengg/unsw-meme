@@ -51,7 +51,12 @@ function channelDetailsV1 (authUserId, channelId) {
   }
 }
 
-// Function that checks if user id is valid
+/** Function that checks if user id is valid
+ *
+ * 
+ * @param {number} user_id 
+ * @returns {boolean}
+ */
 function validate_user(user_id) {
   const data = getData();
   for (const user of data.users) {
@@ -63,7 +68,13 @@ function validate_user(user_id) {
   return false;
 }
 
-// Function that checks if channel id is valid
+/** Function that checks if channel id is valid
+ * 
+ * 
+ * @param {number} channel_id
+ * @returns {boolean}
+*/
+
 function validate_channel(channel_id) {
   const data = getData()
   for (const channel of data.channels) {
