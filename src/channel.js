@@ -12,10 +12,12 @@ import {getData} from './dataStore.js'
 *  }}
 *
 *  - Here, user: {
+*  userId: number,
 *  email: string,
 *  password: string,
 *  nameFirst: string,
-*  nameLast: string
+*  nameLast: string,
+*  handle: string
 *  }
 *
 *  To return the above:
