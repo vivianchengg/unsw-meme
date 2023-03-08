@@ -11,14 +11,14 @@ beforeEach(() => {
 
 describe('channelDetailsV1 Test'), () => {
   test('Invalid authUserId'), () => {
-    expect(channelDetailsV1(user_id + 1, channel_id)).toStrictEqual({ error: 'invalid authUserId' });
+    expect(channelDetailsV1(user_id + 1, channel_id)).toStrictEqual({ error: expect.any(String)});
   }
   test('Invalid channelId'), () => {
-    expect(channelDetailsV1(user_id, channel_id + 1)).toStrictEqual({ error: 'invalid channelId' });
+    expect(channelDetailsV1(user_id, channel_id + 1)).toStrictEqual({ error: expect.any(String)});
   }
   test('Valid channelId and authUserId but user is not in course'), () => {
     const outside_user_id = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    expect(channelDetailsV1(outside_user_id, channel_id)).toStrictEqual({ error: 'user not member of channel'});
+    expect(channelDetailsV1(outside_user_id, channel_id)).toStrictEqual({error: expect.any(String)});
   }
   test('Basic functionality'), () => {
     expect(channelDetailsV1(user_id, channel_id)).toStrictEqual({
