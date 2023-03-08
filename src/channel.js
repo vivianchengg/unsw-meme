@@ -18,6 +18,9 @@ import {getData} from './dataStore.js'
 *  nameFirst: string,
 *  nameLast: string,
 *  handle: string
+*  messages: string[],
+*  start: number,
+*  end: number
 *  }
 *
 *  To return the above:
