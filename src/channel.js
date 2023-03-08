@@ -8,17 +8,17 @@ import {getData} from './dataStore.js'
 function channelDetailsV1 (authUserId, channelId) {
   const data = getData()
   if (validate_user(authUserId) === false) {
-    return {error: 'error'}
+    return {error: 'invalid authUserId'}
   }
 
   if (validate_channel(channelId) === false) {
-    return {error: 'error'}
+    return {error: 'invalid channelId'}
   }
 
   for (const channel of data.channels) {
     if (channel.channelId === channelId) {
       if (channel_member(authUserId, channel.allMembers) === false) {
-        return {error: 'error'}
+        return {error: 'user not member of channel'}
       }
 
       return {
