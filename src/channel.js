@@ -21,7 +21,7 @@ import {getData} from './dataStore.js'
 *  To return the above:
 * - authUserId must be valid
 * - channelId must be valid and user must be member of channel
-* Otherwise, {error: ""} is returned
+* Otherwise, {error: string} is returned
 *
 **/
 
