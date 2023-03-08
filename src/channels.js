@@ -57,7 +57,7 @@ function channelsListAllV1 (authUserId) {
 function validate_user (user_id) {
   const data = getData();
   for (const user of data.users) {
-    if (user.userId === user_id) {
+    if (user.uId === user_id) {
       return true;
     }
   }
