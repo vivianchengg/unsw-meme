@@ -1,3 +1,5 @@
+import { getData } from './dataStore.js'
+
 // stub function: creates a channel - returns a channel id
 function channelsCreateV1 (authUserId, name, isPublic) {
   return {channelId: 1}
@@ -16,14 +18,46 @@ function channelsListV1 (authUserId) {
 }
 
 // Function lists details of all channels the user is in
-
 function channelsListAllV1 (authUserId) {
-  return {
-    channels: [
-      {
-        channelId: 1,
-        name: 'My Channel',
-      }
-    ]
+  const data = getData();
+  if (validate_user(authUserId) === false) {
+    return {error: 'invalid authUserId'};
   }
+
+  let channels_list = [];
+  for (const channel of data.channels) {
+    if (channel_member(channel, authUserId) === true) {
+      const channel_details = {
+        channelId: channel.channelId,
+        name: channel.name
+      };
+
+      channels_list.push(channel_details);
+    }
+  }
+
+  return channels_list;
+}
+
+// Function that checks if user ID given is valid
+function validate_user (user_id) {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.userId === user_id) {
+      return true
+    }
+  }
+
+  return false
+}
+
+// Function that checks if user is member of given channel
+function channel_member (channel, user_id) {
+  for (const member of channel.allMembers) {
+    if (member.userId === user_id) {
+      return true
+    }
+  }
+
+  return false
 }
