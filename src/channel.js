@@ -1,28 +1,80 @@
-// Function that lists details of members in the channel
+import {getData} from './dataStore.js'
+
+/** Function that lists details of members in the channel given that:
+*
+* @param {number} authUserId - User Id of individual asking for details of a channel
+* @param {number} channelId - Channel Id of channel that user is asking to access details of
+* @returns {channel: {
+*  name: string, 
+*  isPublic: boolean, 
+*  ownerMembers: user[]
+*  allMembers: user[]
+*  }}
+*
+*  - Here, user: {
+*  email: string,
+*  password: string,
+*  nameFirst: string,
+*  nameLast: string
+*  }
+*
+*  To return the above:
+* - authUserId must be valid
+* - channelId must be valid and user must be member of channel
+* Otherwise, {error: ""} is returned
+*
+**/
 
 function channelDetailsV1 (authUserId, channelId) {
-  return {
-    name: 'Hayden',
-    ownerMembers: [
-      {
-          uId: 1,
-          email: 'example@gmail.com',
-          nameFirst: 'Hayden',
-          nameLast: 'Jacobs',
-          handleStr: 'haydenjacobs',
+  const data = getData();
+  if (validate_user(authUserId) === false) {
+    return {error: 'invalid authUserId'};
+  }
+
+  if (validate_channel(channelId) === false) {
+    return {error: 'invalid channelId'};
+  }
+
+  for (const channel of data.channels) {
+    if (channel.channelId === channelId) {
+      if (channel_member(authUserId, channel.allMembers) === false) {
+        return {error: 'user not member of channel'};
       }
-    ],
-    allMembers: [
-      {
-        uId: 1,
-        email: 'example@gmail.com',
-        nameFirst: 'Hayden',
-        nameLast: 'Jacobs',
-        handleStr: 'haydenjacobs',
-      }
-    ],
+
+      return {
+        name: channel.name,
+        isPublic: channel.isPublic,
+        ownerMembers: channel.ownerMembers,
+        allMembers: channel.allMembers
+      };
+    }
   }
 }
+
+// Function that checks if user id is valid
+function validate_user(user_id) {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.userId === user_id) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+// Function that checks if channel id is valid
+function validate_channel(channel_id) {
+  const data = getData()
+  for (const channel of data.channels) {
+    if (channel.channelId === channel_id) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 
 //channelJoinV1 stub function 
 function channelJoinV1(authUserId, channelId) {
@@ -51,3 +103,5 @@ function channelMessagesV1(authUserId, channelId, start) {
     end: 50,
   }             
 }
+
+export { channelDetailsV1 };
