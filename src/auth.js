@@ -10,7 +10,7 @@ function isEmailFromUser(email) {
   const data = getData();
   let user = undefined;
   if (data.users !== undefined) {
-    user = data.users.find(a => a.email === email);
+    user = data.users.find(person => person.email === email);
   }
 
   if (user === undefined) {
@@ -29,13 +29,13 @@ function isEmailFromUser(email) {
 */
 export function authLoginV1(email, password) {
   const data = getData();
-  const user = data.users.find(a => a.email === email);
 
   // error: email entered does not belong to a user or incorrect password
   if (!isEmailFromUser(email)) {
     return { error: 'invalid email' };
   }
 
+  const user = data.users.find(person => person.email === email);
   if (user.password !== password) {
     return { error: 'incorrect password' };
   }
