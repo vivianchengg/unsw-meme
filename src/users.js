@@ -14,28 +14,28 @@ import { authRegisterV1 } from 'auth.js';
 */
 
 export function userProfileV1 (authUserId, uId) {
-	const data = getData();
-	if (validate_user(authUserId) === false) {
-		return { error: 'invalid authUserId' };
-	}
-	if (validate_user(uId) === false) {
-		return { error: 'invalid authUserId' };
-	}
+  const data = getData();
+  if (validate_user(authUserId) === false) {
+    return { error: 'invalid authUserId' };
+  }
+  if (validate_user(uId) === false) {
+    return { error: 'invalid authUserId' };
+  }
 
-	for (const user of data.users) {
-		if (user.uId === uId) {
-			const person = {
-				uId: user.uId,
-				email: user.email,
-				nameFirst: user.nameFirst,
-				nameLast: user.nameLast,
-				handleStr: user.handleStr,
+  for (const user of data.users) {
+    if (user.uId === uId) {
+      const person = {
+        uId: user.uId,
+        email: user.email,
+        nameFirst: user.nameFirst,
+        nameLast: user.nameLast,
+        handleStr: user.handleStr,
 
-			};
-		}
-	}
+      };
+    }
+  }
 
-	return person;
+  return person;
 }
 
 /**
@@ -44,12 +44,12 @@ export function userProfileV1 (authUserId, uId) {
 * @returns {boolean}
 */
 function validate_user(user_id) {
-	const data = getData();
-	for (const user of data.users) {
-		if (user.userId === user_id) {
-			return true;
-		}
-	}
+  const data = getData();
+  for (const user of data.users) {
+    if (user.userId === user_id) {
+      return true;
+    }
+  }
 
-	return false;
+  return false;
 }
