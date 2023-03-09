@@ -88,10 +88,29 @@ function getNewId() {
   return id;
 }
 
-// stub for authLoginV1
-function authLoginV1(email, password) {
+/**
+  * Given a registered user's email and password, returns their authUserId value.
+  * 
+  * @param {string} email 
+  * @param {string} password 
+  * @returns {{authUserId: number}}
+*/
+export function authLoginV1(email, password) {
+  const data = getData();
+
+  // error: email entered does not belong to a user or incorrect password
+  if (!isEmailFromUser(email)) {
+    return { error: 'invalid email' };
+  }
+
+  const user = data.users.find(person => person.email === email);
+  if (user.password !== password) {
+    return { error: 'incorrect password' };
+  }
+
+  const id = user.uId;
   return {
-    authUserId: 1,
+    authUserId: id,
   }
 }
 
