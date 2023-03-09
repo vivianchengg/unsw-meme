@@ -30,7 +30,7 @@ export function userProfileV1 (authUserId, uId) {
   			nameFirst: user.nameFirst,
     		nameLast: user.nameLast,
     		handleStr: user.handleStr,
-			}
+			};
 			
 		}
 	}
@@ -43,9 +43,9 @@ function validate_user (user_id) {
 	const data = getData();
 	for (const user of data.users) {
 		if (user.userId === user_id) {
-			return true
+			return true;
 		}
 	}
 
-	return false
+	return false;
 }
