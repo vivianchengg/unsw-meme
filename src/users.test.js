@@ -21,13 +21,13 @@ describe ('VALID INPUT!', () => {
 
 describe ('INVALID!', () => {
   test('Test: invalid authUserId', () => {
-    const authUserId = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    expect(userProfileV1(3, authUserId.uId)).toStrictEqual(ERROR);
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    expect(userProfileV1(user.authUserId + 1, user.authUserId)).toStrictEqual(ERROR);
   });
 
   test('Test: invalid authUserId', () => {
-    const authUserId = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    expect(userProfileV1(authUserId.uId, 6)).toStrictEqual(ERROR);
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    expect(userProfileV1(user.authUserId, user.authUserId + 1)).toStrictEqual(ERROR);
   });
 
 });
