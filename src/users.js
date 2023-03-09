@@ -12,8 +12,6 @@ import { authRegisterV1 } from 'auth.js';
 *  nameLast: string,
 *  handleStr: string,
 * }} user
-* @returns {object} error - invalid authUserId
-* @returns {object} error - invalid uId
 */
 
 export function userProfileV1 (authUserId, uId) {
