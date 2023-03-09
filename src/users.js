@@ -1,4 +1,3 @@
-import { clearV1 } from './other.js'
 import { getData } from './dataStore.js'
 import { authRegisterV1 } from './auth.js';
 
@@ -38,7 +37,6 @@ export function userProfileV1 (authUserId, uId) {
       };
     }
   }
-
   return person;
 }
 
@@ -54,6 +52,5 @@ function validate_user(user_id) {
       return true;
     }
   }
-
   return false;
 }
