@@ -38,9 +38,8 @@ export function userProfileV1 (authUserId, uId) {
 	return person;
 }
 
-// checks if user is valid
 /**
-* Returns information about a user
+* Checks if user is valid
 * @param {number} authUserId
 * @returns {boolean}
 */
