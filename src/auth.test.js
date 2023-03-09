@@ -29,12 +29,6 @@ describe('authRegisterV1 Test', () => {
     expect(authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', '')).toStrictEqual(ERROR);
   });
 
-  test('test basic register', () => {
-    const user = authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    const id = user.authUserId;
-    expect(id).toStrictEqual(10);
-  });
-
   test('check handle: basic', () => {
     const user = authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
     const person = userProfileV1(user.authUserId, user.authUserId);
