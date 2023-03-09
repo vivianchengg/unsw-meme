@@ -4,6 +4,7 @@ import { authRegisterV1 } from 'auth.js';
 * Returns information about a user
 * @param {number} authUserId
 * @param {number} uId
+* ...
 * @returns {{
 *  uId: number,
 *  email: string,
@@ -11,6 +12,8 @@ import { authRegisterV1 } from 'auth.js';
 *  nameLast: string,
 *  handleStr: string,
 * }} user
+* @returns {object} error - invalid authUserId
+* @returns {object} error - invalid uId
 */
 
 export function userProfileV1 (authUserId, uId) {
@@ -19,7 +22,7 @@ export function userProfileV1 (authUserId, uId) {
     return { error: 'invalid authUserId' };
   }
   if (validate_user(uId) === false) {
-    return { error: 'invalid authUserId' };
+    return { error: 'invalid uId' };
   }
 
   for (const user of data.users) {
