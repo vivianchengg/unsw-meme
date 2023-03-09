@@ -1,17 +1,17 @@
 import { authRegisterV1 } from 'auth.js';
 
 /**
- * Returns information about a user
- * @param {number} authUserId
- * @param {number} uId
- * @returns {{
- * uId: number,
- * email: string,
- * nameFirst: string,
- * nameLast: string,
- * handleStr: string,
- * }} user
- */
+* Returns information about a user
+* @param {number} authUserId
+* @param {number} uId
+* @returns {{
+* uId: number,
+* email: string,
+* nameFirst: string,
+* nameLast: string,
+* handleStr: string,
+* }} user
+*/
 export function userProfileV1 (authUserId, uId) {
 	const data = getData();
 
@@ -26,10 +26,10 @@ export function userProfileV1 (authUserId, uId) {
 		if (user.uId === uId) {
 			const person = {
 				uId: user.uId,
-    		email: user.email,
-  			nameFirst: user.nameFirst,
-    		nameLast: user.nameLast,
-    		handleStr: user.handleStr,
+				email: user.email,
+				nameFirst: user.nameFirst,
+				nameLast: user.nameLast,
+				handleStr: user.handleStr,
 			};
 			
 		}
@@ -40,9 +40,9 @@ export function userProfileV1 (authUserId, uId) {
 
 // checks if user is valid
 /**
- * Returns information about a user
- * @param {number} authUserId
- * @returns {boolean}
+* Returns information about a user
+* @param {number} authUserId
+* @returns {boolean}
 */
 function validate_user (user_id) {
 	const data = getData();
