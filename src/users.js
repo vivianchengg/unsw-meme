@@ -1,4 +1,6 @@
-import { authRegisterV1 } from 'auth.js';
+import { clearV1 } from './other.js'
+import { getData } from './dataStore.js'
+import { authRegisterV1 } from './auth.js';
 
 /**
 * Returns information about a user
@@ -23,9 +25,10 @@ export function userProfileV1 (authUserId, uId) {
     return { error: 'invalid uId' };
   }
 
+  let person = {};
   for (const user of data.users) {
     if (user.uId === uId) {
-      const person = {
+      person = {
         uId: user.uId,
         email: user.email,
         nameFirst: user.nameFirst,
