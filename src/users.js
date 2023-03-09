@@ -12,14 +12,14 @@ import { authRegisterV1 } from 'auth.js';
 * handleStr: string,
 * }} user
 */
+
 export function userProfileV1 (authUserId, uId) {
 	const data = getData();
-
 	if (validate_user(authUserId) === false) {
 		return { error: 'invalid authUserId' };
 	}
 	if (validate_user(uId) === false) {
-		return { error: 'invalid uId' };
+		return { error: 'invalid authUserId' };
 	}
 
 	for (const user of data.users) {
@@ -30,8 +30,8 @@ export function userProfileV1 (authUserId, uId) {
 				nameFirst: user.nameFirst,
 				nameLast: user.nameLast,
 				handleStr: user.handleStr,
-			};
 
+			};
 		}
 	}
 
@@ -44,7 +44,7 @@ export function userProfileV1 (authUserId, uId) {
 * @param {number} authUserId
 * @returns {boolean}
 */
-function validate_user (user_id) {
+function validate_user(user_id) {
 	const data = getData();
 	for (const user of data.users) {
 		if (user.userId === user_id) {
