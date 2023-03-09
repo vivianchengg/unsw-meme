@@ -5,11 +5,11 @@ import { authRegisterV1 } from 'auth.js';
 * @param {number} authUserId
 * @param {number} uId
 * @returns {{
-* uId: number,
-* email: string,
-* nameFirst: string,
-* nameLast: string,
-* handleStr: string,
+*  uId: number,
+*  email: string,
+*  nameFirst: string,
+*  nameLast: string,
+*  handleStr: string,
 * }} user
 */
 
@@ -46,7 +46,7 @@ export function userProfileV1 (authUserId, uId) {
 function validate_user(user_id) {
   const data = getData();
   for (const user of data.users) {
-    if (user.userId === user_id) {
+    if (user.uId === user_id) {
       return true;
     }
   }
