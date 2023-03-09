@@ -1,5 +1,5 @@
 import { clearV1 } from './other.js'
-import { getData } from './dataStore.js'
+import { userProfileV1 } from './users.js'
 import { authRegisterV1 } from './auth.js';
 
 beforeEach(() => {
