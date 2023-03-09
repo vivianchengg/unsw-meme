@@ -31,10 +31,10 @@ export function userProfileV1 (authUserId, uId) {
 				nameLast: user.nameLast,
 				handleStr: user.handleStr,
 			};
-			
+
 		}
 	}
-	
+
 	return person;
 }
 
