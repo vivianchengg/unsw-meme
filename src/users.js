@@ -1,4 +1,4 @@
-import { getData } from './dataStore.js'
+import { getData } from './dataStore.js';
 import { authRegisterV1 } from './auth.js';
 
 /**
