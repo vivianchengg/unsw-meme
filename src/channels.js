@@ -104,15 +104,17 @@ export function channelsListAllV1 (authUserId) {
 
   let channels_list = [];
   for (const channel of data.channels) {
-      const channel_details = {
-        channelId: channel.channelId,
-        name: channel.name
-      }
+    const channel_details = {
+      channelId: channel.channelId,
+      name: channel.name
+    }
 
-      channels_list.push(channel_details);
+    channels_list.push(channel_details);
   }
 
-  return channels_list;
+  return {
+    channels: channels_list
+  };
 }
 
 /** Function that checks if user ID given is valid
