@@ -3,50 +3,89 @@ import { channelsCreateV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';
 import { clearV1 } from './other.js';
 
-beforeEach(() => {
-  clearV1();
-  let user_id = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-  const channel_id = channelsCreateV1(user_id, 'COMP1531', true);
-  const second_channel_id = channelsCreateV1(user_id, 'COMP2511', true);
-});
+const ERROR = { error: expect.any(String) };
+
+describe('channelsCreateV1 Tests', () => {
+
+  beforeEach(() => {
+    clearV1();
+  });
+
+  test('Test: valid name & authid!', () => {
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    expect(channelsCreateV1(user.authUserId, 'pewpewpew!', true)).toStrictEqual({channelId: expect.any(Number)});
+  });
+
+  test('Test: invalid 0 name length', () => {
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    expect(channelsCreateV1(user.authUserId, '', false)).toStrictEqual(ERROR);
+  });
+
+  test('Test: invalid +20 name length', () => {
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    expect(channelsCreateV1(user.authUserId, 'verycoolchannelname1234567891011121314151617181920', true)).toStrictEqual(ERROR);
+  });
+
+  test('Test: invalid authUserId', () => {
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    expect(channelsCreateV1(user.authUserId + 1, 'pewpewpew!', true)).toStrictEqual(ERROR);
+  });
+})
+
 
 describe('channelListAllV1 Tests', () => {
-  test('Invalid authUserId', () => {
-    expect(channelsListAllV1(user_id + 1)).toStrictEqual({ error: expect.any(String)});
+  beforeEach(() => {
+    clearV1();
   });
-  test('Shows all public channels', () => {
-    expect(channelListAllV1(user_id)).toStrictEqual([{
-        channelId: channel_id,
+
+
+  test('Invalid authUserId', () => {
+    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+    const channel = channelsCreateV1(user_id, 'COMP1531', true);
+    expect(channelsListAllV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
+  });
+  test('Basic functionality', () => {
+    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+    const second_channel = channelsCreateV1(user.authUserId, 'COMP2511', true);
+    expect(channelListAllV1(user.authUserId, channel.channelId)).toStrictEqual([{
+        channelId: channel.channeId,
         name: 'COMP1531'
     }, {
-      channelId: second_channel_id,
-      name: 'COMP2511'
+        channelId: second_channel.channeId,
+        name: 'COMP2511'
     }]);
   });
   test('Includes private with public channels', () => {
-    const private_id = channelsCreateV1(user_id, 'COMP3311', false);
-    expect(channelListAllV1(user_id)).toStrictEqual([{
-      channelId: channel_id,
+    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+    const second_channel = channelsCreateV1(user.authUserId, 'COMP2511', true);
+    const private = channelsCreateV1(user_id, 'COMP3311', false);
+    expect(channelListAllV1(user.authUserId)).toStrictEqual([{
+      channelId: channel.channelId,
       name: 'COMP1531'
     }, {
-      channelId: second_channel_id,
+      channelId: second_channel.channelId,
       name: 'COMP2511'
     }, {
-      channeId: private_id,
+      channeId: private.channelId,
       name: 'COMP3311'
     }]);
   });
   test('Includes channels user is not part of', () => {
-    const second_user_id = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    const private_id = channelsCreateV1(second_user_id, 'COMP3311', false);
-    expect(channelListAllV1(user_id)).toStrictEqual([{
-      channelId: channel_id,
+    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+    const second_channel = channelsCreateV1(user.authUserId, 'COMP2511', true);
+    const private = channelsCreateV1(user_id, 'COMP3311', false);
+    const second_user = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
+    expect(channelListAllV1(user.authUserId)).toStrictEqual([{
+      channelId: channel.channelId,
       name: 'COMP1531'
     }, {
-      channelId: second_channel_id,
+      channelId: second_channel.channelId,
       name: 'COMP2511'
     }, {
-      channeId: private_id,
+      channeId: private.channelId,
       name: 'COMP3311'
     }]);
   });
