@@ -1,5 +1,5 @@
-import {getData} from './dataStore.js';
-import {userProfileV1} from './users.js';
+import { getData, setData } from './dataStore.js';
+import { userProfileV1 } from './users.js';
 
 /** Function that lists details of members in the channel given that:
 *
@@ -135,10 +135,45 @@ function channel_member (channel, user_id) {
 }
 
 
-//channelJoinV1 stub function 
-function channelJoinV1(authUserId, channelId) {
-  return {
+/**
+  * Given a channelId of a channel that the authorised user can join, adds them to that channel.
+  * @param {number} authUserId
+  * @param {number} channelId
+  * @returns {} 
+  * 
+  * To return the above:
+  *  - channelId must refer to a valid chanel
+  *  - authorised user is not already a member of the channel
+  *  - channelId refers to a channel that is public
+  *  - authUserId is valid
+  * Otherwise, {error: string} is returned
+*
+*/
+
+export function channelJoinV1(authUserId, channelId) {
+  let data = getData(); 
+
+  if (!validate_user(authUserId))  {
+    return { error: 'authUserId is invalid' };
   }
+
+  if (!validate_channel(channelId)) {
+    return { error: 'channelId does not refer to a valid channel' };
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel_member(channel, authUserId)) {
+    return { error: 'the authorised user is already a member of the channel' };
+  }
+
+  if (!channel.isPublic){
+    return { error: 'channel is private, when authorised user is not already a channel member and is not a global owner' }; 
+  }
+  
+  channel.allMembers.push(authUserId);
+ 
+  setData(data);
+  return {};
 }
 
 //channelInviteV1 stub function 
