@@ -110,7 +110,9 @@ export function channelsListAllV1 (authUserId) {
     channels_list.push(channel_details);
   }
 
-  return channels_list;
+  return {
+    channels: channels_list
+  };
 }
 
 /** Function that checks if user ID given is valid
