@@ -30,7 +30,7 @@ import {userProfileV1} from './users.js'
 *
 **/
 
-function channelDetailsV1 (authUserId, channelId) {
+export function channelDetailsV1 (authUserId, channelId) {
   const data = getData();
   if (validate_user(authUserId) === false) {
     return {error: 'invalid authUserId'};
@@ -162,5 +162,3 @@ function channelMessagesV1(authUserId, channelId, start) {
     end: 50,
   }             
 }
-
-export { channelDetailsV1 };
