@@ -52,10 +52,15 @@ function channelDetailsV1 (authUserId, channelId) {
         allMembers.push(user_profile);
       }
 
+      const ownerMembers = [];
+      const owner_profile = userProfileV1(authUserId, channel.authUserId[0]);
+      ownerMembers.push(owner_profile);
+
+
       return {
         name: channel.name,
         isPublic: channel.isPublic,
-        ownerMembers: channel.ownerMembers,
+        ownerMembers: ownerMembers,
         allMembers: allMembers
       };
     }
