@@ -18,6 +18,8 @@ let data = {
       name: 'Channel10',
       isPublic: true,
       authUserId: [1],
+      allMembers: [1],
+      ownerMembers: [1],
       messages: [
         {
           messageId: 1,
