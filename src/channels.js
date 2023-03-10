@@ -32,7 +32,7 @@ function channelsListV1 (authUserId) {
  * 
  * Otherwise, {error: string} is returned
  */
-function channelsListAllV1 (authUserId) {
+export function channelsListAllV1 (authUserId) {
   const data = getData();
   if (validate_user(authUserId) === false) {
     return {error: 'invalid authUserId'};
@@ -65,5 +65,3 @@ function validate_user (user_id) {
 
   return false;
 }
-
-export { channelsListAllV1 };
