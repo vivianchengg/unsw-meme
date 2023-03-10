@@ -74,3 +74,47 @@ describe('channelJoinV1 function testing', () => {
     expect(channelJoinV1(user2.authUserId, channel.channelId)).toStrictEqual({});
   });
 });
+
+
+describe('channelInviteV1 function testing', () => {
+  test('channelId does not refer to a valid channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_user_uId = authRegisterV1("arialee@gmail.com", "dynamite", "aria", "lee");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "music", false);
+    expect(channelInviteV1(new_user_authid.authUserId, new_channel_id.channelId + 1, new_user_uId.uId)).toStrictEqual(ERROR);
+  });
+  
+  test('uId does not refer to a valid user', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_user_uId = authRegisterV1("arialee@gmail.com", "dynamite", "aria", "lee");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "music", false);
+    expect(channelInviteV1(new_user_authid.authUserId, new_channel_id.channelId, new_user_uId.uId + 1)).toStrictEqual(ERROR);
+  });
+  
+  test('uId refers to a user who is already a member of the channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_user_uId = authRegisterV1("arialee@gmail.com", "dynamite", "aria", "lee");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "music", false);
+    channelJoinV1(new_user_uId.uId, new_channel_id.channelId); 
+    expect(channelInviteV1(new_user_authid.authUserId, new_channel_id.channelId, new_user_uId.uId)).toStrictEqual(ERROR);
+  });
+  test('channelId is valid and the authorised user is not a member of the channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "music", false);
+    const new_user_authid2 = authRegisterV1("dianahazea@gmail.com", "january", "diana", "haze");
+    const new_user_uId = authRegisterV1("arialee@gmail.com", "dynamite", "aria", "lee");
+    expect(channelInviteV1(new_user_authid2.authUserId, new_channel_id.channelId, new_user_uId.uId)).toStrictEqual(ERROR);
+  });
+  test('authUserId is invalid', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "bored", false);
+    const new_user_uId = authRegisterV1("arialee@gmail.com", "dynamite", "aria", "lee");
+    expect(channelInviteV1(new_user_authid.authUserId  + 1,new_channel_id.channelId, new_user_uId.uId)).toStrictEqual(ERROR);
+  });
+  test('valid input ', () => {
+    const user1 = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const user2 = authRegisterV1("arialee@gmail.com", "dynamite", "aria", "lee");
+    const channel = channelsCreateV1(user1.authUserId, "sports", true);
+    expect(channelInviteV1(user1.authUserId, channel.channelId, user2.authUserId)).toStrictEqual({});
+   });
+});
