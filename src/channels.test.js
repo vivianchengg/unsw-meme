@@ -34,6 +34,7 @@ describe('channelsCreateV1 Tests', () => {
 
 
 describe('channelListAllV1 Tests'), () => {
+  
   beforeEach(() => {
     clearV1();
     let user_id = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');

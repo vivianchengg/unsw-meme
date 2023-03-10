@@ -1,10 +1,47 @@
 import { getData } from './dataStore.js'
 
-// stub function: creates a channel - returns a channel id
-function channelsCreateV1 (authUserId, name, isPublic) {
-  return {channelId: 1}
-}
+/**
+  * Checks a channel for the authUserId 
+  * 
+  * @param {number} authUserId
+  * @param {string} name
+  * @param {boolean} isPublic
+  * ...
+  * @returns {{channelId: number}}
+*/
+export function channelsCreateV1 (authUserId, name, isPublic) {
+  const data = getData();
+  if (validate_user(authUserId) === false) {
+		return { error: 'invalid auth user id' };
+	}
 
+  if (check_name(name) === false) {
+		return { error: 'invalid name'};
+	}
+  
+  let size = data.channels.length;
+  size = size + 1;
+
+	let owners = [authUserId];
+	let members = [authUserId];
+
+
+	let channel = {
+		channelId: size,
+		name: name,
+		isPublic: isPublic,
+		ownerMembers: owners,
+		allMembers: members,
+		messages: [],
+		start: -1,
+		end: -1,
+	}
+
+	data.channels.push(channel);
+  
+  return { channelId: size };
+}
+  
 // stub function: creates a list of channels - returns channelId, name 
 function channelsListV1 (authUserId) {
   return {
@@ -43,7 +80,7 @@ function channelsListAllV1 (authUserId) {
 function validate_user (user_id) {
   const data = getData();
   for (const user of data.users) {
-    if (user.userId === user_id) {
+    if (user.uId === user_id) {
       return true
     }
   }
@@ -60,4 +97,18 @@ function channel_member (channel, user_id) {
   }
 
   return false
+}
+
+/**
+  * Checks if name is valid
+  * 
+  * @param {string} name
+  * ...
+  * @returns {boolean}
+*/
+function check_name (name) {
+  if (name.length < 1 || name.length > 20) {
+    return false;
+  }
+  return true
 }
