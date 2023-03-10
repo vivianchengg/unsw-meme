@@ -20,11 +20,12 @@ function channelsListV1 (authUserId) {
 /** Function lists details of all channels
  * 
  * @param {number} authUserId - User ID of individual calling function
- * @returns {channels: [{
+ * @returns {array} channels
+ * 
+ * Here, channels: [{
  *  channelId: number,
  *  name: string
- * }] 
- * }
+ * }]
  * 
  * To return the above:
  * - authUserId must be valid
