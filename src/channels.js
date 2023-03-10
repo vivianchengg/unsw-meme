@@ -42,7 +42,7 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
   setData(data);
   
   return { channelId: size };
-}
+};
   
 // stub function: creates a list of channels - returns channelId, name 
 function channelsListV1 (authUserId) {
@@ -103,7 +103,7 @@ function validate_user (user_id) {
   }
 
   return false
-}
+};
 
 // Function that checks if user is member of given channel
 function channel_member (channel, user_id) {
@@ -114,7 +114,7 @@ function channel_member (channel, user_id) {
   }
 
   return false
-}
+};
 
 /**
   * Checks if name is valid
@@ -128,4 +128,4 @@ function check_name (name) {
     return false;
   }
   return true;
-}
+};
