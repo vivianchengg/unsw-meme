@@ -94,7 +94,7 @@ function validate_user(user_id) {
 */
 
 function validate_channel(channel_id) {
-  const data = getData()
+  const data = getData();
   for (const channel of data.channels) {
     if (channel.channelId === channel_id) {
       return true;
