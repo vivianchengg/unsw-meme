@@ -67,29 +67,33 @@ describe('channelListAllV1 Tests', () => {
     const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const second_channel = channelsCreateV1(user.authUserId, 'COMP2511', true);
-    expect(channelsListAllV1(user.authUserId, channel.channelId)).toStrictEqual([{
+    expect(channelsListAllV1(user.authUserId, channel.channelId)).toStrictEqual({"channels":
+      [{
         channelId: channel.channelId,
         name: 'COMP1531'
-    }, {
+      }, {
         channelId: second_channel.channelId,
         name: 'COMP2511'
-    }]);
+      }]
+    });
   });
   test('Includes private with public channels', () => {
     const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const second_channel = channelsCreateV1(user.authUserId, 'COMP2511', true);
     const private_channel = channelsCreateV1(user.authUserId, 'COMP3311', false);
-    expect(channelsListAllV1(user.authUserId)).toStrictEqual([{
-      channelId: channel.channelId,
-      name: 'COMP1531'
-    }, {
-      channelId: second_channel.channelId,
-      name: 'COMP2511'
-    }, {
-      channelId: private_channel.channelId,
-      name: 'COMP3311'
-    }]);
+    expect(channelsListAllV1(user.authUserId)).toStrictEqual({"channels": 
+      [{
+        channelId: channel.channelId,
+        name: 'COMP1531'
+      }, {
+        channelId: second_channel.channelId,
+        name: 'COMP2511'
+      }, {
+        channelId: private_channel.channelId,
+        name: 'COMP3311'
+      }]
+    });
   });
   test('Includes channels user is not part of', () => {
     const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
@@ -97,15 +101,17 @@ describe('channelListAllV1 Tests', () => {
     const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const second_channel = channelsCreateV1(user.authUserId, 'COMP2511', true);
     const private_channel = channelsCreateV1(second_user.authUserId, 'COMP3311', false);
-    expect(channelsListAllV1(user.authUserId)).toStrictEqual([{
-      channelId: channel.channelId,
-      name: 'COMP1531'
-    }, {
-      channelId: second_channel.channelId,
-      name: 'COMP2511'
-    }, {
-      channelId: private_channel.channelId,
-      name: 'COMP3311'
-    }]);
+    expect(channelsListAllV1(user.authUserId)).toStrictEqual({"channels": 
+    [{
+        channelId: channel.channelId,
+        name: 'COMP1531'
+      }, {
+        channelId: second_channel.channelId,
+        name: 'COMP2511'
+      }, {
+        channelId: private_channel.channelId,
+        name: 'COMP3311'
+      }]
+    });
   });
 });
