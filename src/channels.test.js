@@ -31,6 +31,27 @@ describe('channelsCreateV1 Tests', () => {
   });
 })
 
+describe('channelsListV1 Tests', () => {
+
+  beforeEach(() => {
+    clearV1();
+  });
+
+  test('Test: invalid authUserId', () => {
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    const channel = channelsCreateV1(user.authUserId, 'pineapplesunshine', true);
+    expect(channelsListV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
+  });
+
+  test('Valid authUserId', () => {
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    const channel = channelsCreateV1(user.authUserId, 'pineapplesunshine', true);
+    expect(channelsListV1(user.authUserId, channel.channelId)).toStrictEqual([{
+      channelId: channel.channelId,
+      name: 'pineapplesunshine',
+    }]);
+  });
+})
 
 describe('channelListAllV1 Tests', () => {
   beforeEach(() => {
