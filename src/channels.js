@@ -1,5 +1,4 @@
-import { getData } from './dataStore.js';
-import { setData } from './dataStore.js';
+import { getData, setData } from './dataStore.js';
 
 /**
   * Creates a channel for authUserId.
