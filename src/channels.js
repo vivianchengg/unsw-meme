@@ -64,7 +64,7 @@ export function channelsListV1 (authUserId) {
   let channels_list = [];
   let channel_details = {};
   for (const channel of data.channels) {
-    if (channel_member(channel, authUserId) === true) {
+    if (channel_member(channel, authUserId) === true) { 
       channel_details = {
         channelId: channel.channelId,
         name: channel.name,
@@ -74,7 +74,9 @@ export function channelsListV1 (authUserId) {
   }
 
 
-  return channels_list;
+  return {
+    channels: channels_list,
+  };
 }
 
 /** Function lists details of all channels
@@ -133,7 +135,7 @@ function validate_user (user_id) {
  *  @param {object} channel - list of all the channels
  *  @returns {boolean}
 */
-function channel_member (channel, user_id) {
+function channel_member (channel, user_id) { 
   for (const member of channel.allMembers) {
     if (member === user_id) {
       return true
