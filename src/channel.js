@@ -47,13 +47,13 @@ export function channelDetailsV1 (authUserId, channelId) {
         return {error: 'user not member of channel'};
       }
 
-      const allProfiles = [];
+      let allProfiles = [];
       for (const user_id of channel.allMembers) {
         const user_profile = userProfileV1(authUserId, user_id);
         allProfiles.push(user_profile);
       }
 
-      const ownerProfiles = [];
+      let ownerProfiles = [];
       for (const user_id of channel.ownerMembers) {
         const user_profile = userProfileV1(authUserId, user_id);
         ownerProfiles.push(user_profile);
