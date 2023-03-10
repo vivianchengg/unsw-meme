@@ -1,2 +1,3 @@
 Assumptions made in Iteration 1:
-- There cannot exist more than (MAX_SFAE_INTEGER/10 + 2) users, otherwise there would be two users with a uId of infinity
+- Incrementing method for uId must be kept between -MAX_VALUE and MAX_VALUE to prevent two uIds of infinity or negative infinity
+- Incrementing method for channelId must be kept between -MAX_VALUE and MAX_VALUE to prevent two uIds of infinity or negative infinity
