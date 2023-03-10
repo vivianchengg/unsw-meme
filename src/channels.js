@@ -88,7 +88,7 @@ export function channelsListAllV1 (authUserId) {
   }
 
   return channels_list;
-}
+};
 
 /** Function that checks if user ID given is valid
  *  @param {number} user_id
