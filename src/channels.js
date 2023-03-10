@@ -1,7 +1,7 @@
 import { getData } from './dataStore.js'
 
 /**
-  * Checks a channel for the authUserId 
+  * Creates a channel for authUserId.
   * 
   * @param {number} authUserId
   * @param {string} name
