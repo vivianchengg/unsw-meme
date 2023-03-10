@@ -43,16 +43,38 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
   return { channelId: size };
 }
 
-// stub function: creates a list of channels - returns channelId, name 
-function channelsListV1 (authUserId) {
-  return {
-    channels: [
-      {
-        channelId: 1,
-        name: 'My Channel',
-      }
-    ],
+/**
+  * Creates an array of all channels a user is a member of
+  * 
+  * @param {number} authUserId
+  * ...
+  * @returns {channels: [{
+*   channelId: number,
+*   name: string,
+*   }, 
+* ]}
+*  
+*/
+export function channelsListV1 (authUserId) {
+  const data = getData();
+  if (validate_user(authUserId) === false) {
+    return { error: 'invalid authUserId'};
   }
+
+  let channels_list = [];
+  let channel_details = {};
+  for (const channel of data.channels) {
+    if (channel_member(channel, authUserId) === true) {
+      channel_details = {
+        channelId: channel.channelId,
+        name: channel.name,
+      };
+      channels_list.push(channel_details);
+    }
+  }
+
+
+  return channels_list;
 }
 
 /** Function lists details of all channels
@@ -106,7 +128,11 @@ function validate_user (user_id) {
   return false
 }
 
-// Function that checks if user is member of given channel
+/** Function that checks authUserId is part of channel
+ *  @param {number} user_id
+ *  @param {object} channel - list of all the channels
+ *  @returns {boolean}
+*/
 function channel_member (channel, user_id) {
   for (const member of channel.allMembers) {
     if (member === user_id) {
