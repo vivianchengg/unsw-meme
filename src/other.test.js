@@ -1,6 +1,8 @@
 import { clearV1 } from './other.js';
 import { authRegisterV1 } from './auth.js';
 import { channelsCreateV1 } from './channels.js';
+import { userProfileV1 } from './users.js';
+import { channelDetailsV1 } from './channel.js';
 
 const ERROR = { error: expect.any(String)};
 
