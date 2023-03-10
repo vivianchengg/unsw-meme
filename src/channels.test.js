@@ -46,10 +46,11 @@ describe('channelsListV1 Tests', () => {
   test('Valid authUserId', () => {
     const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
     const channel = channelsCreateV1(user.authUserId, 'pineapplesunshine', true);
-    expect(channelsListV1(user.authUserId, channel.channelId)).toStrictEqual([{
-      channelId: channel.channelId,
-      name: 'pineapplesunshine',
-    }]);
+    expect(channelsListV1(user.authUserId, channel.channelId)).toStrictEqual({
+      channels: [{
+        channelId: channel.channelId,
+        name: 'pineapplesunshine',
+    }]});
   });
 })
 
