@@ -176,11 +176,58 @@ export function channelJoinV1(authUserId, channelId) {
   return {};
 }
 
-//channelInviteV1 stub function 
-function channelInviteV1(authUserId, channelId, uId) {
-  return {
+
+/**
+  * Invites a user with ID uId to join a channel with ID channelId. 
+  * Once invited, the user is added to the channel immediately.
+  * In both public and private channels, all members are able to invite users.
+  * @param {number} authUserId
+  * @param {number} channelId
+  * @param {number} uId
+  * @returns {} 
+  * 
+  * To return the above:
+  *  - channelId must refer to a valid chanel
+  *  - authorised user is already a member of the channel
+  *  - uId is not already a member of the channel
+  *  - authUserId refers to a valid user
+  *  - uId refers to a valid user
+  * Otherwise, {error: string} is returned
+*
+*/
+
+export function channelInviteV1(authUserId, channelId, uId) {
+  let data = getData(); 
+
+  if (!validate_user(authUserId))  {
+    return { error: 'authUserId is invalid' };
   }
+
+  if (!validate_channel(channelId)) {
+    return { error: 'channelId does not refer to a valid channel' };
+  }
+
+  if (!validate_user(uId)) {
+    return { error: 'uId does not refer to a valid user' };
+  }
+
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel_member(channel, uId)) {
+    return { error: 'uId refers to a user who is already a member of the channel' };
+  }
+
+  if (!channel_member(channel, authUserId)) {
+    return { error: 'channelId is valid and the authorised user is not a member of the channel' };
+  }
+
+  channel.allMembers.push(uId);
+  
+  setData(data);
+  return {};
 }
+
+
 
 //channelMessagesV1 stub function
 function channelMessagesV1(authUserId, channelId, start) {
