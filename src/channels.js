@@ -42,7 +42,7 @@ export function channelsCreateV1 (authUserId, name, isPublic) {
   
   return { channelId: size };
 }
-  
+
 // stub function: creates a list of channels - returns channelId, name 
 function channelsListV1 (authUserId) {
   return {
@@ -70,6 +70,8 @@ function channelsListV1 (authUserId) {
  * 
  * Otherwise, {error: string} is returned
  */
+
+// Function lists details of all channels the user is in
 export function channelsListAllV1 (authUserId) {
   const data = getData();
   if (validate_user(authUserId) === false) {
