@@ -26,10 +26,10 @@ describe('channelsCreateV1 Tests', () => {
     expect(channelsCreateV1(user.authUserId, 'verycoolchannelname1234567891011121314151617181920', true)).toStrictEqual(ERROR);
   });
 
-	test('Test: invalid authUserId', () => {
-		const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-		expect(channelsCreateV1(user.authUserId + 1, 'pewpewpew!', true)).toStrictEqual(ERROR);
-	});
+  test('Test: invalid authUserId', () => {
+    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    expect(channelsCreateV1(user.authUserId + 1, 'pewpewpew!', true)).toStrictEqual(ERROR);
+  });
 })
 
 

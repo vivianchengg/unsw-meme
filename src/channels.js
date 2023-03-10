@@ -12,32 +12,32 @@ import { getData } from './dataStore.js'
 export function channelsCreateV1 (authUserId, name, isPublic) {
   const data = getData();
   if (validate_user(authUserId) === false) {
-		return { error: 'invalid auth user id' };
-	}
+    return { error: 'invalid auth user id' };
+  }
 
   if (check_name(name) === false) {
-		return { error: 'invalid name'};
-	}
+    return { error: 'invalid name'};
+  }
   
   let size = data.channels.length;
   size = size + 1;
 
-	let owners = [authUserId];
-	let members = [authUserId];
+  let owners = [authUserId];
+  let members = [authUserId];
 
 
-	let channel = {
-		channelId: size,
-		name: name,
-		isPublic: isPublic,
-		ownerMembers: owners,
-		allMembers: members,
-		messages: [],
-		start: -1,
-		end: -1,
-	}
+  let channel = {
+    channelId: size,
+    name: name,
+    isPublic: isPublic,
+    ownerMembers: owners,
+    allMembers: members,
+    messages: [],
+    start: -1,
+    end: -1,
+  }
 
-	data.channels.push(channel);
+  data.channels.push(channel);
   
   return { channelId: size };
 }
