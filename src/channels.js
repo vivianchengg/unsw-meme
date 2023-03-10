@@ -74,7 +74,9 @@ export function channelsListV1 (authUserId) {
   }
 
 
-  return channels_list;
+  return {
+    channels: channels_list,
+  };
 }
 
 /** Function lists details of all channels
