@@ -1,18 +1,21 @@
 import {getData} from './dataStore.js'
+import {userProfileV1} from './users.js'
 
 /** Function that lists details of members in the channel given that:
 *
 * @param {number} authUserId - User Id of individual asking for details of a channel
 * @param {number} channelId - Channel Id of channel that user is asking to access details of
-* @returns {channel: {
+* @returns {object} channel 
+*
+*  - Here, channel: {
 *  name: string, 
 *  isPublic: boolean, 
-*  ownerMembers: user[]c
-*  allMembers: user[]
-*  }}
+*  ownerMembers: array,
+*  allMembers: array
+*  }
 *
-*  - Here, user: {
-*  userId: number,
+*  - Also, user: {
+*  uId: number,
 *  email: string,
 *  password: string,
 *  nameFirst: string,
@@ -23,7 +26,7 @@ import {getData} from './dataStore.js'
 *  To return the above:
 * - authUserId must be valid
 * - channelId must be valid and user must be member of channel
-* Otherwise, {error: string} is returned
+*  Otherwise, {error: string} is returned
 *
 **/
 
@@ -43,11 +46,17 @@ function channelDetailsV1 (authUserId, channelId) {
         return {error: 'user not member of channel'};
       }
 
+      const allMembers = [];
+      for (const user_id of channel.authUserId) {
+        const user_profile = userProfileV1(authUserId, user_id);
+        allMembers.push(user_profile);
+      }
+
       return {
         name: channel.name,
         isPublic: channel.isPublic,
         ownerMembers: channel.ownerMembers,
-        allMembers: channel.allMembers
+        allMembers: allMembers
       };
     }
   }
@@ -93,12 +102,12 @@ function validate_channel(channel_id) {
  * @param channel: {
 *  name: string, 
 *  isPublic: boolean, 
-*  ownerMembers: user[]
-*  allMembers: user[]
+*  ownerMembers: array
+*  allMembers: array
 *  }}
 *
 *  - Here, user: {
-*  userId: number,
+*  uId: number,
 *  email: string,
 *  password: string,
 *  nameFirst: string,
@@ -110,7 +119,7 @@ function validate_channel(channel_id) {
  */
 function channel_member (channel, user_id) {
   for (const member of channel.allMembers) {
-    if (member.userId === user_id) {
+    if (member.uId === user_id) {
       return true;
     }
   }
