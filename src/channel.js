@@ -1,5 +1,5 @@
-import {getData} from './dataStore.js'
-import {userProfileV1} from './users.js'
+import {getData} from './dataStore.js';
+import {userProfileV1} from './users.js';
 
 /** Function that lists details of members in the channel given that:
 *
@@ -22,6 +22,7 @@ import {userProfileV1} from './users.js'
 *  nameLast: string,
 *  handleStr: string
 *  }
+
 *
 *  To return the above:
 * - authUserId must be valid
@@ -57,7 +58,6 @@ export function channelDetailsV1 (authUserId, channelId) {
         const user_profile = userProfileV1(authUserId, user_id);
         ownerProfiles.push(user_profile);
       }
-
 
       return {
         name: channel.name,
@@ -126,7 +126,7 @@ function validate_channel(channel_id) {
  */
 function channel_member (channel, user_id) {
   for (const member of channel.allMembers) {
-    if (member.uId === user_id) {
+    if (member === user_id) {
       return true;
     }
   }
