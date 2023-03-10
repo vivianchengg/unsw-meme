@@ -63,8 +63,8 @@ export function channelsListV1 (authUserId) {
 
   let channels_list = [];
   let channel_details = {};
-  for (const channel of data.channels) {
-    if (channel_member(channel, authUserId) === true) {
+  for (const channel of data.channels) { //dataStore.channels
+    if (channel_member(channel, authUserId) === true) { //dataStore.channels[i]
       channel_details = {
         channelId: channel.channelId,
         name: channel.name,
@@ -133,8 +133,8 @@ function validate_user (user_id) {
  *  @param {object} channel - list of all the channels
  *  @returns {boolean}
 */
-function channel_member (channel, user_id) {
-  for (const member of channel.allMembers) {
+function channel_member (channel, user_id) {  //dataStore.channels[i]
+  for (const member of channel.allMembers) { //dataStore.channels[i].allMembers[i]
     if (member === user_id) {
       return true
     }
