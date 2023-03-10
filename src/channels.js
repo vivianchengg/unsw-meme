@@ -1,5 +1,4 @@
-import { getData } from './dataStore.js';
-import { setData } from './dataStore.js';
+import { getData, setData } from './dataStore.js';
 
 /**
   * Creates a channel for authUserId.
@@ -56,6 +55,21 @@ function channelsListV1 (authUserId) {
   }
 }
 
+/** Function lists details of all channels
+ * 
+ * @param {number} authUserId - User ID of individual calling function
+ * @returns {array} channels
+ * 
+ * Here, channels: [{
+ *  channelId: number,
+ *  name: string
+ * }]
+ * 
+ * To return the above:
+ * - authUserId must be valid
+ * 
+ * Otherwise, {error: string} is returned
+ */
 
 // Function lists details of all channels the user is in
 export function channelsListAllV1 (authUserId) {
@@ -66,20 +80,21 @@ export function channelsListAllV1 (authUserId) {
 
   let channels_list = [];
   for (const channel of data.channels) {
-    if (channel_member(channel, authUserId) === true) {
       const channel_details = {
         channelId: channel.channelId,
         name: channel.name
-      };
+      }
 
       channels_list.push(channel_details);
-    }
   }
 
   return channels_list;
 }
 
-// Function that checks if user ID given is valid
+/** Function that checks if user ID given is valid
+ *  @param {number} user_id
+ *  @returns {boolean}
+*/
 function validate_user (user_id) {
   const data = getData();
   for (const user of data.users) {
@@ -113,5 +128,5 @@ function check_name (name) {
   if (name.length < 1 || name.length > 20) {
     return false;
   }
-  return true
+  return true;
 }
