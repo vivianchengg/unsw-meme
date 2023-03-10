@@ -46,22 +46,24 @@ function channelDetailsV1 (authUserId, channelId) {
         return {error: 'user not member of channel'};
       }
 
-      const allMembers = [];
-      for (const user_id of channel.authUserId) {
+      const allProfiles = [];
+      for (const user_id of channel.allMembers) {
         const user_profile = userProfileV1(authUserId, user_id);
-        allMembers.push(user_profile);
+        allProfiles.push(user_profile);
       }
 
-      const ownerMembers = [];
-      const owner_profile = userProfileV1(authUserId, channel.authUserId[0]);
-      ownerMembers.push(owner_profile);
+      const ownerProfiles = [];
+      for (const user_id of channel.ownerMembers) {
+        const user_profile = userProfileV1(authUserId, user_id);
+        ownerProfiles.push(user_profile);
+      }
 
 
       return {
         name: channel.name,
         isPublic: channel.isPublic,
-        ownerMembers: ownerMembers,
-        allMembers: allMembers
+        ownerMembers: ownerProfiles,
+        allMembers: allProfiles
       };
     }
   }
