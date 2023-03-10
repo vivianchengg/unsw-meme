@@ -1,8 +1,10 @@
-import { channelDetailsV1 } from './channel.js';
+import { channelJoinV1, channelInviteV1, channelMessagesV1, channelDetailsV1 } from './channel.js';
 import { channelsCreateV1 } from './channels.js';
 import { authRegisterV1 } from './auth.js';
 import { clearV1 } from './other.js';
 import { userProfileV1 } from './users.js';
+
+const ERROR = { error: expect.any(String) };
 
 beforeEach(() => {
   clearV1();
@@ -12,18 +14,18 @@ describe('channelDetailsV1 Test', () => {
   test('Invalid authUserId', () => {
     const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-    expect(channelDetailsV1(user.authUserId + 1, channel.channelId)).toStrictEqual({ error: expect.any(String)});
+    expect(channelDetailsV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
   });
   test('Invalid channelId', () => {
     const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-    expect(channelDetailsV1(user.authUserId, channel.channelId + 1)).toStrictEqual({ error: expect.any(String)});
+    expect(channelDetailsV1(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
   });
   test('Valid channelId and authUserId but user is not in course', () => {
     const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const outside_user = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    expect(channelDetailsV1(outside_user.authUserId, channel.channelId)).toStrictEqual({error: expect.any(String)});
+    expect(channelDetailsV1(outside_user.authUserId, channel.channelId)).toStrictEqual(ERROR);
   });
   test('Basic functionality', () => {
     const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
@@ -35,5 +37,40 @@ describe('channelDetailsV1 Test', () => {
         ownerMembers: [user_profile],
         allMembers: [user_profile],
     });
+  });
+});
+
+describe('channelJoinV1 function testing', () => {
+  test('channelId does not refer to a valid channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "holidays", true);
+    expect(channelJoinV1(new_user_authid.authUserId, new_channel_id.channelId + 1)).toStrictEqual(ERROR);
+  });
+  
+  test('the authorised user is already a member of the channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "games", true);
+    channelJoinV1(new_user_authid, new_channel_id.channelId);
+    expect(channelJoinV1(new_user_authid.authUserId, new_channel_id.channelId)).toStrictEqual(ERROR);
+  });
+  
+  test('channelId refers to a channel that is private, when the authorised user is not already a channel member and is not a global owner', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "sports", false);
+    const new_user_authid1 = authRegisterV1("dianahazea@gmail.com", "january", "diana", "haze");
+    expect(channelJoinV1(new_user_authid.authUserId, new_channel_id.channelId)).toStrictEqual(ERROR);
+  });
+  
+  test('authUserId is invalid', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "music", true);
+    expect(channelJoinV1(new_user_authid.authUserId + 1, new_channel_id.channelId)).toStrictEqual(ERROR);
+  });
+
+  test('valid input', () => {
+    const user1 = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const channel = channelsCreateV1(user1.authUserId, "games", true);
+    const user2 = authRegisterV1("abc@gmail.com", "password", "Mary", "Chan");
+    expect(channelJoinV1(user2.authUserId, channel.channelId)).toStrictEqual({});
   });
 });
