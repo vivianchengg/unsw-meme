@@ -118,3 +118,40 @@ describe('channelInviteV1 function testing', () => {
     expect(channelInviteV1(user1.authUserId, channel.channelId, user2.authUserId)).toStrictEqual({});
    });
 });
+
+describe('channelMessagesV1 function testing', () => {
+  test('channelId does not refer to a valid channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "music", false);
+    expect(channelMessagesV1(new_user_authid.authUserId, new_channel_id.channelId + 1, 0)).toStrictEqual(ERROR);
+  });
+  
+  test('start is greater than the total number of messages in the channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "sports", false);
+    expect(channelMessagesV1(new_user_authid.authUserId, new_channel_id.channelId, 1)).toStrictEqual(ERROR);
+  });
+  
+  test('channelId is valid and the authorised user is not a member of the channel', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "gaming", false);
+    const new_user_authid1 = authRegisterV1("dianahazea@gmail.com", "january", "diana", "haze");
+    expect(channelMessagesV1(new_user_authid1.authUserId, new_channel_id.channelId, 0)).toStrictEqual(ERROR);
+  });
+  
+  test('authUserId is invalid', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "games", true);
+    expect(channelMessagesV1(new_user_authid.authUserId+ 1, new_channel_id.channelId, 0)).toStrictEqual(ERROR);
+  });
+
+  test('valid input', () => {
+    const new_user_authid = authRegisterV1("bridgetcosta@gmail.com", "daffodil", "bridget", "costa");
+    const new_channel_id = channelsCreateV1(new_user_authid.authUserId, "music", true);
+    expect(channelMessagesV1(new_user_authid.authUserId, new_channel_id.channelId, 0)).toStrictEqual({
+      messages: [],
+      start: 0,
+      end: -1,
+    });
+  });  
+});
