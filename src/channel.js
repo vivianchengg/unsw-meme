@@ -229,18 +229,66 @@ export function channelInviteV1(authUserId, channelId, uId) {
 
 
 
-//channelMessagesV1 stub function
-function channelMessagesV1(authUserId, channelId, start) {
+/**
+  * Given a channel with ID channelId that the authorised user is a member of,
+  * returns up to 50 messages between index "start" and "start + 50". 
+  * Message with index 0 (i.e. the first element in the returned array of messages) is the most recent message in the channel.
+  * This function returns a new index "end". 
+  * If there are more messages to return after this function call, "end" equals "start + 50". 
+  * If this function has returned the least recent messages in the channel, 
+  * "end" equals -1 to indicate that there are no more messages to load after this return.
+  * @param {number} authUserId
+  * @param {number} channelId
+  * @param {number} start
+  * @returns {
+*   messages: string,
+*   start: number,
+*   end: number
+* } 
+* To return the above:
+*  - channelId must refer to a valid chanel
+*  - authorised user is already a member of the channel
+*  - authUserId is valid
+*  - start must be less than or equal to the total number of messages in the channel
+* Otherwise, {error: string} is returned
+*
+*/
+
+export function channelMessagesV1(authUserId, channelId, start) {
+  let data = getData(); 
+
+  if (!validate_user(authUserId))  {
+    return { error: 'authUserId is invalid' };
+  }
+
+  if (!validate_channel(channelId)) {
+    return { error: 'channelId does not refer to a valid channel' };
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (!channel_member(channel, authUserId)) {
+    return { error: 'hannelId is valid and the authorised user is not a member of the channel' };
+  }
+
+
+  let messages_length = channel.messages.length; 
+  let messages = channel.messages.slice(); 
+
+
+  if (start > messages_length) {
+    return { error: ' start is greater than the total number of messages in the channel' };
+  }
+  
+  let end = 0;
+  if (messages_length > (start + 50))  {
+    end = start + 50; 
+  } else {
+    end = -1;
+  }
+
   return {
-    messages: [
-      {  
-        messageId: 1,
-        uId: 1,
-        message: 'Hello world',
-        timeSent: 1582426789,
-      }
-    ],
-    start: 0,
-    end: 50,
-  }             
+    messages: messages,
+    start: start,
+    end: end,
+  } 
 }
