@@ -1,7 +1,5 @@
-import { getData, setData } from './dataStore.js';
+import { User, getData, setData } from './dataStore';
 import validator from 'validator';
-
-type authUserId = { authUserId: number };
 
 /**
   * check whether email entered belong to a user
@@ -20,7 +18,7 @@ const isEmailFromUser = (email: string): boolean => {
     return false;
   }
   return true;
-}
+};
 
 /**
   * check if handle is taken
@@ -35,7 +33,7 @@ const isHandleTaken = (handle: string): boolean => {
     return false;
   }
   return true;
-}
+};
 
 /**
   * get new unique handle
@@ -68,7 +66,7 @@ const newHandle = (nameFirst: string, nameLast: string): string => {
   }
 
   return handleStr;
-}
+};
 
 /**
   * get new id
@@ -77,10 +75,10 @@ const newHandle = (nameFirst: string, nameLast: string): string => {
   * @returns {number}
 */
 const getNewId = (): number => {
-  let data = getData();
+  const data = getData();
   let max = 0;
-  data = data.users;
-  data.forEach((i) => {
+  const user = data.users;
+  user.forEach((i: User) => {
     if (i.uId > max) {
       max = i.uId;
     }
@@ -88,7 +86,7 @@ const getNewId = (): number => {
 
   const id = max + 10;
   return id;
-}
+};
 
 /**
   * Given a registered user's email and password, returns their authUserId value.
@@ -97,7 +95,7 @@ const getNewId = (): number => {
   * @param {string} password
   * @returns {{authUserId: number}}
 */
-export const authLoginV1 = (email: string, password: string): authUserId => {
+export const authLoginV1 = (email: string, password: string) => {
   const data = getData();
 
   // error: email entered does not belong to a user or incorrect password
@@ -114,7 +112,7 @@ export const authLoginV1 = (email: string, password: string): authUserId => {
   return {
     authUserId: id,
   };
-}
+};
 
 /**
   * Given a user's first and last name, email address, and password,
@@ -126,7 +124,7 @@ export const authLoginV1 = (email: string, password: string): authUserId => {
   * @param {string} nameLast
   * @returns {{authUserId: number}}
 */
-export const authRegisterV1 = (email: string, password: string, nameFirst: string, nameLast: string): authUserId => {
+export const authRegisterV1 = (email: string, password: string, nameFirst: string, nameLast: string) => {
   const data = getData();
 
   // error: email entered is invalid
@@ -172,4 +170,4 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   return {
     authUserId: id,
   };
-}
+};

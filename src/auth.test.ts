@@ -1,6 +1,6 @@
-import { authRegisterV1, authLoginV1 } from './auth.js';
-import { clearV1 } from './other.js';
-import { userProfileV1 } from './users.js';
+import { authRegisterV1, authLoginV1 } from './auth';
+import { clearV1 } from './other';
+import { userProfileV1 } from './users';
 
 const ERROR = { error: expect.any(String) };
 
