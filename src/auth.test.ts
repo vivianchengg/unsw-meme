@@ -53,14 +53,14 @@ describe('authRegisterV1 Test', () => {
   test('check handle: basic', () => {
     const user = authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
     const person = userProfileV1(user.authUserId, user.authUserId);
-    const handle = person.handleStr;
+    const handle = person.user.handleStr;
     expect(handle).toStrictEqual('viviancheng');
   });
 
   test('check handle: remove non-alphanumeric characters', () => {
     const user = authRegisterV1('vc@unsw.edu.au', 'password', 'V@ivi,an', 'Ch#eng!');
     const person = userProfileV1(user.authUserId, user.authUserId);
-    const handle = person.handleStr;
+    const handle = person.user.handleStr;
     expect(handle).toStrictEqual('viviancheng');
   });
 
@@ -70,20 +70,31 @@ describe('authRegisterV1 Test', () => {
     const user3 = authRegisterV1('vc3@unsw.edu.au', 'password', 'Vivian', 'Cheng');
 
     const person1 = userProfileV1(user1.authUserId, user1.authUserId);
-    const handle1 = person1.handleStr;
+    const handle1 = person1.user.handleStr;
     expect(handle1).toStrictEqual('viviancheng');
     const person2 = userProfileV1(user2.authUserId, user2.authUserId);
-    const handle2 = person2.handleStr;
+    const handle2 = person2.user.handleStr;
     expect(handle2).toStrictEqual('viviancheng0');
     const person3 = userProfileV1(user3.authUserId, user3.authUserId);
-    const handle3 = person3.handleStr;
+    const handle3 = person3.user.handleStr;
     expect(handle3).toStrictEqual('viviancheng1');
   });
 
   test('check handle: cut off at length 20', () => {
     const user = authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian1234', 'Cheng123456');
     const person = userProfileV1(user.authUserId, user.authUserId);
-    const handle = person.handleStr;
+    const handle = person.user.handleStr;
     expect(handle).toStrictEqual('vivian1234cheng12345');
+  });
+
+  test('duplicate handles generated correctly', () => {
+    authRegisterV1('blah3@email.com', 'password1', 'abc', 'def');
+    const user1 = authRegisterV1('blah1@email.com', 'password1', 'abcdefghij', 'klmnopqrs');
+    const handle1 = userProfileV1(user1.authUserId, user1.authUserId).user.handleStr;
+    expect(handle1).toEqual('abcdefghijklmnopqrs');
+
+    const user2 = authRegisterV1('blah2@email.com', 'password1', 'abcdefghij', 'klmnopqrs');
+    const handle2 = userProfileV1(user2.authUserId, user2.authUserId).user.handleStr;
+    expect(handle2).toEqual('abcdefghijklmnopqrs0');
   });
 });

@@ -35,7 +35,9 @@ export const userProfileV1 = (authUserId: number, uId: number) => {
       };
     }
   }
-  return person;
+  return {
+    user: person,
+  };
 };
 
 /**
