@@ -6,6 +6,7 @@ export type User = {
   email: string,
   handleStr: string,
   password: string,
+  pId: number,
 };
 
 export type Message = {
@@ -19,7 +20,6 @@ export type Channel = {
   channelId: number,
   name: string,
   isPublic: boolean,
-  authUserId: number[],
   allMembers: number[],
   ownerMembers: number[],
   messages: Message[],

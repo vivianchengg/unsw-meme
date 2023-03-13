@@ -8,20 +8,22 @@ beforeEach(() => {
 
 const ERROR = { error: expect.any(String) };
 
-describe ('VALID INPUT!', () => {
+describe('VALID INPUT!', () => {
   test('Test: valid authuserId and uId', () => {
     const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    expect(userProfileV1(user.authUserId, user.authUserId)).toStrictEqual({user: {
+    expect(userProfileV1(user.authUserId, user.authUserId)).toStrictEqual({
+      user: {
         uId: user.authUserId,
         email: 'christine@gmail.com',
         nameFirst: 'christine',
         nameLast: 'chu',
         handleStr: 'christinechu',
-    }});
+      }
+    });
   });
 });
 
-describe ('INVALID!', () => {
+describe('INVALID!', () => {
   test('Test: invalid authUserId', () => {
     const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
     expect(userProfileV1(user.authUserId + 1, user.authUserId)).toStrictEqual(ERROR);
@@ -31,5 +33,4 @@ describe ('INVALID!', () => {
     const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
     expect(userProfileV1(user.authUserId, user.authUserId + 1)).toStrictEqual(ERROR);
   });
-
 });

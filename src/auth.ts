@@ -155,6 +155,12 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const handle = newHandle(nameFirst, nameLast);
   const id = getNewId();
 
+  // set permission id: global owner = first sign up = 1, global member = 2
+  let pId = 1;
+  if (data.users.length !== 0) {
+    pId = 2;
+  }
+
   const newUser = {
     uId: id,
     nameFirst: nameFirst,
@@ -162,6 +168,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     email: email,
     handleStr: handle,
     password: password,
+    pId: pId,
   };
 
   data.users.push(newUser);

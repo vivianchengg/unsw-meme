@@ -9,6 +9,7 @@ let data = {
       email: 'johnsmith@gmail.com',
       handleStr: 'JohnSmith',
       password: 'Britain',
+      pId: 1,
     }
   ],
 
@@ -17,7 +18,6 @@ let data = {
       channelId: 1,
       name: 'Channel10',
       isPublic: true,
-      authUserId: [1],
       allMembers: [1],
       ownerMembers: [1],
       messages: [
