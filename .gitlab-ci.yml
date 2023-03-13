@@ -1,19 +1,24 @@
 image: comp1531/basic:latest
 
 stages:
-  - lint
-  - test
+  - checks
 
 before_script:
   - npm install
 
 linting:
-  stage: lint
+  stage: checks
   script:
-    - npm run lint
+    - SERVER_LOG=$(mktemp)
+    - npm run start >& $SERVER_LOG &
+    - timeout 10s grep -q "⚡️ Server started on port" <(tail -f $SERVER_LOG) || exit 1
+    - timeout -s SIGINT 180s npm run lint || (cat $SERVER_LOG && exit 1)
+    - kill -SIGINT %1
+    - sleep 2
+    - cat $SERVER_LOG
 
 tests:
-  stage: test
+  stage: checks
   script:
     - SERVER_LOG=$(mktemp)
     - npm run start >& $SERVER_LOG &
