@@ -1,0 +1,8 @@
+{
+    "ignore": {
+        "ts-node": {
+            "versions": "10.9.1",
+            "reason": ""
+        }
+    }
+}
