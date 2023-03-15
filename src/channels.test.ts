@@ -4,28 +4,29 @@ import { clearV1 } from './other';
 
 const ERROR = { error: expect.any(String) };
 
+let user : { authUserId: number } | any = { authUserId: -1 }; 
+let channel : { channelId: number } | any = { channelId: -1 };
+
 describe('channelsCreateV1 Tests', () => {
   beforeEach(() => {
     clearV1();
+    user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
   });
 
   test('Test: valid name & authid!', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
     expect(channelsCreateV1(user.authUserId, 'pewpewpew!', true)).toStrictEqual({ channelId: expect.any(Number) });
   });
 
   test('Test: invalid 0 name length', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
     expect(channelsCreateV1(user.authUserId, '', false)).toStrictEqual(ERROR);
   });
 
   test('Test: invalid +20 name length', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
     expect(channelsCreateV1(user.authUserId, 'verycoolchannelname1234567891011121314151617181920', true)).toStrictEqual(ERROR);
   });
 
   test('Test: invalid authUserId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+
     expect(channelsCreateV1(user.authUserId + 1, 'pewpewpew!', true)).toStrictEqual(ERROR);
   });
 });
@@ -33,17 +34,15 @@ describe('channelsCreateV1 Tests', () => {
 describe('channelsListV1 Tests', () => {
   beforeEach(() => {
     clearV1();
+    user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+    channel = channelsCreateV1(user.authUserId, 'pineapplesunshine', true);
   });
 
   test('Test: invalid authUserId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    channelsCreateV1(user.authUserId, 'pineapplesunshine', true);
     expect(channelsListV1(user.authUserId + 1)).toStrictEqual(ERROR);
   });
 
   test('Valid authUserId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    const channel = channelsCreateV1(user.authUserId, 'pineapplesunshine', true);
     expect(channelsListV1(user.authUserId)).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
