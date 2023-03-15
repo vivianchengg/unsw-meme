@@ -54,18 +54,20 @@ describe('channelsListV1 Tests', () => {
 });
 
 describe('channelListAllV1 Tests', () => {
+  let user: any;
+  let channel: any;
+
   beforeEach(() => {
     clearV1();
+    user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+    channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
   });
 
   test('Invalid authUserId', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     channelsCreateV1(user.authUserId, 'COMP1531', true);
     expect(channelsListAllV1(user.authUserId + 1)).toStrictEqual(ERROR);
   });
   test('Basic functionality', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
     expect(channelsListAllV1(user.authUserId)).toStrictEqual({
       channels:
@@ -79,8 +81,6 @@ describe('channelListAllV1 Tests', () => {
     });
   });
   test('Includes private with public channels', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
     const channelPriv = channelsCreateV1(user.authUserId, 'COMP3311', false);
     expect(channelsListAllV1(user.authUserId)).toStrictEqual({
@@ -98,9 +98,7 @@ describe('channelListAllV1 Tests', () => {
     });
   });
   test('Includes channels user is not part of', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     const user2 = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
     const channelPriv = channelsCreateV1(user2.authUserId, 'COMP3311', false);
     expect(channelsListAllV1(user.authUserId)).toStrictEqual({
