@@ -1,5 +1,4 @@
-import { getData } from './dataStore.js';
-import { authRegisterV1 } from './auth.js';
+import { getData } from './dataStore';
 
 /**
 * Returns information about a user
@@ -7,24 +6,24 @@ import { authRegisterV1 } from './auth.js';
 * @param {number} uId
 * ...
 * @returns {{
-*  uId: number,
-*  email: string,
-*  nameFirst: string,
-*  nameLast: string,
-*  handleStr: string,
+*   uId: number,
+*   email: string,
+*   nameFirst: string,
+*   nameLast: string,
+*   handleStr: string,
 * }} user
 */
 
-export function userProfileV1 (authUserId, uId) {
+export const userProfileV1 = (authUserId: number, uId: number) => {
   const data = getData();
-  if (validate_user(authUserId) === false) {
+  if (isValidUser(authUserId) === false) {
     return { error: 'invalid authUserId' };
   }
-  if (validate_user(uId) === false) {
+  if (isValidUser(uId) === false) {
     return { error: 'invalid uId' };
   }
 
-  let person = {};
+  let person;
   for (const user of data.users) {
     if (user.uId === uId) {
       person = {
@@ -33,24 +32,25 @@ export function userProfileV1 (authUserId, uId) {
         nameFirst: user.nameFirst,
         nameLast: user.nameLast,
         handleStr: user.handleStr,
-
       };
     }
   }
-  return person;
-}
+  return {
+    user: person,
+  };
+};
 
 /**
 * Checks if user is valid
 * @param {number} authUserId
 * @returns {boolean}
 */
-function validate_user(user_id) {
+const isValidUser = (userId: number): boolean => {
   const data = getData();
   for (const user of data.users) {
-    if (user.uId === user_id) {
+    if (user.uId === userId) {
       return true;
     }
   }
   return false;
-}
+};

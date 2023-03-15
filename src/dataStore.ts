@@ -1,9 +1,41 @@
 // YOU SHOULD MODIFY THIS OBJECT BELOW
-let data = {
+export type User = {
+  uId: number,
+  nameFirst: string,
+  nameLast: string,
+  email: string,
+  handleStr: string,
+  password: string,
+  pId: number,
+};
+
+export type Message = {
+  messageId: number,
+  uId: number,
+  message: string,
+  timeSent: number,
+}
+
+export type Channel = {
+  channelId: number,
+  name: string,
+  isPublic: boolean,
+  allMembers: number[],
+  ownerMembers: number[],
+  messages: Message[],
+  start: number,
+  end: number,
+};
+
+export type Data = {
+  users: User[],
+  channels: Channel[]
+};
+
+let data: Data = {
   users: [],
   channels: []
 };
-
 
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
@@ -22,16 +54,14 @@ Example usage
 */
 
 // Use get() to access the data
-function getData() {
+export const getData = (): Data => {
   return data;
-}
+};
 
 // Use set(newData) to pass in the entire data object, with modifications made
 // - Only needs to be used if you replace the data store entirely
 // - Javascript uses pass-by-reference for objects... read more here: https://stackoverflow.com/questions/13104494/does-javascript-pass-by-reference
 // Hint: this function might be useful to edit in iteration 2
-function setData(newData) {
+export const setData = (newData: Data) => {
   data = newData;
-}
-
-export { getData, setData };
+};

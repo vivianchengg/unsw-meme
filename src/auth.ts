@@ -1,59 +1,59 @@
-import { getData, setData } from './dataStore.js';
+import { User, getData, setData } from './dataStore';
 import validator from 'validator';
 
 /**
   * check whether email entered belong to a user
-  * 
-  * @param {string} email 
+  *
+  * @param {string} email
   * @returns {bool}
 */
-function isEmailFromUser(email) {
+const isEmailFromUser = (email: string): boolean => {
   const data = getData();
-  let user = undefined;
+  let user;
   if (data.users !== undefined) {
     user = data.users.find(person => person.email === email);
   }
 
   if (user === undefined) {
     return false;
-  } 
+  }
   return true;
-}
+};
 
 /**
   * check if handle is taken
-  * 
-  * @param {string} handle 
+  *
+  * @param {string} handle
   * @returns {bool}
 */
-function isHandleTaken(handle) {
+const isHandleTaken = (handle: string): boolean => {
   const data = getData();
   const user = data.users.find(person => person.handleStr === handle);
   if (user === undefined) {
     return false;
-  } 
+  }
   return true;
-}
+};
 
 /**
   * get new unique handle
-  * 
+  *
   * @param {string} nameFirst
-  * @param {string} nameLast 
-  * @returns {string} 
+  * @param {string} nameLast
+  * @returns {string}
 */
-function newHandle(nameFirst, nameLast) {
+const newHandle = (nameFirst: string, nameLast: string): string => {
   let handle = '';
 
   let first = nameFirst.toLowerCase();
-  first = first.replace(/[^a-z0-9]/g, "");
+  first = first.replace(/[^a-z0-9]/g, '');
 
   let last = nameLast.toLowerCase();
-  last = last.replace(/[^a-z0-9]/g, "");
+  last = last.replace(/[^a-z0-9]/g, '');
 
   handle += first;
   handle += last;
-  
+
   const len = 20;
   handle = handle.length > len ? handle.substring(0, len) : handle;
 
@@ -66,19 +66,19 @@ function newHandle(nameFirst, nameLast) {
   }
 
   return handleStr;
-}
+};
 
 /**
   * get new id
-  * 
+  *
   * @param {}
-  * @returns {number} 
+  * @returns {number}
 */
-function getNewId() {
-  let data = getData();
+const getNewId = (): number => {
+  const data = getData();
   let max = 0;
-  data = data.users;
-  data.forEach((i) => {
+  const user = data.users;
+  user.forEach((i: User) => {
     if (i.uId > max) {
       max = i.uId;
     }
@@ -86,16 +86,16 @@ function getNewId() {
 
   const id = max + 10;
   return id;
-}
+};
 
 /**
   * Given a registered user's email and password, returns their authUserId value.
-  * 
-  * @param {string} email 
-  * @param {string} password 
+  *
+  * @param {string} email
+  * @param {string} password
   * @returns {{authUserId: number}}
 */
-export function authLoginV1(email, password) {
+export const authLoginV1 = (email: string, password: string) => {
   const data = getData();
 
   // error: email entered does not belong to a user or incorrect password
@@ -111,21 +111,21 @@ export function authLoginV1(email, password) {
   const id = user.uId;
   return {
     authUserId: id,
-  }
-}
+  };
+};
 
 /**
-  * Given a user's first and last name, email address, and password, 
+  * Given a user's first and last name, email address, and password,
   * creates a new account for them and returns a new authUserId.
-  * 
+  *
   * @param {string} email
   * @param {string} password
   * @param {string} nameFirst
-  * @param {string} nameLast 
-  * @returns {{authUserId: number}} 
+  * @param {string} nameLast
+  * @returns {{authUserId: number}}
 */
-export function authRegisterV1(email, password, nameFirst, nameLast) {
-  let data = getData();
+export const authRegisterV1 = (email: string, password: string, nameFirst: string, nameLast: string) => {
+  const data = getData();
 
   // error: email entered is invalid
   if (!validator.isEmail(email)) {
@@ -155,6 +155,12 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
   const handle = newHandle(nameFirst, nameLast);
   const id = getNewId();
 
+  // set permission id: global owner = first sign up = 1, global member = 2
+  let pId = 1;
+  if (data.users.length !== 0) {
+    pId = 2;
+  }
+
   const newUser = {
     uId: id,
     nameFirst: nameFirst,
@@ -162,12 +168,13 @@ export function authRegisterV1(email, password, nameFirst, nameLast) {
     email: email,
     handleStr: handle,
     password: password,
-  }
+    pId: pId,
+  };
 
   data.users.push(newUser);
   setData(data);
 
   return {
     authUserId: id,
-  }
-}
+  };
+};
