@@ -6,30 +6,27 @@ import { userProfileV1 } from './users';
 
 const ERROR = { error: expect.any(String) };
 
-beforeEach(() => {
-  clearV1();
-});
-
 describe('channelDetailsV1 Test', () => {
+  let user: any;
+  let channel: any;
+
+  beforeEach(() => {
+    clearV1();
+    user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+    channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+  });
+
   test('Invalid authUserId', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     expect(channelDetailsV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
   });
   test('Invalid channelId', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     expect(channelDetailsV1(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
   });
   test('Valid channelId and authUserId but user is not in course', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const outsideUser = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
     expect(channelDetailsV1(outsideUser.authUserId, channel.channelId)).toStrictEqual(ERROR);
   });
   test('Basic functionality', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const userProfile = userProfileV1(user.authUserId, user.authUserId);
     expect(channelDetailsV1(user.authUserId, channel.channelId)).toStrictEqual({
       name: 'COMP1531',
