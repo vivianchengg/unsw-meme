@@ -4,7 +4,7 @@ import { clearV1 } from './other';
 
 const ERROR = { error: expect.any(String) };
 
-let user : { authUserId: number } | any = { authUserId: -1 }; 
+let user : { authUserId: number } | any = { authUserId: -1 };
 let channel : { channelId: number } | any = { channelId: -1 };
 
 describe('channelsCreateV1 Tests', () => {
@@ -26,7 +26,6 @@ describe('channelsCreateV1 Tests', () => {
   });
 
   test('Test: invalid authUserId', () => {
-
     expect(channelsCreateV1(user.authUserId + 1, 'pewpewpew!', true)).toStrictEqual(ERROR);
   });
 });
