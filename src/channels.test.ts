@@ -7,12 +7,13 @@ const ERROR = { error: expect.any(String) };
 let user : { authUserId: number } | any = { authUserId: -1 };
 let channel : { channelId: number } | any = { channelId: -1 };
 
-describe('channelsCreateV1 Tests', () => {
-  beforeEach(() => {
-    clearV1();
-    user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-  });
+beforeEach(() => {
+  clearV1();
+  user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+  channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+});
 
+describe('channelsCreateV1 Tests', () => {
   test('Test: valid name & authid!', () => {
     expect(channelsCreateV1(user.authUserId, 'pewpewpew!', true)).toStrictEqual({ channelId: expect.any(Number) });
   });
@@ -31,12 +32,6 @@ describe('channelsCreateV1 Tests', () => {
 });
 
 describe('channelsListV1 Tests', () => {
-  beforeEach(() => {
-    clearV1();
-    user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    channel = channelsCreateV1(user.authUserId, 'pineapplesunshine', true);
-  });
-
   test('Test: invalid authUserId', () => {
     expect(channelsListV1(user.authUserId + 1)).toStrictEqual(ERROR);
   });
@@ -45,25 +40,18 @@ describe('channelsListV1 Tests', () => {
     expect(channelsListV1(user.authUserId)).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
-        name: 'pineapplesunshine',
+        name: 'COMP1531',
       }]
     });
   });
 });
 
 describe('channelListAllV1 Tests', () => {
-  beforeEach(() => {
-    clearV1();
-  });
-
   test('Invalid authUserId', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     channelsCreateV1(user.authUserId, 'COMP1531', true);
     expect(channelsListAllV1(user.authUserId + 1)).toStrictEqual(ERROR);
   });
   test('Basic functionality', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
     expect(channelsListAllV1(user.authUserId)).toStrictEqual({
       channels:
@@ -77,8 +65,6 @@ describe('channelListAllV1 Tests', () => {
     });
   });
   test('Includes private with public channels', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
     const channelPriv = channelsCreateV1(user.authUserId, 'COMP3311', false);
     expect(channelsListAllV1(user.authUserId)).toStrictEqual({
@@ -96,9 +82,7 @@ describe('channelListAllV1 Tests', () => {
     });
   });
   test('Includes channels user is not part of', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
     const user2 = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
     const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
     const channelPriv = channelsCreateV1(user2.authUserId, 'COMP3311', false);
     expect(channelsListAllV1(user.authUserId)).toStrictEqual({
