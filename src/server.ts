@@ -3,6 +3,8 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { channelDetailsV1 } from './channel';
+import { extractUId } from './token';
 
 // Set up web app
 const app = express();
@@ -21,6 +23,15 @@ app.get('/echo', (req: Request, res: Response, next) => {
   const data = req.query.echo as string;
   return res.json(echo(data));
 });
+
+app.get('/channel/details/v2', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const channelId = parseInt(req.query.channelId) as number;
+
+  const userId = extractUId(token) as number;
+
+  return res.json(channelDetailsV1(userId, channelId));
+})
 
 // start server
 const server = app.listen(PORT, HOST, () => {

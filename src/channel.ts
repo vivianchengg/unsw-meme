@@ -33,8 +33,9 @@ import { userProfileV1 } from './users';
 
 export const channelDetailsV1 = (authUserId: number, channelId: number) => {
   const data = getData();
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid authUserId' };
+  // Invalid token recognised by value being returned as -1
+  if (authUserId === -1) {
+    return { error: 'invalid token' };
   }
 
   if (isValidChannel(channelId) === false) {
