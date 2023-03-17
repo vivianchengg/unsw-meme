@@ -40,7 +40,6 @@ describe('channelDetailsV1 Test', () => {
   });
 });
 
-
 let user : any;
 let channel : any;
 
