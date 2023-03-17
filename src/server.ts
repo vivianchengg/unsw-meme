@@ -3,6 +3,8 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { channelsListAllV1 } from './channels';
+import { extractUId } from './token';
 
 // Set up web app
 const app = express();
@@ -20,6 +22,19 @@ const HOST: string = process.env.IP || 'localhost';
 app.get('/echo', (req: Request, res: Response, next) => {
   const data = req.query.echo as string;
   return res.json(echo(data));
+});
+
+app.get('/channels/listall/v2', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const userId = extractUId(token) as number;
+
+  const INVALID = -1;
+
+  if (userId === INVALID) {
+    return res.json({ error: 'Invalid token' });
+  }
+
+  return res.json(channelsListAllV1(userId));
 });
 
 // start server
