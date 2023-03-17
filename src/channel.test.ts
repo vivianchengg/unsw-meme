@@ -6,10 +6,10 @@ import { userProfileV1 } from './users';
 
 const ERROR = { error: expect.any(String) };
 
-describe('channelDetailsV1 Test', () => {
-  let user: any;
-  let channel: any;
+let user: any;
+let channel: any;
 
+describe('channelDetailsV1 Test', () => {
   beforeEach(() => {
     clearV1();
     user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
