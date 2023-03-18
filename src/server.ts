@@ -3,6 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { clearV1 } from './other';
 
 // Set up web app
 const app = express();
@@ -20,6 +21,11 @@ const HOST: string = process.env.IP || 'localhost';
 app.get('/echo', (req: Request, res: Response, next) => {
   const data = req.query.echo as string;
   return res.json(echo(data));
+});
+
+app.delete('/clear/v1', (req: Request, res: Response) => {
+  console.log('clear');
+  return res.json(clearV1());
 });
 
 // start server
