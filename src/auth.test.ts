@@ -1,6 +1,5 @@
 import { authRegisterV1, authLoginV1 } from './auth';
-import { clearV1 } from './other';
-import { userProfileV1 } from './users';
+import { port, url } from './config.json';
 
 const ERROR = { error: expect.any(String) };
 
