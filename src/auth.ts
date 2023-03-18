@@ -104,7 +104,7 @@ const checkToken = (token: string) => {
     }
   }
   return false;
-}
+};
 
 /**
   * get new token
@@ -113,7 +113,6 @@ const checkToken = (token: string) => {
   * @returns {string}
 */
 const getNewToken = () => {
-  const data = getData();
   let tokenNum = Math.floor(Math.random() * 1000);
   let tokenString = tokenNum.toString();
   while (checkToken(tokenString)) {
@@ -121,7 +120,7 @@ const getNewToken = () => {
     tokenString = tokenNum.toString();
   }
   return tokenString;
-}
+};
 
 /**
   * Given a registered user's email and password, returns their authUserId value.
