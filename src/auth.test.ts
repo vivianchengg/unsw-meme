@@ -1,29 +1,108 @@
-import { authRegisterV1, authLoginV1 } from './auth';
-import { clearV1 } from './other';
-import { userProfileV1 } from './users';
+import request from 'sync-request';
+import { port, url } from './config.json';
 
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
 
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const postRequest = (url: string, data: any) => {
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const deleteRequest = (url: string) => {
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
 beforeEach(() => {
-  clearV1();
+  deleteRequest('/clear/v1', {});
 });
 
 describe('authLoginV1 Test', () => {
   test('email entered does not belong to a user', () => {
-    expect(authLoginV1('vc@unsw.edu.au', 'password')).toStrictEqual(ERROR);
+    const user1Data = {
+      email: 'vc@unsw.edu.au',
+      password: 'password'
+    }; 
 
-    authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    expect(authLoginV1('vc1@unsw.edu.au', 'password')).toStrictEqual(ERROR);
+    expect(postRequest('/auth/login/v2', user1Data)).toStrictEqual(ERROR);
+
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    postRequest('/auth/register/v2', regData);
+
+    const user2Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password'
+    }; 
+
+    expect(postRequest('/auth/login/v2', user2Data)).toStrictEqual(ERROR);
   });
 
   test('password is not correct', () => {
-    authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    expect(authLoginV1('vc@unsw.edu.au', 'pwd')).toStrictEqual(ERROR);
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    postRequest('/auth/register/v2', regData);
+
+    const userData = {
+      email: 'vc@unsw.edu.au',
+      password: 'pwd'
+    }; 
+
+    expect(postRequest('/auth/login/v2', userData)).toStrictEqual(ERROR);
   });
 
   test('test login', () => {
-    const reg = authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    const user = authLoginV1('vc@unsw.edu.au', 'password');
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    const userData = {
+      email: 'vc@unsw.edu.au',
+      password: 'pwd'
+    };
+
+    const reg = postRequest('/auth/register/v2', regData);
+    const user = postRequest('/auth/login/v2', userData);
     expect(user.authUserId).toStrictEqual(reg.authUserId);
   });
 });
