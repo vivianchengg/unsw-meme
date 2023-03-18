@@ -28,17 +28,20 @@ const postRequest = (url: string, data: any) => {
   return body;
 };
 
-const deleteRequest = (url: string) => {
+const deleteRequest = (url: string, data: any) => {
   const res = request(
     'DELETE',
-    SERVER_URL + url
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
   );
   const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
 beforeEach(() => {
-  deleteRequest('/clear/v1');
+  deleteRequest('/clear/v1', {});
 });
 
 describe('authLoginV1 Test', () => {
