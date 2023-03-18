@@ -18,6 +18,8 @@ app.use(morgan('dev'));
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
+const tokenStorage: string[] = [];
+
 // Example get request
 app.get('/echo', (req: Request, res: Response, next) => {
   const data = req.query.echo as string;
@@ -26,11 +28,8 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 app.get('/channels/listall/v2', (req: Request, res: Response) => {
   const token = req.query.token as string;
-  const userId = extractUId(token) as number;
 
-  const INVALID = -1;
-
-  if (userId === INVALID) {
+  if (!tokenStorage.includes(token)) {
     return res.json({ error: 'Invalid token' });
   }
 
