@@ -28,7 +28,7 @@ const postRequest = (url: string, data: any) => {
   return body;
 };
 
-const deleteRequest = (url: string) => {
+const deleteRequest = (url: string, data: any) => {
   const res = request(
     'DELETE',
     SERVER_URL + url,
@@ -49,7 +49,7 @@ describe('authLoginV1 Test', () => {
     const user1Data = {
       email: 'vc@unsw.edu.au',
       password: 'password'
-    }; 
+    };
 
     expect(postRequest('/auth/login/v2', user1Data)).toStrictEqual(ERROR);
 
@@ -65,7 +65,7 @@ describe('authLoginV1 Test', () => {
     const user2Data = {
       email: 'vc1@unsw.edu.au',
       password: 'password'
-    }; 
+    };
 
     expect(postRequest('/auth/login/v2', user2Data)).toStrictEqual(ERROR);
   });
@@ -83,7 +83,7 @@ describe('authLoginV1 Test', () => {
     const userData = {
       email: 'vc@unsw.edu.au',
       password: 'pwd'
-    }; 
+    };
 
     expect(postRequest('/auth/login/v2', userData)).toStrictEqual(ERROR);
   });
