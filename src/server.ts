@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import { channelDetailsV1 } from './channel';
-import { getData } from './dataStore';
 
 // Set up web app
 const app = express();
@@ -28,12 +27,6 @@ app.get('/channel/details/v2', (req: Request, res: Response) => {
   const token = req.query.token as string;
   const channelId = parseInt(req.query.channelId as string);
 
-  const userId = extractUId(token);
-  const INVALID = -1;
-  if (userId === INVALID) {
-    return res.json({ error: 'Invalid token' });
-  }
-
   return res.json(channelDetailsV1(userId, channelId));
 });
 
@@ -47,16 +40,3 @@ const server = app.listen(PORT, HOST, () => {
 process.on('SIGINT', () => {
   server.close(() => console.log('Shutting down server gracefully.'));
 });
-
-const extractUId = (token: string) => {
-  const data = getData();
-  let userId = -1;
-
-  for (const user of data.users) {
-    if (user.tokens.includes(token)) {
-      userId = user.uId;
-    }
-  }
-
-  return userId;
-};

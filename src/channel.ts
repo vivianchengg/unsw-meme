@@ -31,11 +31,12 @@ import { userProfileV1 } from './users';
 *
 **/
 
-export const channelDetailsV1 = (authUserId: number, channelId: number) => {
+export const channelDetailsV1 = (token: string, channelId: number) => {
   const data = getData();
-  // Invalid token recognised by value being returned as -1
-  if (authUserId === -1) {
-    return { error: 'invalid token' };
+  const authUserId = extractUId(token);
+  const INVALID = -1;
+  if (authUserId === INVALID) {
+    return { error: 'Invalid token' };
   }
 
   if (isValidChannel(channelId) === false) {
@@ -68,6 +69,24 @@ export const channelDetailsV1 = (authUserId: number, channelId: number) => {
       };
     }
   }
+};
+
+/** Function that returns user Id from token
+ * 
+ * @param {string} token 
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
+  const data = getData();
+  let userId = -1;
+
+  for (const user of data.users) {
+    if (user.tokens.includes(token)) {
+      userId = user.uId;
+    }
+  }
+
+  return userId;
 };
 
 /** Function that checks if user id is valid
