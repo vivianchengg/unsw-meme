@@ -3,29 +3,14 @@ import { userProfileV1 } from './users';
 
 /** Function that lists details of members in the channel given that:
 *
-* @param {number} authUserId - User Id of individual asking for details of a channel
+* @param {string} - Token of individual's session
 * @param {number} channelId - Channel Id of channel that user is asking to access details of
-* @returns {object} channel
+* @returns {Channel} channel
 *
-*  - Here, channel: {
-*  name: string,
-*  isPublic: boolean,
-*  ownerMembers: array,
-*  allMembers: array
-*  }
-*
-*  - Also, user: {
-*  uId: number,
-*  email: string,
-*  password: string,
-*  nameFirst: string,
-*  nameLast: string,
-*  handleStr: string
-*  }
-
+* Note that channel type is specificed in dataStore.ts
 *
 *  To return the above:
-* - authUserId must be valid
+* - token must be valid
 * - channelId must be valid and user must be member of channel
 *  Otherwise, {error: string} is returned
 *
