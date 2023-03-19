@@ -2,10 +2,64 @@ import { channelsListAllV1, channelsCreateV1, channelsListV1 } from './channels'
 import { authRegisterV1 } from './auth';
 import { clearV1 } from './other';
 
+import request from 'sync-request';
+import config from './config.json';
+
+//const OK = 200;
+const port = config.port;
+const url = config.url;
+
 const ERROR = { error: expect.any(String) };
 
 let user : { authUserId: number } | any = { authUserId: -1 };
 let channel : { channelId: number } | any = { channelId: -1 };
+
+// iteration 2
+const getRequestPOST = (url: string, data: any) => {
+  const res = request(
+    'POST',
+    url,
+    {
+      json: data,
+    }
+  );
+  const bodyObj = JSON.parse(String(res.getBody()));
+  return bodyObj
+}
+
+describe('channelsCreateV2 Tests', () => {
+  test('Testing valid token + name', () => {
+    const bodyObj = getRequestPOST(`${url}:${port}/channels`, {
+      token: user.token[0],
+      name: 'pewpewpew!',
+      isPublic: true,
+    });
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual({ channelId: expect.any(Number) });
+  })
+
+  test('Testing invalid token', () => {
+    const bodyObj = getRequestPOST(`${url}:${port}/channels`, {
+      token: user.token[0] + 'hey!',
+      name: 'pewpewpew!',
+      isPublic: true,
+    });
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  })
+
+  test('Testing invalid name', () => {
+    const bodyObj = getRequestPOST(`${url}:${port}/channels`, {
+      token: user.token[0],
+      name: 'verycoolchannelname1234567891011121314151617181920',
+      isPublic: true,
+    });
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  })
+
+})
+
 
 beforeEach(() => {
   clearV1();
