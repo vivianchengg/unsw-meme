@@ -80,7 +80,7 @@ export const channelsListV1 = (authUserId: number) => {
 
 /** Function lists details of all channels
  *
- * @param {number} authUserId - User ID of individual calling function
+ * @param {string} token - Token of individual's session
  * @returns {array} channels
  *
  * Here, channels: [{
@@ -89,7 +89,7 @@ export const channelsListV1 = (authUserId: number) => {
  * }]
  *
  * To return the above:
- * - authUserId must be valid
+ * - token must be valid
  *
  * Otherwise, {error: string} is returned
  */
