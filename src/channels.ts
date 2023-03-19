@@ -129,3 +129,21 @@ const isValidName = (name: string): boolean => {
   }
   return true;
 };
+
+const isValidToken = (token: string) => {
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+const findToken = (token: string) => {
+  for (const user of DataTransfer.users) {
+    if (user.token.includes(token)) {
+      return user.uId;
+    }
+  }
+  return user.uId * 0;
+}

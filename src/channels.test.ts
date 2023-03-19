@@ -29,7 +29,7 @@ const getRequestPOST = (url: string, data: any) => {
 
 describe('channelsCreateV2 Tests', () => {
   test('Testing valid token + name', () => {
-    const bodyObj = getRequestPOST(`${url}:${port}/channels`, {
+    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
       token: user.token[0],
       name: 'pewpewpew!',
       isPublic: true,
@@ -39,7 +39,7 @@ describe('channelsCreateV2 Tests', () => {
   })
 
   test('Testing invalid token', () => {
-    const bodyObj = getRequestPOST(`${url}:${port}/channels`, {
+    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
       token: user.token[0] + 'hey!',
       name: 'pewpewpew!',
       isPublic: true,
@@ -49,7 +49,7 @@ describe('channelsCreateV2 Tests', () => {
   })
 
   test('Testing invalid name', () => {
-    const bodyObj = getRequestPOST(`${url}:${port}/channels`, {
+    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
       token: user.token[0],
       name: 'verycoolchannelname1234567891011121314151617181920',
       isPublic: true,
@@ -58,7 +58,7 @@ describe('channelsCreateV2 Tests', () => {
     expect(bodyObj).toEqual(ERROR);
   })
 
-});
+})
 
 
 beforeEach(() => {
