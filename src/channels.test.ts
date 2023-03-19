@@ -58,7 +58,7 @@ describe('channelsCreateV2 Tests', () => {
     expect(bodyObj).toEqual(ERROR);
   })
 
-})
+});
 
 
 beforeEach(() => {
