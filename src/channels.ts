@@ -95,10 +95,13 @@ export const channelsListV1 = (authUserId: number) => {
  */
 
 // Function lists details of all channels the user is in
-export const channelsListAllV1 = (authUserId: number) => {
+export const channelsListAllV1 = (token: string) => {
   const data = getData();
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid authUserId' };
+  const userId = extractUId(token);
+  const INVALID = -1;
+
+  if (userId === INVALID) {
+    return { error: 'Invalid token' };
   }
 
   const channelList = [];
@@ -114,6 +117,24 @@ export const channelsListAllV1 = (authUserId: number) => {
   return {
     channels: channelList
   };
+};
+
+/**
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
+  const data = getData();
+  let userId = -1;
+
+  for (const user of data.users) {
+    if (user.tokens.includes(token)) {
+      userId = user.uId;
+    }
+  }
+
+  return userId;
 };
 
 /**

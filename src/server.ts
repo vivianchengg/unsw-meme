@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import { channelsListAllV1 } from './channels';
-import { getData } from './dataStore';
 
 // Set up web app
 const app = express();
@@ -26,28 +25,8 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 app.get('/channels/listall/v2', (req: Request, res: Response) => {
   const token = req.query.token as string;
-  const userId = extractUId(token);
-  const INVALID = -1;
-
-  if (userId === INVALID) {
-    return res.json({ error: 'Invalid token' });
-  }
-
-  return res.json(channelsListAllV1(userId));
+  return res.json(channelsListAllV1(token));
 });
-
-const extractUId = (token: string) => {
-  const data = getData();
-  let userId = -1;
-
-  for (const user of data.users) {
-    if (user.tokens.includes(token)) {
-      userId = user.uId;
-    }
-  }
-
-  return userId;
-};
 
 // start server
 const server = app.listen(PORT, HOST, () => {
