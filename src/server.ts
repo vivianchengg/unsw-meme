@@ -27,7 +27,7 @@ app.get('/channel/details/v2', (req: Request, res: Response) => {
   const token = req.query.token as string;
   const channelId = parseInt(req.query.channelId as string);
 
-  return res.json(channelDetailsV1(userId, channelId));
+  return res.json(channelDetailsV1(token, channelId));
 });
 
 // start server

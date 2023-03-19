@@ -72,8 +72,8 @@ export const channelDetailsV1 = (token: string, channelId: number) => {
 };
 
 /** Function that returns user Id from token
- * 
- * @param {string} token 
+ *
+ * @param {string} token
  * @returns {number}
  */
 const extractUId = (token: string) => {
