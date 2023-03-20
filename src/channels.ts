@@ -10,8 +10,16 @@ import { isValidUser, isMember } from './channel';
   * ...
   * @returns {{channelId: number}}
 */
-export const channelsCreateV1 = (authUserId: number, name: string, isPublic: boolean) => {
+export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
+  const authUserId = null;
+
+  if (isValidToken(token) === false) {
+    return { error: 'invalid token'};
+  } else {
+    authUserId = findUID(token);
+  }
+
   if (isValidUser(authUserId) === false) {
     return { error: 'invalid auth user id' };
   }
@@ -160,5 +168,5 @@ const findUID = (token: string) => {
       return user.uId;
     }
   }
-  return user.uId * 0;
+  return null;
 }
