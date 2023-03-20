@@ -106,7 +106,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: '',
       nameLast: 'Cheng'
     };
-    
+
     expect(postRequest('/auth/register/v2', userData)).toStrictEqual(ERROR);
   });
 
@@ -117,7 +117,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'Vivian',
       nameLast: ''
     };
-    
+
     expect(postRequest('/auth/register/v2', userData)).toStrictEqual(ERROR);
   });
 
@@ -128,7 +128,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    
+
     const user = postRequest('/auth/register/v2', userData);
 
     const profileData = {
@@ -147,7 +147,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'V@ivi,an',
       nameLast: 'Ch#eng!'
     };
-    
+
     const user = postRequest('/auth/register/v2', userData);
 
     const profileData = {
@@ -167,7 +167,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    
+
     const user1 = postRequest('/auth/register/v2', user1Data);
 
     const profile1Data = {
@@ -176,7 +176,7 @@ describe('authRegisterV1 Test', () => {
     };
 
     const person1 = getRequest('/user/profile/v2', profile1Data);
-    
+
     // user 2
     const user2Data = {
       email: 'vc2@unsw.edu.au',
@@ -184,7 +184,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    
+
     const user2 = postRequest('/auth/register/v2', user2Data);
 
     const profile2Data = {
@@ -201,7 +201,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    
+
     const user3 = postRequest('/auth/register/v2', user3Data);
 
     const profile3Data = {
@@ -223,7 +223,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'Vivian1234',
       nameLast: 'Cheng123456'
     };
-    
+
     const user = postRequest('/auth/register/v2', userData);
 
     const profileData = {
@@ -242,16 +242,16 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'abc',
       nameLast: 'def'
     };
-    
+
     postRequest('/auth/register/v2', user1Data);
-    
+
     const user2Data = {
       email: 'blah1@email.com',
       password: 'password1',
       nameFirst: 'abcdefghij',
       nameLast: 'klmnopqrs'
     };
-    
+
     const user2 = postRequest('/auth/register/v2', user2Data);
 
     const profile2Data = {
@@ -268,7 +268,7 @@ describe('authRegisterV1 Test', () => {
       nameFirst: 'abcdefghij',
       nameLast: 'klmnopqrs'
     };
-    
+
     const user3 = postRequest('/auth/register/v2', user3Data);
 
     const profile3Data = {
