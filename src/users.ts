@@ -54,3 +54,19 @@ const isValidUser = (userId: number): boolean => {
   }
   return false;
 };
+
+/**
+  * Checks if the token is valid
+  * 
+  * @param {string} token
+  * ...
+  * @returns {boolean}
+*/
+const isValidToken = (token: string): boolean => {
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return true;
+    }
+  }
+  return false;
+}
