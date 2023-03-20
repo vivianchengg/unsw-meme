@@ -155,7 +155,7 @@ const isValidToken = (token: string): boolean => {
   * @returns {string} authUserId 
 */
 const findUID = (token: string) => {
-  for (const user of DataTransfer.users) {
+  for (const user of data.users) {
     if (user.token.includes(token)) {
       return user.uId;
     }
