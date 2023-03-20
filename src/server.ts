@@ -26,7 +26,6 @@ app.get('/echo', (req: Request, res: Response, next) => {
 // creates a channel - given token + name and isPublic
 app.post('/channels/create/v2', (req: Request, res: Response, next) => {
     const { token, name, isPublic } = req.body
-
     const isToken = isValidToken(token);
     if (isToken === false) {
       return res.json({ error: 'invalid token' });
