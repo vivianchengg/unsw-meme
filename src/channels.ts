@@ -28,8 +28,7 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
     return { error: 'invalid name' };
   }
 
-  let size = data.channels.length;
-  size = size + 1;
+  const size = data.channels.length + 1;
 
   const owners = [authUserId];
   const members = [authUserId];
