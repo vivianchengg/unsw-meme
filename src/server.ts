@@ -22,6 +22,19 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
+app.get('/channels/list/v2', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+
+  const isToken = isValidToken(token);
+  if (isToken === false) {
+    return res.json({ error: 'invalid token' });
+  }
+  
+  const id = findUID(token);
+  return res.json(channelsListV1(id));
+});
+
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE

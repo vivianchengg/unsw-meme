@@ -129,3 +129,35 @@ const isValidName = (name: string): boolean => {
   }
   return true;
 };
+
+/**
+  * Checks if the token is valid
+  * 
+  * @param {string} token
+  * ...
+  * @returns {boolean}
+*/
+const isValidToken = (token: string): boolean => {
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+  * Finds the authUserId given a token.
+  * 
+  * @param {string} token
+  * ...
+  * @returns {string} authUserId 
+*/
+const findUID = (token: string) => {
+  for (const user of DataTransfer.users) {
+    if (user.token.includes(token)) {
+      return user.uId;
+    }
+  }
+  return user.uId * 0;
+}
