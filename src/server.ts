@@ -22,6 +22,13 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
+app.post('/'), (req: Request, res: Response, next) => {
+  const { token, channelId } = req.body;
+  const ret = channelJoinV2(token, channelId); 
+  res.json({
+  })  
+}
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
