@@ -12,7 +12,7 @@ import { isValidUser, isMember } from './channel';
 */
 export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
-  const authUserId = null;
+  let authUserId;
 
   if (isValidToken(token) === false) {
     return { error: 'invalid token'};
