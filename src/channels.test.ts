@@ -5,7 +5,7 @@ import { clearV1 } from './other';
 import request from 'sync-request';
 import config from './config.json';
 
-//const OK = 200;
+const OK = 200;
 const port = config.port;
 const url = config.url;
 
@@ -16,18 +16,18 @@ let channel : { channelId: number } | any = { channelId: -1 };
 
 // iteration 2
 const getRequestPOST = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    url,
-    {
-      json: data,
-    }
-  );
+  const res = request('POST', url, { json: data, });
   const bodyObj = JSON.parse(String(res.getBody()));
-  return bodyObj
+  return bodyObj;
 }
 
-describe('channelsCreateV2 Tests', () => {
+beforeEach(() => {
+  clearV1();
+  user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+  channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+});
+
+describe('HTTP - channelsCreateV2 Tests', () => {
   test('Testing valid token + name', () => {
     const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
       token: user.token[0],
@@ -58,14 +58,16 @@ describe('channelsCreateV2 Tests', () => {
     expect(bodyObj).toEqual(ERROR);
   })
 
-})
+});
 
-
+//iteration 1
+/*
 beforeEach(() => {
   clearV1();
   user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
   channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
 });
+*/
 
 describe('channelsCreateV1 Tests', () => {
   test('Test: valid name & authid!', () => {

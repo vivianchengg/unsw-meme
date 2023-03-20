@@ -23,20 +23,19 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
-//create channel
+// creates a channel - given token + name and isPublic
 app.post('/channels/create/v2', (req: Request, res: Response, next) => {
     const token = req.body.token as string;
     const name = req.body.name as string;
     const isPublic = req.body.isPublic as boolean;
 
-    //check if token is valid function
     const isToken = isValidToken(token);
     if (isToken === false) {
       return res.json({ error: 'invalid token' });
     }
     
-    const id = findToken(token);
-    return res.json(channel(channelsCreateV1(id, name, isPublic)));
+    const id = findUID(token);
+    return res.json(channelsCreateV1(id, name, isPublic));
 });
 
 // start server
