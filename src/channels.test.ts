@@ -42,7 +42,6 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       name: 'pewpewpew!',
       isPublic: true,
     }
-    
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual({ channelId: expect.any(Number) });
   })
@@ -53,7 +52,6 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       name: 'pewpewpew!',
       isPublic: true,
     }
-    
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual(ERROR);
   })
@@ -64,7 +62,6 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       name: 'verycoolchannelname1234567891011121314151617181920',
       isPublic: true,
     }
-    
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual(ERROR);
   })
@@ -75,7 +72,6 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       name: '',
       isPublic: true,
     }
-    
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual(ERROR);
   })
