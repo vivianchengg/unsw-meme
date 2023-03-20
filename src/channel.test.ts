@@ -175,7 +175,7 @@ beforeEach(() => {
 describe('HTTP tests using Jest for channelJoinV2', () => {
   beforeEach(() => {
     clearV1();
-    user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
+    user = authRegisterV2('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
   });
 
   test('test sucessful channelJoinV2', () => {
@@ -191,8 +191,8 @@ describe('HTTP tests using Jest for channelJoinV2', () => {
   })
 
   test('channelId does not refer to a valid channel', () => {
-    channel = channelsCreateV1(user.authUserId, 'holidays', true);
-    expect(channelJoinV1(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
+    channel = channelsCreateV2(user.authUserId, 'holidays', true);
+    expect(channelJoinV2(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
     const res = request(
       'POST', `${url}:${port}/channelJoinV2`, { json: {token: user.token, channeld: channel.channelId + 1}} );
     const bodyObj = JSON.parse(res.body as string);
@@ -201,8 +201,8 @@ describe('HTTP tests using Jest for channelJoinV2', () => {
   });
   
   test('the authorised user is already a member of the channel', () => {
-    channel = channelsCreateV1(user.authUserId, 'games', true);
-    channelJoinV1(user.token, channel.channelId);
+    channel = channelsCreateV2(user.authUserId, 'games', true);
+    channelJoinV2(user.token, channel.channelId);
     const res = request(
       'POST', `${url}:${port}/channelJoinV2`, { json: {token: user.token, channeld: channel.channelId}} );
     const bodyObj = JSON.parse(res.body as string);
@@ -211,8 +211,8 @@ describe('HTTP tests using Jest for channelJoinV2', () => {
   });
 
   test('channelId refers to a channel that is private, when the authorised user is not already a channel member and is not a global owner', () => {
-    channel = channelsCreateV1(user.authUserId, 'sports', false);
-    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
+    channel = channelsCreateV2(user.authUserId, 'sports', false);
+    const user2 = authRegisterV2('dianahazea@gmail.com', 'january', 'diana', 'haze');
     const res = request(
       'POST', `${url}:${port}/channelJoinV2`, { json: {token: user2.token, channeld: channel.channelId}} );
     const bodyObj = JSON.parse(res.body as string);
@@ -250,7 +250,7 @@ describe('channelInvite2 function testing', () => {
   });
 
   test('channelId does not refer to a valid channel', () => {
-    channel = channelsCreateV1(user.authUserId, 'holidays', true);
+    channel = channelsCreateV1=2(user.authUserId, 'holidays', true);
     const newUser = authRegisterV2('arialee@gmail.com', 'dynamite', 'aria', 'lee');
     const res = request(
       'POST', `${url}:${port}/channelInvite2`, { json: {token: user.token, channeld: channel.channelId + 1, uId: newuser.authUserId}} );
@@ -281,9 +281,9 @@ describe('channelInvite2 function testing', () => {
   });
 
   test('channelId is valid and the authorised user is not a member of the channel', () => {
-    const channel = channelsCreateV1(user.authUserId, 'music', false);
-    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
-    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    const channel = channelsCreateV2(user.authUserId, 'music', false);
+    const user2 = authRegisterV2('dianahazea@gmail.com', 'january', 'diana', 'haze');
+    const newUser = authRegisterV2('arialee@gmail.com', 'dynamite', 'aria', 'lee');
     const res = request(
       'POST', `${url}:${port}/channelInviteV2`, { json: {token: user2.token, channeld: channel.channelId, uId: newUser.authUserId}} );
     const bodyObj = JSON.parse(res.body as string);
@@ -292,8 +292,8 @@ describe('channelInvite2 function testing', () => {
   });
 
   test('valid input', () => {
-    const user2 = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
-    const channel = channelsCreateV1(user.authUserId, 'sports', true);
+    const user2 = authRegisterV2('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    const channel = channelsCreateV2(user.authUserId, 'sports', true);
     const res = request(
       'POST', `${url}:${port}/channelInviteV2`, { json: {token: user.token, channeld: channel.channelId, uId: user2.authUserId}} );
     const bodyObj = JSON.parse(res.body as string);
