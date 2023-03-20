@@ -85,6 +85,15 @@ export const isValidUser = (userId: number): boolean => {
   return false;
 };
 
+export const isValidToken = (token: number): boolean => {
+  const data = getData(); 
+  for (const user of data.users)  {
+    if (user.token === token)  {
+      return true; 
+    }
+  }
+}
+
 /** Function that checks if channel id is valid
  *
  *
@@ -256,7 +265,7 @@ export const channelMessagesV1 = (authUserId: number, channelId: number, start: 
 
   const channel = data.channels.find(c => c.channelId === channelId);
   if (!isMember(channel, authUserId)) {
-    return { error: 'hannelId is valid and the authorised user is not a member of the channel' };
+    return { error: 'channelId is valid and the authorised user is not a member of the channel' };
   }
 
   const messageLen = channel.messages.length;
@@ -278,4 +287,35 @@ export const channelMessagesV1 = (authUserId: number, channelId: number, start: 
     start: start,
     end: end,
   };
+};
+
+
+export const channelJoinV2 = (token: number, channelId: number) => {
+  const data = getData();
+
+  if (isValidUser(authUserId) === false) {
+    return { error: 'invalid authUserId' };
+  }
+
+  if (!isValidToken(token)) {
+    return { error: 'token is invalid' };
+  }
+
+  if (!isValidChannel(channelId)) {
+    return { error: 'channelId does not refer to a valid channel' };
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (isMember(channel, authUserId)) {
+    return { error: 'the authorised user is already a member of the channel' };
+  }
+
+  const user = data.users.find((p) => p.uId === authUserId);
+  if (!channel.isPublic && user.pId !== 1) {
+    return { error: 'channel is private, when authorised user is not already a channel member and is not a global owner' };
+  }
+  
+  channel.allMembers.push(authUserId);
+  setData(data);
+  return {};
 };
