@@ -16,7 +16,6 @@ const getRequestGET = (url: string, data: any) => {
   return bodyObj;
 }
 
-//takes in token + uId
 describe ('HTTP - userProfileV2 tests', () => {
   test('Testing valid token + uId', () => {
     const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');

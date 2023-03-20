@@ -22,6 +22,19 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
+// returns user profile
+app.get('/user/profile/v2', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const uId = parseInt(req.query.uId as string);
+
+  const isToken = isValidToken(token);
+  if (isToken === false) {
+    return res.json({ error: 'invalid token' });
+  }
+
+  return res.json(userProfileV1(uId, uId));
+});
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
