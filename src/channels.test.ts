@@ -2,11 +2,58 @@ import { channelsListAllV1, channelsCreateV1, channelsListV1 } from './channels'
 import { authRegisterV1 } from './auth';
 import { clearV1 } from './other';
 
+import request from 'sync-request';
+import config from './config.json';
+
+const OK = 200;
+const port = config.port;
+const url = config.url;
+
 const ERROR = { error: expect.any(String) };
 
 let user : { authUserId: number } | any = { authUserId: -1 };
 let channel : { channelId: number } | any = { channelId: -1 };
 
+// iteration 2
+const getRequestGET = (url: string, data: any) => {
+  const res = request('GET', url, { qs: data, });
+  const bodyObj = JSON.parse(String(res.getBody()));
+  return bodyObj;
+}
+
+beforeEach(() => {
+  clearV1();
+  user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
+  channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+});
+
+describe('HTTP - channelsListV2 Tests', () => {
+  test('Testing valid input', () => {
+    const bodyObj = getRequestGET(`${url}:${port}/channels/list/v2`, {
+      token: user.token[0],
+    });
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual({
+      channels: [{
+        channelId: channel.channelId,
+        name: 'COMP1531',
+      }]
+    });
+  })
+
+  test('Testing invalid token', () => {
+    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
+      token: user.token[0] + 'hey!',
+    });
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  })
+
+});
+
+
+
+// iteration 1
 beforeEach(() => {
   clearV1();
   user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
