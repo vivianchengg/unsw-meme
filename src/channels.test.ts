@@ -1,7 +1,3 @@
-import { channelsListAllV1, channelsCreateV1, channelsListV1 } from './channels';
-import { authRegisterV1 } from './auth';
-import { clearV1 } from './other';
-
 import request from 'sync-request';
 import config from './config.json';
 
@@ -10,54 +6,70 @@ const port = config.port;
 const url = config.url;
 
 const ERROR = { error: expect.any(String) };
+const SERVERurl = `${url}:${port}`;
 
-let user : { authUserId: number } | any = { authUserId: -1 };
-let channel : { channelId: number } | any = { channelId: -1 };
+//let user : { authUserId: number } | any = { authUserId: -1 };
+//let channel : { channelId: number } | any = { channelId: -1 };
 
 // iteration 2
-const getRequestPOST = (url: string, data: any) => {
-  const res = request('POST', url, { json: data, });
-  const bodyObj = JSON.parse(String(res.getBody()));
-  return bodyObj;
+const postRequest = (url: string, data: any) => {
+  const res = request('POST', SERVERurl + url, { json: data, });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+}
+
+const deleteRequest = (url: string, data: any) => {
+  const res = request('DELETE', SERVERurl + url, { qs: data, });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
 }
 
 beforeEach(() => {
-  clearV1();
-  user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-  channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+  deleteRequest('/clear/v1', {});
+  
+  const person = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  }
+
+  const user = postRequest('/auth/register/v2', user);
 });
 
 describe('HTTP - channelsCreateV2 Tests', () => {
   test('Testing valid token + name', () => {
-    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
+    const param = {
       token: user.token[0],
       name: 'pewpewpew!',
       isPublic: true,
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual({ channelId: expect.any(Number) });
+    }
+    
+    const channelId = postRequest('/channels/create/v2', param);
+    expect(channelId).toStrictEqual({ channelId: expect.any(Number) });
   })
 
   test('Testing invalid token', () => {
-    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
-      token: user.token[0] + 'hey!',
+    const param = {
+      token: user.token[0] + 'yay!',
       name: 'pewpewpew!',
       isPublic: true,
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual(ERROR);
+    }
+    
+    const channelId = postRequest('/channels/create/v2', param);
+    expect(channelId).toStrictEqual(ERROR);
   })
 
   test('Testing invalid name', () => {
-    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
+    const param = {
       token: user.token[0],
       name: 'verycoolchannelname1234567891011121314151617181920',
       isPublic: true,
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual(ERROR);
+    }
+    
+    const channelId = postRequest('/channels/create/v2', param);
+    expect(channelId).toStrictEqual(ERROR);
   })
-
 });
 
 //iteration 1
