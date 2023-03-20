@@ -7,32 +7,31 @@ const url = config.url;
 const ERROR = { error: expect.any(String) };
 const SERVERurl = `${url}:${port}`;
 
-//let user : { authUserId: number } | any = { authUserId: -1 };
-//let channel : { channelId: number } | any = { channelId: -1 };
-// iteration 2
 const postRequest = (url: string, data: any) => {
-  const res = request('POST', SERVERurl + url, { json: data, });
+  const res = request('POST', SERVERurl + url, { json: data });
   const body = JSON.parse(String(res.getBody()));
   return body;
-}
+};
 
 const deleteRequest = (url: string, data: any) => {
-  const res = request('DELETE', SERVERurl + url, { qs: data, });
+  const res = request('DELETE', SERVERurl + url, { qs: data });
   const body = JSON.parse(String(res.getBody()));
   return body;
-}
+};
+
+let user: any;
+let channel: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
-  
   const person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
     nameFirst: 'Jake',
     nameLast: 'Renzella'
-  }
+  };
 
-  const user = postRequest('/auth/register/v2', user);
+  const user = postRequest('/auth/register/v2', person);
 });
 
 describe('HTTP - channelsCreateV2 Tests', () => {
@@ -41,50 +40,41 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       token: user.token[0],
       name: 'pewpewpew!',
       isPublic: true,
-    }
+    };
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual({ channelId: expect.any(Number) });
-  })
+  });
 
   test('Testing invalid token', () => {
     const param = {
       token: user.token[0] + 'yay!',
       name: 'pewpewpew!',
       isPublic: true,
-    }
+    };
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual(ERROR);
-  })
+  });
 
   test('Testing 20+ name length', () => {
     const param = {
       token: user.token[0],
       name: 'verycoolchannelname1234567891011121314151617181920',
       isPublic: true,
-    }
+    };
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual(ERROR);
-  })
+  });
 
   test('Testing 0 name length', () => {
     const param = {
       token: user.token[0],
       name: '',
       isPublic: true,
-    }
+    };
     const channelId = postRequest('/channels/create/v2', param);
     expect(channelId).toStrictEqual(ERROR);
-  })
+  });
 });
-
-//iteration 1
-/*
-beforeEach(() => {
-  clearV1();
-  user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-  channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-});
-*/
 
 describe('channelsListV1 Tests', () => {
   test('Test: invalid authUserId', () => {
