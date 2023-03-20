@@ -1,7 +1,6 @@
 import request from 'sync-request';
 import config from './config.json';
 
-const OK = 200;
 const port = config.port;
 const url = config.url;
 
@@ -59,10 +58,21 @@ describe('HTTP - channelsCreateV2 Tests', () => {
     expect(channelId).toStrictEqual(ERROR);
   })
 
-  test('Testing invalid name', () => {
+  test('Testing 20+ name length', () => {
     const param = {
       token: user.token[0],
       name: 'verycoolchannelname1234567891011121314151617181920',
+      isPublic: true,
+    }
+    
+    const channelId = postRequest('/channels/create/v2', param);
+    expect(channelId).toStrictEqual(ERROR);
+  })
+
+  test('Testing 0 name length', () => {
+    const param = {
+      token: user.token[0],
+      name: '',
       isPublic: true,
     }
     
@@ -79,24 +89,6 @@ beforeEach(() => {
   channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
 });
 */
-
-describe('channelsCreateV1 Tests', () => {
-  test('Test: valid name & authid!', () => {
-    expect(channelsCreateV1(user.authUserId, 'pewpewpew!', true)).toStrictEqual({ channelId: expect.any(Number) });
-  });
-
-  test('Test: invalid 0 name length', () => {
-    expect(channelsCreateV1(user.authUserId, '', false)).toStrictEqual(ERROR);
-  });
-
-  test('Test: invalid +20 name length', () => {
-    expect(channelsCreateV1(user.authUserId, 'verycoolchannelname1234567891011121314151617181920', true)).toStrictEqual(ERROR);
-  });
-
-  test('Test: invalid authUserId', () => {
-    expect(channelsCreateV1(user.authUserId + 1, 'pewpewpew!', true)).toStrictEqual(ERROR);
-  });
-});
 
 describe('channelsListV1 Tests', () => {
   test('Test: invalid authUserId', () => {
