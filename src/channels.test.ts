@@ -10,7 +10,6 @@ const SERVERurl = `${url}:${port}`;
 
 //let user : { authUserId: number } | any = { authUserId: -1 };
 //let channel : { channelId: number } | any = { channelId: -1 };
-
 // iteration 2
 const postRequest = (url: string, data: any) => {
   const res = request('POST', SERVERurl + url, { json: data, });
