@@ -1,8 +1,49 @@
-import { channelsListAllV1, channelsCreateV1, channelsListV1 } from './channels';
+// Will remove once merged, here to fix linting errors
+import { channelsCreateV1, channelsListV1 } from './channels';
 import { authRegisterV1 } from './auth';
 import { clearV1 } from './other';
 
+import request from 'sync-request';
+import { port, url } from './config.json';
+
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
+
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const postRequest = (url: string, data: any) => {
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const deleteRequest = (url: string, data: any) => {
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
 
 describe('channelsCreateV1 Tests', () => {
   beforeEach(() => {
@@ -58,18 +99,46 @@ describe('channelListAllV1 Tests', () => {
   let channel: any;
 
   beforeEach(() => {
-    clearV1();
-    user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+    deleteRequest('/clear/v1', {});
+
+    const userData = {
+      email: 'jr@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+
+    user = postRequest('/auth/register/v2', userData);
+
+    const channelData = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+
+    channel = postRequest('/channels/create/v2', channelData);
   });
 
-  test('Invalid authUserId', () => {
-    channelsCreateV1(user.authUserId, 'COMP1531', true);
-    expect(channelsListAllV1(user.authUserId + 1)).toStrictEqual(ERROR);
+  test('Invalid token', () => {
+    const listRequest = {
+      token: []
+    };
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual(ERROR);
   });
   test('Basic functionality', () => {
-    const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
-    expect(channelsListAllV1(user.authUserId)).toStrictEqual({
+    const channel2Data = {
+      token: user.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const listRequest = {
+      token: user.token
+    };
+
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
       channels:
       [{
         channelId: channel.channelId,
@@ -81,9 +150,27 @@ describe('channelListAllV1 Tests', () => {
     });
   });
   test('Includes private with public channels', () => {
-    const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
-    const channelPriv = channelsCreateV1(user.authUserId, 'COMP3311', false);
-    expect(channelsListAllV1(user.authUserId)).toStrictEqual({
+    const channel2Data = {
+      token: user.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const channelPrivData = {
+      token: user.token,
+      name: 'COMP3311',
+      isPublic: false
+    };
+
+    const channelPriv = postRequest('/channels/create/v2', channelPrivData);
+
+    const listRequest = {
+      token: user.token
+    };
+
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
       channels:
       [{
         channelId: channel.channelId,
@@ -98,10 +185,36 @@ describe('channelListAllV1 Tests', () => {
     });
   });
   test('Includes channels user is not part of', () => {
-    const user2 = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    const channel2 = channelsCreateV1(user.authUserId, 'COMP2511', true);
-    const channelPriv = channelsCreateV1(user2.authUserId, 'COMP3311', false);
-    expect(channelsListAllV1(user.authUserId)).toStrictEqual({
+    const outsideUserData = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const outsideUser = postRequest('/auth/register/v2', outsideUserData);
+
+    const channel2Data = {
+      token: user.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const channelPrivData = {
+      token: user.token,
+      name: 'COMP3311',
+      isPublic: false
+    };
+
+    const channelPriv = postRequest('/channels/create/v2', channelPrivData);
+
+    const listRequest = {
+      token: outsideUser.token
+    };
+
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
       channels:
     [{
       channelId: channel.channelId,
