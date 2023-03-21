@@ -4,7 +4,7 @@ import { isValidUser, isMember } from './channel';
 /**
   * Creates a channel for authUserId.
   *
-  * @param {number} authUserId
+  * @param {string} token
   * @param {string} name
   * @param {boolean} isPublic
   * ...
