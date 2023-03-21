@@ -1,96 +1,74 @@
-import { channelsListAllV1, channelsCreateV1, channelsListV1 } from './channels';
-import { authRegisterV1 } from './auth';
-import { clearV1 } from './other';
-
 import request from 'sync-request';
 import config from './config.json';
 
-const OK = 200;
 const port = config.port;
 const url = config.url;
 
 const ERROR = { error: expect.any(String) };
+const SERVERurl = `${url}:${port}`;
 
-let user : { authUserId: number } | any = { authUserId: -1 };
-let channel : { channelId: number } | any = { channelId: -1 };
+let user : any;
+let channel : any;
 
 // iteration 2
-const getRequestGET = (url: string, data: any) => {
-  const res = request('GET', url, { qs: data, });
-  const bodyObj = JSON.parse(String(res.getBody()));
-  return bodyObj;
-}
+const postRequest = (url: string, data: any) => {
+  const res = request('POST', SERVERurl + url, { json: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+const deleteRequest = (url: string, data: any) => {
+  const res = request('DELETE', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+const getRequest = (url: string, data: any) => {
+  const res = request('GET', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
 
 beforeEach(() => {
-  clearV1();
-  user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-  channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+  deleteRequest('/clear/v1', {});
+  const person = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  };
+  const user = postRequest('/auth/register/v2', person);
+
+  const channelParam = {
+    token: user.token[0],
+    name: 'COMP1531',
+    isPublic: true,
+  };
+  const channelId = postRequest('/channels/create/v2', channelParam);
 });
 
 describe('HTTP - channelsListV2 Tests', () => {
   test('Testing valid input', () => {
-    const bodyObj = getRequestGET(`${url}:${port}/channels/list/v2`, {
+    const param = {
       token: user.token[0],
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual({
+    };
+    const channelsList = postRequest('/channels/list/v2', param);
+    expect(channelsList).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531',
       }]
     });
   })
-
+  
   test('Testing invalid token', () => {
-    const bodyObj = getRequestPOST(`${url}:${port}/channels/create/v2`, {
-      token: user.token[0] + 'hey!',
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual(ERROR);
+    const param = {
+      token: user.token[0] + 'yay!',
+    };
+    const channelsList = postRequest('/channels/list/v2', param);
+    expect(channelsList).toStrictEqual(ERROR);
   })
-
-});
-
-
-
-// iteration 1
-beforeEach(() => {
-  clearV1();
-  user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-  channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-});
-
-describe('channelsCreateV1 Tests', () => {
-  test('Test: valid name & authid!', () => {
-    expect(channelsCreateV1(user.authUserId, 'pewpewpew!', true)).toStrictEqual({ channelId: expect.any(Number) });
-  });
-
-  test('Test: invalid 0 name length', () => {
-    expect(channelsCreateV1(user.authUserId, '', false)).toStrictEqual(ERROR);
-  });
-
-  test('Test: invalid +20 name length', () => {
-    expect(channelsCreateV1(user.authUserId, 'verycoolchannelname1234567891011121314151617181920', true)).toStrictEqual(ERROR);
-  });
-
-  test('Test: invalid authUserId', () => {
-    expect(channelsCreateV1(user.authUserId + 1, 'pewpewpew!', true)).toStrictEqual(ERROR);
-  });
-});
-
-describe('channelsListV1 Tests', () => {
-  test('Test: invalid authUserId', () => {
-    expect(channelsListV1(user.authUserId + 1)).toStrictEqual(ERROR);
-  });
-
-  test('Valid authUserId', () => {
-    expect(channelsListV1(user.authUserId)).toStrictEqual({
-      channels: [{
-        channelId: channel.channelId,
-        name: 'COMP1531',
-      }]
-    });
-  });
+  
 });
 
 describe('channelListAllV1 Tests', () => {
