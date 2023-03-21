@@ -22,10 +22,17 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
-app.post('/'), (req: Request, res: Response, next) => {
+app.post('/channelJoinV2'), (req: Request, res: Response, next) => {
   const { token, channelId } = req.body;
   const ret = channelJoinV2(token, channelId); 
-  res.json({
+  return res.json({
+  })  
+}
+
+app.post('/channelInviteV2'), (req: Request, res: Response, next) => {
+  const { token, channelId, uId } = req.body;
+  const ret = channelJoinV2( token, channelId, uId ); 
+  return res.json({
   })  
 }
 
