@@ -3,7 +3,7 @@ import { isValidUser, findUID } from './channels';
 
 /**
 * Returns information about a user
-* @param {number} authUserId
+* @param {string} token
 * @param {number} uId
 * ...
 * @returns {{

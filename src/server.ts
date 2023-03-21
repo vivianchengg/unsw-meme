@@ -3,6 +3,8 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { authRegisterV1 } from './auth';
+import { clearV1 } from './other';
 
 // Set up web app
 const app = express();
@@ -23,16 +25,9 @@ app.get('/echo', (req: Request, res: Response, next) => {
 });
 
 // returns user profile
-app.get('/user/profile/v2', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
-  const uId = parseInt(req.query.uId as string);
-
-  const isToken = isValidToken(token);
-  if (isToken === false) {
-    return res.json({ error: 'invalid token' });
-  }
-
-  return res.json(userProfileV1(uId, uId));
+app.get('/user/profile/v2', (req: Request, res: Response) => {
+  const { token, uId } = req.query;
+  return res.json(userProfileV1(token, uId));
 });
 
 // start server
