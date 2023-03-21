@@ -1,76 +1,52 @@
-import { clearV1 } from './other';
-import { userProfileV1 } from './users';
-import { authRegisterV1 } from './auth';
-
 import request from 'sync-request';
 import config from './config.json';
 
-const OK = 200;
 const port = config.port;
 const url = config.url;
 
-//iteration 2
-const getRequestGET = (url: string, data: any) => {
-  const res = request('GET', url, { qs: data, });
-  const bodyObj = JSON.parse(String(res.getBody()));
-  return bodyObj;
-}
+const ERROR = { error: expect.any(String) };
+const SERVERurl = `${url}:${port}`;
 
-describe ('HTTP - userProfileV2 tests', () => {
-  test('Testing valid token + uId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    const bodyObj = getRequestGET(`${url}:${port}/user/profile/v2`, {
-      token: user.token[0],
-      id: user.uId,
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual({
-      user: {
-        uId: user.authUserId,
-        email: 'christine@gmail.com',
-        nameFirst: 'christine',
-        nameLast: 'chu',
-        handleStr: 'christinechu',
-      }
-    });
-  })
+const postRequest = (url: string, data: any) => {
+  const res = request('POST', SERVERurl + url, { json: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
 
-  test('Testing invalid token', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    const bodyObj = getRequestGET(`${url}:${port}/user/profile/v2`, {
-      token: user.token[0] + 'yay!',
-      id: user.uId,
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual(ERROR);
-  })
+const deleteRequest = (url: string, data: any) => {
+  const res = request('DELETE', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
 
-  test('Testing invalid uId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    const bodyObj = getRequestGET(`${url}:${port}/user/profile/v2`, {
-      token: user.token[0],
-      id: user.uId + 1,
-    });
-    expect(res.statusCode).toBe(OK);
-    expect(bodyObj).toEqual(ERROR);
-  })
-});
+const getRequest = (url: string, data: any) => {
+  const res = request('GET', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
 
-
-
-// iteration 1
 let user: any;
 
 beforeEach(() => {
-  clearV1();
-  const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
+  deleteRequest('/clear/v1', {});
+  const person = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  };
+
+  const user = postRequest('/auth/register/v2', person);
 });
 
-const ERROR = { error: expect.any(String) };
-
-describe('VALID INPUT!', () => {
-  test('Test: valid authuserId and uId', () => {
-    expect(userProfileV1(user.authUserId, user.authUserId)).toStrictEqual({
+describe('HTTP - userProfileV2 tests', () => {
+  test('Testing valid token + uId', () => {
+    const param = {
+      token: user.token[0],
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual({
       user: {
         uId: user.authUserId,
         email: 'christine@gmail.com',
@@ -80,14 +56,22 @@ describe('VALID INPUT!', () => {
       }
     });
   });
-});
 
-describe('INVALID!', () => {
-  test('Test: invalid authUserId', () => {
-    expect(userProfileV1(user.authUserId + 1, user.authUserId)).toStrictEqual(ERROR);
+  test('Testing invalid token', () => {
+    const param = {
+      token: user.token[0] + 'yay!',
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
   });
 
-  test('Test: invalid authUserId', () => {
-    expect(userProfileV1(user.authUserId, user.authUserId + 1)).toStrictEqual(ERROR);
+  test('Testing invalid uId', () => {
+    const param = {
+      token: user.token[0] + 'yay!',
+      uId: user.authUserId + 1,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
   });
 });
