@@ -1,38 +1,127 @@
+// Will remove once merged but needed now to fix linting errors
 import { channelJoinV1, channelInviteV1, channelMessagesV1, channelDetailsV1 } from './channel';
 import { channelsCreateV1 } from './channels';
 import { authRegisterV1 } from './auth';
 import { clearV1 } from './other';
-import { userProfileV1 } from './users';
 
+import request from 'sync-request';
+import { port, url } from './config.json';
+
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
+
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const postRequest = (url: string, data: any) => {
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const deleteRequest = (url: string, data: any) => {
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
 
 let user: any;
 let channel: any;
 
 describe('channelDetailsV1 Test', () => {
   beforeEach(() => {
-    clearV1();
-    user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
+    deleteRequest('/clear/v1', {});
+
+    const userData = {
+      email: 'jr@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+
+    user = postRequest('/auth/register/v2', userData);
+
+    const channelData = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+
+    channel = postRequest('/channels/create/v2', channelData);
   });
 
-  test('Invalid authUserId', () => {
-    expect(channelDetailsV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
+  test('Invalid token', () => {
+    const detailRequest = {
+      token: '',
+      channelId: channel.channelId
+    };
+
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
   });
   test('Invalid channelId', () => {
-    expect(channelDetailsV1(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
+    const detailRequest = {
+      token: user.token,
+      channelId: channel.channelId + 1
+    };
+
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
   });
-  test('Valid channelId and authUserId but user is not in course', () => {
-    const outsideUser = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    expect(channelDetailsV1(outsideUser.authUserId, channel.channelId)).toStrictEqual(ERROR);
+  test('Valid channelId and token but user is not in course', () => {
+    const outsideUserData = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const outsideUser = postRequest('/auth/register/v2', outsideUserData);
+
+    const detailRequest = {
+      token: outsideUser.token,
+      channelId: channel.channelId
+    };
+
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
   });
   test('Basic functionality', () => {
-    const userProfile = userProfileV1(user.authUserId, user.authUserId);
-    expect(channelDetailsV1(user.authUserId, channel.channelId)).toStrictEqual({
+    const profileRequest = {
+      token: user.token,
+      user: user.authUserId
+    };
+
+    const userProfile = getRequest('/user/profile/v2', profileRequest);
+
+    const detailRequest = {
+      token: user.token,
+      channelId: channel.channelId + 1
+    };
+
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual({
       name: 'COMP1531',
       isPublic: true,
       ownerMembers: [userProfile.user],
-      allMembers: [userProfile.user],
+      allMembers: [userProfile.user]
     });
   });
 });
