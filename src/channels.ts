@@ -4,7 +4,7 @@ import { isValidUser, isMember } from './channel';
 /**
   * Creates a channel for authUserId.
   *
-  * @param {number} authUserId
+  * @param {string} string
   * @param {string} name
   * @param {boolean} isPublic
   * ...
@@ -54,7 +54,7 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
 /**
   * Creates an array of all channels a user is a member of
   *
-  * @param {number} authUserId
+  * @param {string} token
   * ...
   * @returns {channels: [{
 *   channelId: number,
