@@ -5,6 +5,7 @@ import { clearV1 } from './other';
 import { userProfileV1 } from './users';
 
 const ERROR = { error: expect.any(String) };
+const SERVER_URL = `${url}:${port}`;
 
 describe('channelDetailsV1 Test', () => {
   beforeEach(() => {
@@ -301,3 +302,118 @@ describe('channelInvite2 function testing', () => {
     expect(bodyObj).toStrictEqual({ error: 'error' });
   });
 }); 
+
+describe('channelMessengesV2 function testing', () => {
+  beforeEach(() => {
+    clearV1();
+    user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
+  });
+
+  test('channelId does not refer to a valid channel', () => {
+    const channel = channelsCreateV1(user.authUserId, 'music', false);
+    const res = request(
+      'GET',
+            `${url}:${port}/channelMessagesV2`,
+            {
+              qs: {
+                token: user.token,
+                channelId: channel.channelId + 1,
+                start: 0
+              }
+            }
+    );
+    const bodyObj = JSON.parse(res.body as string);
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  });
+
+  test('channelId does not refer to a valid channel', () => {
+    const channel = channelsCreateV1(user.authUserId, 'music', false);
+    const res = request(
+      'GET',
+            `${url}:${port}/channelMessagesV2`,
+            {
+              qs: {
+                token: user.token,
+                channelId: channel.channelId + 1,
+                start: 0
+              }
+            }
+    );
+    const bodyObj = JSON.parse(res.body as string);
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  });
+
+  test('start is greater than the total number of messages in the channe', () => {
+    const channel = channelsCreateV1(user.authUserId, 'sports', false);
+    const res = request(
+      'GET',
+            `${url}:${port}/channelMessagesV2`,
+            {
+              qs: {
+                token: user.token,
+                channelId: channel.channelId,
+                start: 1
+              }
+            }
+    );
+    const bodyObj = JSON.parse(res.body as string);
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  });
+
+
+  test('channelId is valid and the authorised user is not a member of the channel', () => {
+    const res = request(
+      'GET',
+            `${url}:${port}/channelMessagesV2`,
+            {
+              qs: {
+                token: user1.token,
+                channelId: channel.channelId,
+                start: 0
+              }
+            }
+    );
+    const bodyObj = JSON.parse(res.body as string);
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  });
+
+  test('token is invalid', () => {
+    const channel = channelsCreateV1(user.authUserId, 'games', true);
+    const res = request(
+      'GET',
+            `${url}:${port}/channelMessagesV2`,
+            {
+              qs: {
+                token: user.token + 1,
+                channelId: channel.channelId,
+                start: 0
+              }
+            }
+    );
+    const bodyObj = JSON.parse(res.body as string);
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  });
+
+  test('valid input', () => {
+    const channel = channelsCreateV1(user.authUserId, 'music', true);
+    const res = request(
+      'GET',
+            `${url}:${port}/channelMessagesV2`,
+            {
+              qs: {
+                token: user.token,
+                channelId: channel.channelId,
+                start: 0
+              }
+            }
+    );
+    const bodyObj = JSON.parse(res.body as string);
+    expect(res.statusCode).toBe(OK);
+    expect(bodyObj).toEqual(ERROR);
+  });
+});
