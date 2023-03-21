@@ -3,7 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import { authRegisterV1 } from './auth'
+import { authRegisterV1 } from './auth';
 import { channelsCreateV1, channelsListV1 } from './channels';
 import { clearV1 } from './other';
 
@@ -30,7 +30,6 @@ app.get('/channels/list/v2', (req: Request, res: Response) => {
   const { token } = req.query;
   return res.json(channelsListV1(token));
 });
-
 
 // start server
 const server = app.listen(PORT, HOST, () => {

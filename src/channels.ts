@@ -15,7 +15,7 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
   let authUserId;
 
   if (isValidToken(token) === false) {
-    return { error: 'invalid token'};
+    return { error: 'invalid token' };
   } else {
     authUserId = findUID(token);
   }
@@ -69,7 +69,7 @@ export const channelsListV1 = (token: string) => {
   let authUserId;
 
   if (isValidToken(token) === false) {
-    return { error: 'invalid token'};
+    return { error: 'invalid token' };
   } else {
     authUserId = findUID(token);
   }
@@ -148,7 +148,6 @@ const isValidName = (name: string): boolean => {
 
 /**
   * Checks if the token is valid
-  * 
   * @param {string} token
   * ...
   * @returns {boolean}
@@ -161,14 +160,13 @@ const isValidToken = (token: string): boolean => {
     }
   }
   return false;
-}
+};
 
 /**
   * Finds the authUserId given a token.
-  * 
   * @param {string} token
   * ...
-  * @returns {string} authUserId 
+  * @returns {string} authUserId
 */
 const findUID = (token: string) => {
   const data = getData();
@@ -177,5 +175,5 @@ const findUID = (token: string) => {
       return user.uId;
     }
   }
-  return user.uId * 0;
-}
+  return null;
+};

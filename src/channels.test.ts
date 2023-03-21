@@ -52,22 +52,22 @@ describe('HTTP - channelsListV2 Tests', () => {
     const param = {
       token: user.token[0],
     };
-    const channelsList = postRequest('/channels/list/v2', param);
+    const channelsList = getRequest('/channels/list/v2', param);
     expect(channelsList).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531',
       }]
     });
-  })
-  
+  });
+
   test('Testing invalid token', () => {
     const param = {
       token: user.token[0] + 'yay!',
     };
-    const channelsList = postRequest('/channels/list/v2', param);
+    const channelsList = getRequest('/channels/list/v2', param);
     expect(channelsList).toStrictEqual(ERROR);
-  })
+  });
 });
 
 describe('channelListAllV1 Tests', () => {
