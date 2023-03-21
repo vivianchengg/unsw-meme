@@ -119,7 +119,7 @@ export const channelsListAllV1 = (token: string) => {
   };
 };
 
-/**
+/** Function that returns user Id from token
  *
  * @param {string} token
  * @returns {number}
@@ -129,8 +129,10 @@ const extractUId = (token: string) => {
   let userId = -1;
 
   for (const user of data.users) {
-    if (user.tokens.includes(token)) {
-      userId = user.uId;
+    for (const tokenData of user.tokens) {
+      if (token === tokenData) {
+        userId = user.uId;
+      }
     }
   }
 
