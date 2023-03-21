@@ -29,6 +29,18 @@ const postRequest = (url: string, data: any) => {
   return body; 
 }
 
+const deleteRequest = (url: string) => {
+  const res = request(
+    'DELETE',
+    SERVER_URL + url, 
+    {
+      qs: data, 
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body; 
+}
+
 
 describe('channelDetailsV1 Test', () => {
   beforeEach(() => {
