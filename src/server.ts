@@ -22,8 +22,8 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
-app.get('/channels/list/v2', (req: Request, res: Response, next) => {
-  const token = req.query.token as string;
+app.get('/channels/list/v2', (req: Request, res: Response) => {
+  const { token } = req.query;
 
   const isToken = isValidToken(token);
   if (isToken === false) {

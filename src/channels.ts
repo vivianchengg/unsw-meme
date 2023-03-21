@@ -10,8 +10,16 @@ import { isValidUser, isMember } from './channel';
   * ...
   * @returns {{channelId: number}}
 */
-export const channelsCreateV1 = (authUserId: number, name: string, isPublic: boolean) => {
+export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
+  let authUserId;
+
+  if (isValidToken(token) === false) {
+    return { error: 'invalid token'};
+  } else {
+    authUserId = findUID(token);
+  }
+
   if (isValidUser(authUserId) === false) {
     return { error: 'invalid auth user id' };
   }
@@ -56,8 +64,16 @@ export const channelsCreateV1 = (authUserId: number, name: string, isPublic: boo
 * ]}
 *
 */
-export const channelsListV1 = (authUserId: number) => {
+export const channelsListV1 = (token: string) => {
   const data = getData();
+  let authUserId;
+
+  if (isValidToken(token) === false) {
+    return { error: 'invalid token'};
+  } else {
+    authUserId = findUID(token);
+  }
+
   if (isValidUser(authUserId) === false) {
     return { error: 'invalid authUserId' };
   }
@@ -138,6 +154,7 @@ const isValidName = (name: string): boolean => {
   * @returns {boolean}
 */
 const isValidToken = (token: string): boolean => {
+  const data = getData();
   for (const user of data.users) {
     if (user.token.includes(token)) {
       return true;
@@ -154,7 +171,8 @@ const isValidToken = (token: string): boolean => {
   * @returns {string} authUserId 
 */
 const findUID = (token: string) => {
-  for (const user of DataTransfer.users) {
+  const data = getData();
+  for (const user of data.users) {
     if (user.token.includes(token)) {
       return user.uId;
     }
