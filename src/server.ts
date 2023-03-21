@@ -22,16 +22,10 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
+// returns a list of channels that the user is apart of.
 app.get('/channels/list/v2', (req: Request, res: Response) => {
   const { token } = req.query;
-
-  const isToken = isValidToken(token);
-  if (isToken === false) {
-    return res.json({ error: 'invalid token' });
-  }
-  
-  const id = findUID(token);
-  return res.json(channelsListV1(id));
+  return res.json(channelsListV1(token));
 });
 
 

@@ -68,7 +68,6 @@ describe('HTTP - channelsListV2 Tests', () => {
     const channelsList = postRequest('/channels/list/v2', param);
     expect(channelsList).toStrictEqual(ERROR);
   })
-  
 });
 
 describe('channelListAllV1 Tests', () => {
