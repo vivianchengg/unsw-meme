@@ -1,5 +1,5 @@
 import express, { json, Request, Response } from 'express';
-import { echo } from './echo';
+import channelJoinV2 from './channel.ts';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
@@ -16,20 +16,17 @@ app.use(morgan('dev'));
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
-app.post('/channel/joinv2'), (req: Request, res: Response, next) => {
+app.post('/channel/joinv2', (req: Request, res: Response, next) => {
   const { token, channelId } = req.body;
-  return res.json(channelJoinV2(token, channelId));  
-}
+  return res.json(channelJoinV2(token, channelId));
+});
 
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
   console.log(`⚡️ Server started on port ${PORT} at ${HOST}`);
 });
 
-
 // For coverage, handle Ctrl+C gracefully
 process.on('SIGINT', () => {
   server.close(() => console.log('Shutting down server gracefully.'));
 });
-
-]

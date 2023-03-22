@@ -1,5 +1,4 @@
 import { Channel, getData, setData } from './dataStore';
-import { userProfileV1 } from './users';
 
 /** Function that returns user Id from token
  *
@@ -39,8 +38,10 @@ export const isValidUser = (userId: number): boolean => {
 export const isValidToken = (token: number): boolean => {
   const data = getData();
   for (const user of data.users) {
-    if (user.token === token) {
-      return true;
+    for (const user_tok of user.tokens) {
+      if (user.tokens === token) {
+        return true;
+      }
     }
   }
 };
