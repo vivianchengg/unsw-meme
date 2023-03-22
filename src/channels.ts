@@ -143,7 +143,7 @@ const isValidName = (name: string): boolean => {
   * ...
   * @returns {boolean}
 */
-const isValidToken = (token: string): boolean => {
+export const isValidToken = (token: string): boolean => {
   const data = getData();
   for (const user of data.users) {
     if (user.token.includes(token)) {
@@ -159,7 +159,7 @@ const isValidToken = (token: string): boolean => {
   * ...
   * @returns {string} authUserId
 */
-const findUID = (token: string) => {
+export const findUID = (token: string) => {
   const data = getData();
   for (const user of data.users) {
     if (user.token.includes(token)) {
