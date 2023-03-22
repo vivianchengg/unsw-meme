@@ -256,7 +256,7 @@ describe('HTTP tests using Jest for channelJoinV2', () => {
     expect(postRequest('/channel/join/v2', param2).toStrictEqual(ERROR)); 
   });
   
-  test('token invalid', () => {
+  test('token is invalid', () => {
     const param1 = {
       token: user.token + 1, 
       channelId: channelId
@@ -280,6 +280,7 @@ describe('channelMessengesV2 function testing', () => {
     clearV1();
     user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
   });
+
   test('channelId does not refer to a valid channel', () => {
     const channel = channelsCreateV1(user.authUserId, 'music', false);
     const res = request(
