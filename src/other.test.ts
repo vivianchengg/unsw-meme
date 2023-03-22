@@ -83,6 +83,6 @@ describe('Test clearV1 function', () => {
   });
 
   test('test clearV1 - basic output', () => {
-    expect(deleteRequest('/clear/v1'), {}).toStrictEqual({});
+    expect(deleteRequest('/clear/v1', {})).toStrictEqual({});
   });
 });

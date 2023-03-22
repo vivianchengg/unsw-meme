@@ -59,7 +59,7 @@ Example usage
 // Use get() to access the data
 export const getData = (): Data => {
   const json = fs.readFileSync('data.json', { flag: 'r' });
-  const data = JSON.parse(json);
+  const data = JSON.parse(json.toString());
   return data;
 };
 
