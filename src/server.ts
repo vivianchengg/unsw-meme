@@ -16,7 +16,7 @@ app.use(morgan('dev'));
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
-app.post('/channelJoinV2'), (req: Request, res: Response, next) => {
+app.post('/channel/joinv2'), (req: Request, res: Response, next) => {
   const { token, channelId } = req.body;
   return res.json(channelJoinV2(token, channelId));  
 }
@@ -31,3 +31,5 @@ const server = app.listen(PORT, HOST, () => {
 process.on('SIGINT', () => {
   server.close(() => console.log('Shutting down server gracefully.'));
 });
+
+]
