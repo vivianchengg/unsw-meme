@@ -45,8 +45,8 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
-let user : { authUserId: number } | any = { authUserId: -1 };
-let channel : { channelId: number } | any = { channelId: -1 };
+let user;
+let channel;
 
 beforeEach(() => {
   clearV1();
