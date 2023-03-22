@@ -21,14 +21,6 @@ app.post('/channelJoinV2'), (req: Request, res: Response, next) => {
   return res.json(channelJoinV2(token, channelId));  
 }
 
-app.post('/channelInviteV2'), (req: Request, res: Response, next) => {
-  const { token, channelId, uId } = req.body;
-  const ret = channelJoinV2( token, channelId, uId ); 
-  return res.json({
-  })  
-}
-
-// start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
   console.log(`⚡️ Server started on port ${PORT} at ${HOST}`);
