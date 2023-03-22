@@ -16,17 +16,9 @@ app.use(morgan('dev'));
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
-// Example get request
-app.get('/echo', (req: Request, res: Response, next) => {
-  const data = req.query.echo as string;
-  return res.json(echo(data));
-});
-
-app.post('/'), (req: Request, res: Response, next) => {
-  const { token, channelId } = req.body;
-  const ret = channelJoinV2(token, channelId); 
-  res.json({
-  })  
+app.post('/channel/invite/v2'), (req: Request, res: Response, next) => {
+  const { token, channelId, uId} = req.body;
+  res.json(channelInviteV2(token, channelId, uId))  
 }
 
 // start server
