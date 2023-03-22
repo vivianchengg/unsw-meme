@@ -49,10 +49,10 @@ describe('HTTP - userProfileV2 tests', () => {
     expect(profile).toStrictEqual({
       user: {
         uId: user.authUserId,
-        email: 'christine@gmail.com',
-        nameFirst: 'christine',
-        nameLast: 'chu',
-        handleStr: 'christinechu',
+        email: 'jr@unsw.edu.au',
+        nameFirst: 'Jake',
+        nameLast: 'Renzella',
+        handleStr: 'JakeRenzella',
       }
     });
   });
