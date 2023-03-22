@@ -39,7 +39,6 @@ beforeEach(() => {
   const user = postRequest('/auth/register/v2', person);
 });
 
-
 describe('HTTP tests using Jest for channelInviteV2', () => {
   beforeEach(() => {
     const param2 = {
