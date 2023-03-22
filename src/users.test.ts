@@ -25,7 +25,7 @@ const getRequest = (url: string, data: any) => {
   return body;
 };
 
-let user: any;
+let user;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
@@ -36,7 +36,7 @@ beforeEach(() => {
     nameLast: 'Renzella'
   };
 
-  const user = postRequest('/auth/register/v2', person);
+  user = postRequest('/auth/register/v2', person);
 });
 
 describe('HTTP - userProfileV2 tests', () => {
@@ -68,7 +68,7 @@ describe('HTTP - userProfileV2 tests', () => {
 
   test('Testing invalid uId', () => {
     const param = {
-      token: user.token[0] + 'yay!',
+      token: user.token[0],
       uId: user.authUserId + 1,
     };
     const profile = getRequest('/user/profile/v2', param);
