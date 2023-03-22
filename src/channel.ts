@@ -69,6 +69,25 @@ export const channelDetailsV1 = (authUserId: number, channelId: number) => {
   }
 };
 
+/** Function that returns user Id from token
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
+  const data = getData();
+  let userId = -1;
+
+  for (const user of data.users) {
+    for (const tokenData of user.tokens) {
+      if (token === tokenData) {
+        userId = user.uId;
+      }
+    }
+  }
+  return userId;
+};
+
 /** Function that checks if user id is valid
  *
  *
