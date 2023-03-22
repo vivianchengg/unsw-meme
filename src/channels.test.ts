@@ -7,10 +7,9 @@ const url = config.url;
 const ERROR = { error: expect.any(String) };
 const SERVERurl = `${url}:${port}`;
 
-let user : any;
-let channel : any;
+let user;
+let channel;
 
-// iteration 2
 const postRequest = (url: string, data: any) => {
   const res = request('POST', SERVERurl + url, { json: data });
   const body = JSON.parse(String(res.getBody()));
@@ -37,14 +36,14 @@ beforeEach(() => {
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  const user = postRequest('/auth/register/v2', person);
+  user = postRequest('/auth/register/v2', person);
 
   const channelParam = {
     token: user.token[0],
     name: 'COMP1531',
     isPublic: true,
   };
-  const channelId = postRequest('/channels/create/v2', channelParam);
+  channel = postRequest('/channels/create/v2', channelParam);
 });
 
 describe('HTTP - channelsListV2 Tests', () => {

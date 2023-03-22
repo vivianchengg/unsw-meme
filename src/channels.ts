@@ -77,15 +77,15 @@ export const channelsListV1 = (token: string) => {
     return { error: 'invalid authUserId' };
   }
 
-  const channelList = [];
-  let channelDetail = {};
+  let channelList = [];
+  let detail = {};
   for (const channel of data.channels) {
     if (isMember(channel, authUserId) === true) {
       channelDetail = {
         channelId: channel.channelId,
         name: channel.name,
       };
-      channelList.push(channelDetail);
+      channelList.push(detail);
     }
   }
   return {
