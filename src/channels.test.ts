@@ -19,8 +19,7 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
-let user: any;
-let channel: any;
+let user;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
@@ -31,7 +30,7 @@ beforeEach(() => {
     nameLast: 'Renzella'
   };
 
-  const user = postRequest('/auth/register/v2', person);
+  user = postRequest('/auth/register/v2', person);
 });
 
 describe('HTTP - channelsCreateV2 Tests', () => {
