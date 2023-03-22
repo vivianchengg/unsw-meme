@@ -1,4 +1,4 @@
-import { Channel, getData, setData } from './dataStore';
+import { Channel, getData } from './dataStore';
 import { userProfileV1 } from './users';
 
 /** Function that lists details of members in the channel given that:
@@ -69,7 +69,6 @@ export const channelDetailsV1 = (authUserId: number, channelId: number) => {
   }
 };
 
-
 /** Function that returns user Id from token
  *
  * @param {string} token
@@ -89,7 +88,6 @@ const extractUId = (token: string) => {
   return userId;
 };
 
-
 /** Function that checks if user id is valid
  *
  *
@@ -107,14 +105,14 @@ export const isValidUser = (userId: number): boolean => {
 };
 
 export const isValidToken = (token: number): boolean => {
-  const data = getData(); 
-  for (const user of data.users)  {
-    if (user.token.includes(token)) {
-      return true; 
+  const data = getData();
+  for (const user of data.users) {
+    if (user.tokens.includes(token)) {
+      return true;
     }
   }
-  return false; 
-}
+  return false;
+};
 
 /** Function that checks if channel id is valid
  *
@@ -175,7 +173,7 @@ export const channelMessagesV2 = (token: number, channelId: number, start: numbe
   }
 
   const messageLen = channel.messages.length;
-  let messages; 
+  let messages;
 
   if (start > messageLen) {
     return { error: ' start is greater than the total number of messages in the channel' };
@@ -183,10 +181,10 @@ export const channelMessagesV2 = (token: number, channelId: number, start: numbe
   let end = 0;
   if (messageLen > (start + 50)) {
     end = start + 50;
-    messages = channel.messages.slice(start, end); 
+    messages = channel.messages.slice(start, end);
   } else {
     end = -1;
-    messages = channel.messages.slice(start); 
+    messages = channel.messages.slice(start);
   }
 
   return {
@@ -195,4 +193,3 @@ export const channelMessagesV2 = (token: number, channelId: number, start: numbe
     end: end,
   };
 };
-
