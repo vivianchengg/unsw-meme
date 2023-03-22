@@ -160,7 +160,7 @@ export const isMember = (channel: Channel, userId: number): boolean => {
 
 /**
   * Given a channelId of a channel that the authorised user can join, adds them to that channel.
-  * @param {number} authUserId
+  * @param {number} token
   * @param {number} channelId
   * @returns {}
   *
@@ -173,16 +173,18 @@ export const isMember = (channel: Channel, userId: number): boolean => {
 *
 */
 
-export const channelJoinV1 = (authUserId: number, channelId: number) => {
+export const channelJoinV1 = (token: number, channelId: number) => {
   const data = getData();
 
-  if (!isValidUser(authUserId)) {
+  /*if (!isValidUser(authUserId)) {
     return { error: 'authUserId is invalid' };
-  }
+  }*/
 
   if (!isValidChannel(channelId)) {
     return { error: 'channelId does not refer to a valid channel' };
   }
+
+  const authUserId = extractUId(token);
 
   const channel = data.channels.find(c => c.channelId === channelId);
   if (isMember(channel, authUserId)) {
@@ -219,12 +221,13 @@ export const channelJoinV1 = (authUserId: number, channelId: number) => {
 *
 */
 
-export const channelInviteV1 = (authUserId: number, channelId: number, uId: number) => {
+export const channelInviteV1 = (token: number, channelId: number, uId: number) => {
   const data = getData();
 
-  if (!isValidUser(authUserId)) {
+  /*if (!isValidUser(authUserId)) {
     return { error: 'authUserId is invalid' };
-  }
+  }*/
+
 
   if (!isValidChannel(channelId)) {
     return { error: 'channelId does not refer to a valid channel' };
@@ -238,6 +241,8 @@ export const channelInviteV1 = (authUserId: number, channelId: number, uId: numb
   if (isMember(channel, uId)) {
     return { error: 'uId refers to a user who is already a member of the channel' };
   }
+
+  const authUserId = extractUId(token);
 
   if (!isMember(channel, authUserId)) {
     return { error: 'channelId is valid and the authorised user is not a member of the channel' };
@@ -339,7 +344,6 @@ export const channelJoinV2 = (token: number, channelId: number) => {
   setData(data);
   return {};
 };
-
 
 export const channelInviteV2 = (token: number, channelId: number, uId: number) => {
   const data = getData();
