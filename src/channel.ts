@@ -291,7 +291,7 @@ export const channelMessagesV1 = (token: number, channelId: number, start: numbe
   }
 
   const messageLen = channel.messages.length;
-  let messages = {}; 
+  let messages; 
 
   if (start > messageLen) {
     return { error: ' start is greater than the total number of messages in the channel' };
@@ -341,7 +341,7 @@ export const channelJoinV2 = (token: number, channelId: number) => {
 };
 
 
-export const channelInviteV2 = (authUserId: number, channelId: number, uId: number) => {
+export const channelInviteV2 = (token: number, channelId: number, uId: number) => {
   const data = getData();
 
   if (!isValidToken(token)) {
