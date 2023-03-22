@@ -80,7 +80,7 @@ export const channelsListV1 = (token: string) => {
   let channelList = [];
   for (const channel of data.channels) {
     if (isMember(channel, authUserId) === true) {
-      channelDetail = {
+      const channelDetail = {
         channelId: channel.channelId,
         name: channel.name,
       };
