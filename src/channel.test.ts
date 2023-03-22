@@ -29,8 +29,7 @@ let user : any;
 let channel : any;
 
 beforeEach(() => {
-  request('DELETE', SERVER_URL + '/clear', { json: {} });
-  deleterequest('DELETE', SERVER_URL + '/clear', { json: {} });
+  deleterequest('DELETE', SERVERurl + '/clear', { json: {} });
   const person = {
     email: 'bridgetcosta@gmail.com',
     password: 'daffodil',
@@ -39,6 +38,7 @@ beforeEach(() => {
   };
   const user = postRequest('/auth/register/v2', person);
 });
+
 
 describe('HTTP tests using Jest for channelInviteV2', () => {
   beforeEach(() => {
