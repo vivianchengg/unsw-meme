@@ -3,7 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import { userProfileV1 } from './users'
+import { userProfileV1 } from './users';
 
 // Set up web app
 const app = express();

@@ -7,6 +7,8 @@ const url = config.url;
 const ERROR = { error: expect.any(String) };
 const SERVERurl = `${url}:${port}`;
 
+let user : any;
+
 const postRequest = (url: string, data: any) => {
   const res = request('POST', SERVERurl + url, { json: data });
   const body = JSON.parse(String(res.getBody()));
@@ -24,8 +26,6 @@ const getRequest = (url: string, data: any) => {
   const body = JSON.parse(String(res.getBody()));
   return body;
 };
-
-let user;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
