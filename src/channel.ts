@@ -5,7 +5,7 @@ import { Channel, getData, setData } from './dataStore';
  * @param {string} token
  * @returns {number}
  */
-const extractUId = (token: string) => {
+const extractUId = (token: number) => {
   const data = getData();
   let userId = -1;
 
@@ -38,8 +38,8 @@ export const isValidUser = (userId: number): boolean => {
 export const isValidToken = (token: number): boolean => {
   const data = getData();
   for (const user of data.users) {
-    for (const user_tok of user.tokens) {
-      if (user.tokens === token) {
+    for (const userTok of user.tokens) {
+      if (userTok === token) {
         return true;
       }
     }

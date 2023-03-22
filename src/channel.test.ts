@@ -19,9 +19,9 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
-let user : any;
-let channel : any;
-let channelId : number;
+let user: any;
+let channel: any;
+let channelId: number;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
