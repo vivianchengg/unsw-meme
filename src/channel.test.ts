@@ -21,7 +21,6 @@ const deleteRequest = (url: string, data: any) => {
 
 let user: any;
 let channel: any;
-let channelId: number;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
@@ -86,10 +85,17 @@ describe('HTTP tests using Jest for channelJoinV2', () => {
 
   test('token is invalid', () => {
     const param1 = {
-      token: user.token + 1,
-      channelId: channelId
+      token: user.token,
+      name: 'sports',
+      isPublic: true
     };
-    expect(postRequest('/channel/join/v2', param1).toStrictEqual(ERROR));
+    channel = postRequest('/channel/create/v2', param1);
+
+    const param2 = {
+      token: user.token + 1,
+      channelId: channel.channelId
+    };
+    expect(postRequest('/channel/join/v2', param2).toStrictEqual(ERROR));
   });
 
   test('test sucessful channelJoinV2', () => {
