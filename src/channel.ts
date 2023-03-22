@@ -1,9 +1,9 @@
-import { Channel, getData } from './dataStore';
+import { Channel, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
 
 /** Function that lists details of members in the channel given that:
 *
-* @param {number} authUserId - User Id of individual asking for details of a channel
+* @param {string} token - Token of individual asking for details of a channel
 * @param {number} channelId - Channel Id of channel that user is asking to access details of
 * @returns {object} channel
 *
@@ -74,7 +74,7 @@ export const channelDetailsV1 = (authUserId: number, channelId: number) => {
  * @param {string} token
  * @returns {number}
  */
-const extractUId = (token: string) => {
+const extractUId = (token: number) => {
   const data = getData();
   let userId = -1;
 
@@ -87,6 +87,7 @@ const extractUId = (token: string) => {
   }
   return userId;
 };
+
 
 /** Function that checks if user id is valid
  *
@@ -107,11 +108,10 @@ export const isValidUser = (userId: number): boolean => {
 export const isValidToken = (token: number): boolean => {
   const data = getData();
   for (const user of data.users) {
-    if (user.tokens.includes(token)) {
+    if (user.token === token) {
       return true;
     }
   }
-  return false;
 };
 
 /** Function that checks if channel id is valid
@@ -156,40 +156,32 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   return false;
 };
 
-export const channelMessagesV2 = (token: number, channelId: number, start: number) => {
+export const channelInviteV2 = (authUserId: number, channelId: number, uId: number) => {
   const data = getData();
-  const authUserId = extractUId(token);
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
+
+  if (!isValidToken(token)) {
+    return { error: 'token is invalid' };
   }
 
   if (!isValidChannel(channelId)) {
     return { error: 'channelId does not refer to a valid channel' };
   }
 
+  if (!isValidUser(uId)) {
+    return { error: 'uId does not refer to a valid user' };
+  }
+
   const channel = data.channels.find(c => c.channelId === channelId);
+  if (isMember(channel, uId)) {
+    return { error: 'uId refers to a user who is already a member of the channel' };
+  }
+
   if (!isMember(channel, authUserId)) {
     return { error: 'channelId is valid and the authorised user is not a member of the channel' };
   }
 
-  const messageLen = channel.messages.length;
-  let messages;
+  channel.allMembers.push(uId);
 
-  if (start > messageLen) {
-    return { error: ' start is greater than the total number of messages in the channel' };
-  }
-  let end = 0;
-  if (messageLen > (start + 50)) {
-    end = start + 50;
-    messages = channel.messages.slice(start, end);
-  } else {
-    end = -1;
-    messages = channel.messages.slice(start);
-  }
-
-  return {
-    messages: messages,
-    start: start,
-    end: end,
-  };
+  setData(data);
+  return {};
 };
