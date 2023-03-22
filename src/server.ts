@@ -18,7 +18,7 @@ const HOST: string = process.env.IP || 'localhost';
 
 app.get('/channel/messagesv2'), (req: Request, res: Response, next) => {
   const { token, channelId, start } = req.query;
-  return res.json(channelJoinV2(token, channelId, start));  
+  return res.json(channelMessagesV2(token, channelId, start));  
 }
 
 // start server
