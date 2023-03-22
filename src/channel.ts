@@ -88,10 +88,11 @@ export const isValidUser = (userId: number): boolean => {
 export const isValidToken = (token: number): boolean => {
   const data = getData(); 
   for (const user of data.users)  {
-    if (user.token === token)  {
+    if (user.token.includes(token)) {
       return true; 
     }
   }
+  return false; 
 }
 
 /** Function that checks if channel id is valid
