@@ -7,6 +7,9 @@ const port = config.port;
 const url = config.url;
 const SERVERurl = `${url}:${port}`;
 
+let user : any;
+let channel : any;
+
 const postRequest = (url: string, data: any) => {
   const res = request('POST', SERVERurl+ url, { json: data });
   const body = JSON.parse(String(res.getBody()));
@@ -26,7 +29,7 @@ const getRequest = (url: string, data: any) => {
 };
 
 beforeEach(() => {
-  deleterequest('DELETE', SERVERurl + '/clear', { json: {} });
+  deleteRequest('/clear/v1', {});
   const person = {
     email: 'bridgetcosta@gmail.com',
     password: 'daffodil',
@@ -116,7 +119,13 @@ describe('channelMessengesV2 function testing', () => {
       channelId: channel.channelId, 
       start: 0
     }
-    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual([], 0, 50); 
+    const expected_ret = {
+      messages: {},
+      start: 0,
+      end: 50
+    };
+
+    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(expected_ret); 
   });
 });
 
