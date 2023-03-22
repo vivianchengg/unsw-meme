@@ -130,8 +130,7 @@ describe('channelListAllV1 Tests', () => {
     };
 
     expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
-      channels:
-      [{
+      channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
       }, {
@@ -162,8 +161,7 @@ describe('channelListAllV1 Tests', () => {
     };
 
     expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
-      channels:
-      [{
+      channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
       }, {
@@ -206,17 +204,16 @@ describe('channelListAllV1 Tests', () => {
     };
 
     expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
-      channels:
-    [{
-      channelId: channel.channelId,
-      name: 'COMP1531'
-    }, {
-      channelId: channel2.channelId,
-      name: 'COMP2511'
-    }, {
-      channelId: channelPriv.channelId,
-      name: 'COMP3311'
-    }]
+      channels: [{
+        channelId: channel.channelId,
+        name: 'COMP1531'
+      }, {
+        channelId: channel2.channelId,
+        name: 'COMP2511'
+      }, {
+        channelId: channelPriv.channelId,
+        name: 'COMP3311'
+      }]
     });
   });
 });
