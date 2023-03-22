@@ -1,8 +1,6 @@
-import { channelJoinV1, channelInviteV1, channelMessagesV1, channelDetailsV1 } from './channel';
-import { channelsCreateV1 } from './channels';
-import { authRegisterV1 } from './auth';
-import { clearV1 } from './other';
-import { userProfileV1 } from './users';
+
+import request from 'sync-request';
+import config from './config.json';
 
 const ERROR = { error: expect.any(String) };
 const SERVER_URL = `${url}:${port}`;
