@@ -26,7 +26,6 @@ const getRequest = (url: string, data: any) => {
 };
 
 beforeEach(() => {
-  request('DELETE', SERVERurl + '/clear', { json: {} });
   deleterequest('DELETE', SERVERurl + '/clear', { json: {} });
   const person = {
     email: 'bridgetcosta@gmail.com',
