@@ -3,8 +3,30 @@ import request from 'sync-request';
 import config from './config.json';
 
 const ERROR = { error: expect.any(String) };
-const SERVER_URL = `${url}:${port}`;
+const port = config.port;
+const url = config.url;
+const SERVERurl = `${url}:${port}`;
 
+const postRequest = (url: string, data: any) => {
+  const res = request('POST', SERVERurl+ url, { json: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+const deleteRequest = (url: string, data: any) => {
+  const res = request('DELETE', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+const getRequest = (url: string, data: any) => {
+  const res = request('GET', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+let user : any;
+let channel : any;
 
 beforeEach(() => {
   request('DELETE', SERVER_URL + '/clear', { json: {} });
