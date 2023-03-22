@@ -291,17 +291,18 @@ export const channelMessagesV1 = (token: number, channelId: number, start: numbe
   }
 
   const messageLen = channel.messages.length;
-  const messages = channel.messages.slice();
+  let messages = {}; 
 
   if (start > messageLen) {
     return { error: ' start is greater than the total number of messages in the channel' };
   }
-
   let end = 0;
   if (messageLen > (start + 50)) {
     end = start + 50;
+    messages = channel.messages.slice(start, end); 
   } else {
     end = -1;
+    messages = channel.messages.slice(start); 
   }
 
   return {
