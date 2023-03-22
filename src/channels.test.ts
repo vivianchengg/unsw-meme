@@ -7,8 +7,8 @@ const url = config.url;
 const ERROR = { error: expect.any(String) };
 const SERVERurl = `${url}:${port}`;
 
-let user;
-let channel;
+let user : any;
+let channel : any;
 
 const postRequest = (url: string, data: any) => {
   const res = request('POST', SERVERurl + url, { json: data });
