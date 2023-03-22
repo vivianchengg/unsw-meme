@@ -69,6 +69,27 @@ export const channelDetailsV1 = (authUserId: number, channelId: number) => {
   }
 };
 
+
+/** Function that returns user Id from token
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
+  const data = getData();
+  let userId = -1;
+
+  for (const user of data.users) {
+    for (const tokenData of user.tokens) {
+      if (token === tokenData) {
+        userId = user.uId;
+      }
+    }
+  }
+  return userId;
+};
+
+
 /** Function that checks if user id is valid
  *
  *
@@ -253,9 +274,9 @@ export const channelInviteV1 = (authUserId: number, channelId: number, uId: numb
 *
 */
 
-export const channelMessagesV1 = (authUserId: number, channelId: number, start: number) => {
+export const channelMessagesV1 = (token: number, channelId: number, start: number) => {
   const data = getData();
-
+  const authUserId = extractUId(token);
   if (!isValidUser(authUserId)) {
     return { error: 'authUserId is invalid' };
   }
@@ -303,6 +324,7 @@ export const channelJoinV2 = (token: number, channelId: number) => {
   }
 
   const channel = data.channels.find(c => c.channelId === channelId);
+
   if (isMember(channel, authUserId)) {
     return { error: 'the authorised user is already a member of the channel' };
   }
