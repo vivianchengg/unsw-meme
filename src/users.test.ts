@@ -52,7 +52,7 @@ describe('HTTP - userProfileV2 tests', () => {
         email: 'jr@unsw.edu.au',
         nameFirst: 'Jake',
         nameLast: 'Renzella',
-        handleStr: 'JakeRenzella',
+        handleStr: 'jakerenzella',
       }
     });
   });
