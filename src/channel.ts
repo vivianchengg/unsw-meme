@@ -1,74 +1,6 @@
 import { Channel, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
 
-/** Function that lists details of members in the channel given that:
-*
-* @param {number} authUserId - User Id of individual asking for details of a channel
-* @param {number} channelId - Channel Id of channel that user is asking to access details of
-* @returns {object} channel
-*
-*  - Here, channel: {
-*  name: string,
-*  isPublic: boolean,
-*  ownerMembers: array,
-*  allMembers: array
-*  }
-*
-*  - Also, user: {
-*  uId: number,
-*  email: string,
-*  password: string,
-*  nameFirst: string,
-*  nameLast: string,
-*  handleStr: string
-*  }
-
-*
-*  To return the above:
-* - authUserId must be valid
-* - channelId must be valid and user must be member of channel
-*  Otherwise, {error: string} is returned
-*
-**/
-
-export const channelDetailsV1 = (authUserId: number, channelId: number) => {
-  const data = getData();
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid authUserId' };
-  }
-
-  if (isValidChannel(channelId) === false) {
-    return { error: 'invalid channelId' };
-  }
-
-  for (const channel of data.channels) {
-    if (channel.channelId === channelId) {
-      if (isMember(channel, authUserId) === false) {
-        return { error: 'user not member of channel' };
-      }
-
-      const allProfiles = [];
-      for (const userId of channel.allMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        allProfiles.push(userProfile.user);
-      }
-
-      const ownerProfiles = [];
-      for (const userId of channel.ownerMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        ownerProfiles.push(userProfile.user);
-      }
-
-      return {
-        name: channel.name,
-        isPublic: channel.isPublic,
-        ownerMembers: ownerProfiles,
-        allMembers: allProfiles
-      };
-    }
-  }
-};
-
 /** Function that returns user Id from token
  *
  * @param {string} token
@@ -105,13 +37,13 @@ export const isValidUser = (userId: number): boolean => {
 };
 
 export const isValidToken = (token: number): boolean => {
-  const data = getData(); 
-  for (const user of data.users)  {
-    if (user.token === token)  {
-      return true; 
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token === token) {
+      return true;
     }
   }
-}
+};
 
 /** Function that checks if channel id is valid
  *
@@ -158,6 +90,8 @@ export const isMember = (channel: Channel, userId: number): boolean => {
 export const channelJoinV2 = (token: number, channelId: number) => {
   const data = getData();
 
+  const authUserId = extractUId(token);
+
   if (isValidUser(authUserId) === false) {
     return { error: 'invalid authUserId' };
   }
@@ -179,7 +113,7 @@ export const channelJoinV2 = (token: number, channelId: number) => {
   if (!channel.isPublic && user.pId !== 1) {
     return { error: 'channel is private, when authorised user is not already a channel member and is not a global owner' };
   }
-  
+
   channel.allMembers.push(authUserId);
   setData(data);
   return {};
