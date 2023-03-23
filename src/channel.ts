@@ -5,7 +5,7 @@ import { Channel, getData, setData } from './dataStore';
  * @param {string} token
  * @returns {number}
  */
-const extractUId = (token: number) => {
+const extractUId = (token: string) => {
   const data = getData();
   let userId = -1;
 
@@ -35,7 +35,7 @@ export const isValidUser = (userId: number): boolean => {
   return false;
 };
 
-export const isValidToken = (token: number): boolean => {
+export const isValidToken = (token: string): boolean => {
   const data = getData();
   for (const user of data.users) {
     for (const userTok of user.tokens) {
@@ -88,7 +88,7 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   return false;
 };
 
-export const channelJoinV2 = (token: number, channelId: number) => {
+export const channelJoinV2 = (token: string, channelId: number) => {
   const data = getData();
 
   const authUserId = extractUId(token);
