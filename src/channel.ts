@@ -104,7 +104,7 @@ export const isValidUser = (userId: number): boolean => {
   return false;
 };
 
-export const isValidToken = (token: number): boolean => {
+export const isValidToken = (token: string): boolean => {
   const data = getData();
   for (const user of data.users) {
     if (user.token === token) {
@@ -155,7 +155,7 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   return false;
 };
 
-export const channelInviteV2 = (authUserId: number, channelId: number, uId: number) => {
+export const channelInviteV2 = (token: string, channelId: number, uId: number) => {
   const data = getData();
 
   if (!isValidToken(token)) {
