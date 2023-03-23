@@ -31,7 +31,7 @@ const postRequest = (url: string, data: any) => {
 const deleteRequest = (url: string) => {
   const res = request(
     'DELETE',
-    SERVER_URL + url
+    SERVER_URL + url,
   );
   const body = JSON.parse(res.getBody() as string);
   return body;

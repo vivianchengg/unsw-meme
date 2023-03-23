@@ -18,13 +18,14 @@ const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
 // Example get request
-app.get('/echo', (req: Request, res: Response, next) => {
+app.get('/echo', (req: Request, res: Response) => {
   const data = req.query.echo as string;
   return res.json(echo(data));
 });
 
-app.delete('/clear/v1', (req: Request, res: Response, next) => {
-  return res.json(clearV1());
+app.delete('/clear/v1', (req: Request, res: Response) => {
+  console.log('clear');
+  res.json(clearV1());
 });
 
 // start server
