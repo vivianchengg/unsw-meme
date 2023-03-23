@@ -25,7 +25,8 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 // returns user profile
 app.get('/user/profile/v2', (req: Request, res: Response) => {
-  const { token, uId } = req.query;
+  const token = req.query.token as string;
+  const uId = parseInt(req.query.uId as string);
   return res.json(userProfileV1(token, uId));
 });
 

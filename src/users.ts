@@ -1,5 +1,4 @@
 import { getData } from './dataStore';
-import { isValidUser, findUID } from './channels';
 
 /**
 * Returns information about a user
@@ -61,4 +60,36 @@ const isValidUser = (userId: number): boolean => {
     }
   }
   return false;
+};
+
+/**
+  * Checks if the token is valid
+  * @param {string} token
+  * ...
+  * @returns {boolean}
+*/
+const isValidToken = (token: string): boolean => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+  * Finds the authUserId given a token.
+  * @param {string} token
+  * ...
+  * @returns {string} authUserId
+*/
+const findUID = (token: string) => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return user.uId;
+    }
+  }
+  return null;
 };

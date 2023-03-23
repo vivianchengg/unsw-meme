@@ -169,6 +169,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     handleStr: handle,
     password: password,
     pId: pId,
+    token: ['1'],
   };
 
   data.users.push(newUser);
