@@ -74,10 +74,10 @@ export const channelDetailsV1 = (authUserId: number, channelId: number) => {
  * @param {string} token
  * @returns {number}
  */
-const extractUId = (token: number) => {
+
+const extractUId = (token: string) => {
   const data = getData();
   let userId = -1;
-
   for (const user of data.users) {
     for (const tokenData of user.tokens) {
       if (token === tokenData) {
@@ -87,7 +87,6 @@ const extractUId = (token: number) => {
   }
   return userId;
 };
-
 
 /** Function that checks if user id is valid
  *
@@ -105,14 +104,18 @@ export const isValidUser = (userId: number): boolean => {
   return false;
 };
 
-export const isValidToken = (token: number): boolean => {
+export const isValidToken = (token: string): boolean => {
   const data = getData();
   for (const user of data.users) {
-    if (user.token === token) {
-      return true;
+    for (const tokenData of user.tokens) {
+      if (token === tokenData) {
+        return true;
+      }
     }
   }
+  return false;
 };
+
 
 /** Function that checks if channel id is valid
  *
@@ -156,32 +159,41 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   return false;
 };
 
-export const channelInviteV2 = (authUserId: number, channelId: number, uId: number) => {
-  const data = getData();
 
-  if (!isValidToken(token)) {
-    return { error: 'token is invalid' };
+export const channelMessagesV2 = (token: string, channelId: number, start: number) => {
+  const data = getData();
+  const authUserId = extractUId(token);
+  if (!isValidUser(authUserId)) {
+    return { error: 'authUserId is invalid' };
   }
 
   if (!isValidChannel(channelId)) {
     return { error: 'channelId does not refer to a valid channel' };
   }
 
-  if (!isValidUser(uId)) {
-    return { error: 'uId does not refer to a valid user' };
-  }
-
   const channel = data.channels.find(c => c.channelId === channelId);
-  if (isMember(channel, uId)) {
-    return { error: 'uId refers to a user who is already a member of the channel' };
-  }
-
   if (!isMember(channel, authUserId)) {
     return { error: 'channelId is valid and the authorised user is not a member of the channel' };
   }
 
-  channel.allMembers.push(uId);
+  const messageLen = channel.messages.length;
+  let messages;
 
-  setData(data);
-  return {};
+  if (start > messageLen) {
+    return { error: ' start is greater than the total number of messages in the channel' };
+  }
+  let end = 0;
+  if (messageLen > (start + 50)) {
+    end = start + 50;
+    messages = channel.messages.slice(start, end);
+  } else {
+    end = -1;
+    messages = channel.messages.slice(start);
+  }
+
+  return {
+    messages: messages,
+    start: start,
+    end: end,
+  };
 };
