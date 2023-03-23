@@ -28,20 +28,17 @@ const postRequest = (url: string, data: any) => {
   return body;
 };
 
-const deleteRequest = (url: string, data: any) => {
+const deleteRequest = (url: string) => {
   const res = request(
     'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
+    SERVER_URL + url
   );
   const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', {});
+  deleteRequest('/clear/v1');
 });
 
 describe('Test clearV1 function', () => {
@@ -64,7 +61,7 @@ describe('Test clearV1 function', () => {
     const channel = postRequest('/channels/create/v2', channelData);
 
     // clear
-    deleteRequest('/clear/v1', {});
+    deleteRequest('/clear/v1');
 
     // get user profile
     const profileData = {
@@ -83,6 +80,6 @@ describe('Test clearV1 function', () => {
   });
 
   test('test clearV1 - basic output', () => {
-    expect(deleteRequest('/clear/v1', {})).toStrictEqual({});
+    expect(deleteRequest('/clear/v1')).toStrictEqual({});
   });
 });

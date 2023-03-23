@@ -23,8 +23,7 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
-app.delete('/clear/v1', (req: Request, res: Response) => {
-  console.log('clear');
+app.delete('/clear/v1', (req: Request, res: Response, next) => {
   return res.json(clearV1());
 });
 
