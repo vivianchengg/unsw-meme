@@ -3,9 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import { authRegisterV1 } from './auth';
 import { channelsCreateV1 } from './channels';
-import { clearV1 } from './other';
 
 // Set up web app
 const app = express();
@@ -27,7 +25,8 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 // creates a channel - given token + name and isPublic
 app.post('/channels/create/v2', (req: Request, res: Response) => {
-  const { token, name, isPublic } = req.body;
+  const { token, name } = req.body;
+  const isPublic = req.body.isPublic as boolean;
   return res.json(channelsCreateV1(token, name, isPublic));
 });
 
