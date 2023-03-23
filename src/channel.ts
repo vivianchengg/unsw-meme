@@ -175,6 +175,7 @@ export const channelInviteV2 = (token: string, channelId: number, uId: number) =
     return { error: 'uId refers to a user who is already a member of the channel' };
   }
 
+  const authUserId = extractUId(token);
   if (!isMember(channel, authUserId)) {
     return { error: 'channelId is valid and the authorised user is not a member of the channel' };
   }

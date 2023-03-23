@@ -114,9 +114,9 @@ describe('HTTP tests using Jest for channelJoinV2', () => {
   });
 
   test('test sucessful channelJoinV2', () => {
-    channel = channelsCreateV2(user.authUserId, 'games', true);
-    const user = authRegisterV2('abc@gmail.com', 'password', 'Mary', 'Chan');
-    expect(channelJoinV1(user.token, channel.channelId)).toStrictEqual({});
+    channel = channelsCreateV1(user.authUserId, 'games', true);
+    const user = authRegisterV1('abc@gmail.com', 'password', 'Mary', 'Chan');
+    expect(channelJoinV2(user.token, channel.channelId)).toStrictEqual({});
 
     const res = request(
       'POST', `${url}:${port}/channelJoinV2`, { json: { token: user2.token, channeld: 3 } });

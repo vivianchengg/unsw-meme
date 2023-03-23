@@ -34,6 +34,7 @@ beforeEach(() => {
 });
 
 describe('HTTP tests using Jest for channelInviteV2', () => {
+  let invitedUser: any;
   beforeEach(() => {
     const param1 = {
       email: 'arialee@gmail.com',
@@ -41,7 +42,6 @@ describe('HTTP tests using Jest for channelInviteV2', () => {
       nameFirst: 'aria',
       nameLast: 'lee'
     };
-    let invitedUser = any;
     invitedUser = postRequest('/auth/register/v2', param1);
   });
 
