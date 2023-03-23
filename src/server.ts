@@ -17,7 +17,9 @@ const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
 app.get('/channel/messagesv2', (req: Request, res: Response, next) => {
-  const { token, channelId, start } = req.query;
+  const token = req.query.token as string;
+  const channelId = parseInt(req.query.channelId as string); 
+  const start = parseInt(req.query.start as string);
   return res.json(channelMessagesV2(token, channelId, start));
 });
 

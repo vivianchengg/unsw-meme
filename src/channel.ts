@@ -1,4 +1,4 @@
-import { Channel, getData, setData } from './dataStore';
+import { Channel, getData } from './dataStore';
 import { userProfileV1 } from './users';
 
 /** Function that lists details of members in the channel given that:
@@ -116,7 +116,6 @@ export const isValidToken = (token: string): boolean => {
   return false;
 };
 
-
 /** Function that checks if channel id is valid
  *
  *
@@ -158,7 +157,6 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   }
   return false;
 };
-
 
 export const channelMessagesV2 = (token: string, channelId: number, start: number) => {
   const data = getData();

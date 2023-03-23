@@ -7,7 +7,7 @@ export type User = {
   handleStr: string,
   password: string,
   pId: number,
-  tokens: string[]
+  tokens: []
 };
 
 export type Message = {
