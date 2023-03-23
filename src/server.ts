@@ -1,5 +1,5 @@
 import express, { json, Request, Response } from 'express';
-import { channelInviteV2 } from 'channel';
+import { channelInviteV2 } from './channel';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
