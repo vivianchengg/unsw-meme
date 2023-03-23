@@ -3,9 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import { authRegisterV1 } from './auth';
-import { channelsCreateV1, channelsListV1 } from './channels';
-import { clearV1 } from './other';
+import { channelsListV1 } from './channels';
 
 // Set up web app
 const app = express();
@@ -27,7 +25,7 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 // returns a list of channels that the user is apart of.
 app.get('/channels/list/v2', (req: Request, res: Response) => {
-  const { token } = req.query;
+  const token = req.query.token as string;
   return res.json(channelsListV1(token));
 });
 
