@@ -111,7 +111,7 @@ describe('channelListAllV1 Tests', () => {
 
   test('Invalid token', () => {
     const listRequest = {
-      token: []
+      token: ''
     };
     expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual(ERROR);
   });
