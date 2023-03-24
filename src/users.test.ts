@@ -94,7 +94,7 @@ describe('userProfileSetEmailV1 tests', () => {
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
   });
 
-  test('Invalid token', () => {
+  test('Basic functionality', () => {
     const param = {
       token: user.token,
       email: 'jake23@unsw.edu.au'
