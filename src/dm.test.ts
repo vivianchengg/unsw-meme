@@ -1,21 +1,8 @@
 import request from 'sync-request';
 import { port, url } from './config.json';
-import { getData } from './dataStore';
 
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-
-const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
 
 const postRequest = (url: string, data: any) => {
   const res = request(
@@ -44,7 +31,7 @@ const deleteRequest = (url: string, data: any) => {
 let user: any;
 let dm: any;
 
-describe('dmDetailsV1 Test', () => {
+describe('dmLeaveV1 Test', () => {
   beforeEach(() => {
     deleteRequest('/clear/v1', {});
 
@@ -71,7 +58,7 @@ describe('dmDetailsV1 Test', () => {
       dmId: dm.dmId
     };
 
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
   });
 
   test('Invalid dmId', () => {
@@ -80,7 +67,7 @@ describe('dmDetailsV1 Test', () => {
       dmId: dm.dmId + 1
     };
 
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
   });
 
   test('Valid dmId but user not member of DM', () => {
@@ -98,7 +85,7 @@ describe('dmDetailsV1 Test', () => {
       dmId: dm.dmId
     };
 
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
   });
 
   test('Basic functionality', () => {
@@ -107,23 +94,6 @@ describe('dmDetailsV1 Test', () => {
       dmId: dm.dmId
     };
 
-    const data = getData();
-    let dmName: any;
-    for (const dmDetail of data.dms) {
-      if (dmDetail.dmId === dm.dmId) {
-        dmName = dmDetail.name;
-      }
-    }
-
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual({
-      name: dmName,
-      members: [{
-        uId: user.uId,
-        email: user.email,
-        nameFirst: user.nameFirst,
-        nameLast: user.nameLast,
-        handleStr: user.handleStr
-      }]
-    });
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
   });
 });
