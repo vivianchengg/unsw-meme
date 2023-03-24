@@ -5,14 +5,14 @@ const port = config.port;
 const url = config.url;
 
 const ERROR = { error: expect.any(String) };
-const SERVER = `${url}:${port}`;
+const SERVER_URL = `${url}:${port}`;
 
 let user: any;
 
 const postRequest = (url: string, data: any) => {
   const res = request(
     'POST',
-    SERVER + url,
+    SERVER_URL + url,
     {
       json: data,
     }
@@ -24,7 +24,7 @@ const postRequest = (url: string, data: any) => {
 const putRequest = (url: string, data: any) => {
   const res = request(
     'PUT',
-    SERVER + url,
+    SERVER_URL + url,
     {
       json: data,
     }
@@ -36,7 +36,7 @@ const putRequest = (url: string, data: any) => {
 const deleteRequest = (url: string, data: any) => {
   const res = request(
     'DELETE',
-    SERVER + url,
+    SERVER_URL + url,
     {
       qs: data,
     }
