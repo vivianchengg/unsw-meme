@@ -57,26 +57,35 @@ beforeEach(() => {
   user = postRequest('/auth/register/v2', person);
 });
 
-describe('userProfileSetEmailV1 tests', () => {
+describe('userProfileSetHandleV1 tests', () => {
   test('Invalid token', () => {
     const param = {
       token: user.token + 'buffer',
-      email: 'jake23@unsw.edu.au'
+      handleStr: 'theJAKErenzella'
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
   });
 
-  test('Invalid email', () => {
+  test('New handle not between 3-20 characters', () => {
     const param = {
       token: user.token,
-      email: 'buffer'
+      handleStr: 'ohmygodILOVECOMP1531!!'
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
   });
 
-  test('Email already taken', () => {
+  test('New handle contains non-alphanumeric characters', () => {
+    const param = {
+      token: user.token,
+      handleStr: 'やったCOMP1531が大好き!'
+    };
+
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('New handle already taken', () => {
     const person2 = {
       email: 'yj@unsw.edu.au',
       password: 'PASSWORD',
@@ -88,7 +97,7 @@ describe('userProfileSetEmailV1 tests', () => {
 
     const param = {
       token: user.token,
-      email: user2.email
+      handleStr: user2.handleStr
     };
 
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
@@ -97,7 +106,7 @@ describe('userProfileSetEmailV1 tests', () => {
   test('Basic functionality', () => {
     const param = {
       token: user.token,
-      email: 'JR@unsw.edu.au'
+      handleStr: 'theJAKErenzella'
     };
 
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
