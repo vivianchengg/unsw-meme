@@ -97,7 +97,7 @@ describe('userProfileSetEmailV1 tests', () => {
   test('Basic functionality', () => {
     const param = {
       token: user.token,
-      email: 'jake23@unsw.edu.au'
+      email: 'JR@unsw.edu.au'
     };
 
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
