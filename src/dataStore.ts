@@ -36,7 +36,7 @@ export type Dm = {
   messages: Message[],
   start: number,
   end: number,
-}
+};
 
 export type Data = {
   users: User[],
