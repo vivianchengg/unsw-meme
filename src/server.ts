@@ -22,6 +22,11 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
+app.post('/dm/create/v1', (req: Request, res: Response, next) => {
+  const { token, uIds } = req.body;
+  return res.json(dmCreateV1(token, uIds));
+});
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE
