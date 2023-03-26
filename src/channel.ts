@@ -1,4 +1,4 @@
-import { Channel, getData, setData } from './dataStore';
+import { User, Channel, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
 
 /** Function that lists details of members in the channel given that:
@@ -278,4 +278,54 @@ export const channelMessagesV1 = (authUserId: number, channelId: number, start: 
     start: start,
     end: end,
   };
+};
+
+/**
+  * get user and check whether token is valid
+  *
+  * @param {string} token
+  * @returns {User}
+*/
+const validTokenUser = (token: string): User => {
+  const data = getData();
+  for (const user of data.users) {
+    for (const userToken of user.token) {
+      if (userToken === token) {
+        return user;
+      }
+    }
+  }
+  return null;
+};
+
+/**
+  * Given a channel with ID channelId that the authorised user is a member of,
+  * remove them as a member of the channel.
+  * Their messages should remain in the channel.
+  * If the only channel owner leaves, the channel will remain.
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @returns {}
+*/
+export const channelLeaveV1 = (token: string, channelId: number) => {
+  const data = getData();
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel === undefined) {
+    return { error: 'Invalid channel' };
+  }
+
+  const user = validTokenUser(token);
+  if (user === null) {
+    return { error: 'invalid token' };
+  }
+
+  if (!isMember(channel, user.uId)) {
+    return { error: 'authorised user is not a member of the channel' };
+  }
+
+  channel.allMembers = channel.allMembers.filter(id => id !== user.uId);
+  channel.ownerMembers = channel.ownerMembers.filter(id => id !== user.uId);
+
+  setData(data);
 };
