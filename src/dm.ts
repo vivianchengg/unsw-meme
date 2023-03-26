@@ -29,17 +29,14 @@ export const dmDetailsV1 = (token: string, dmId: number) => {
     return { error: 'User is not member of DM' };
   }
 
-  let dmDetails;
   for (const dm of data.dms) {
     if (dm.dmId === dmId) {
-      dmDetails = {
+      return {
         name: dm.name,
         members: dm.members
       };
     }
   }
-
-  return dmDetails;
 };
 
 /** Function checks if DMId refers to valid DM or not
