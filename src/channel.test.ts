@@ -253,7 +253,8 @@ describe('channelLeaveV1 test', () => {
       token: user.token,
       channelId: channel.channelId,
     };
-    postRequest('/channel/leave/v1', channelData);
+    const result = postRequest('/channel/leave/v1', channelData);
+    expect(result).toStrictEqual({});
     expect(getRequest('/channel/details/v2', detail)).toStrictEqual(ERROR);
   });
 });

@@ -328,4 +328,5 @@ export const channelLeaveV1 = (token: string, channelId: number) => {
   channel.ownerMembers = channel.ownerMembers.filter(id => id !== user.uId);
 
   setData(data);
+  return {};
 };
