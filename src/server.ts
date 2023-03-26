@@ -25,7 +25,7 @@ app.get('/echo', (req: Request, res: Response) => {
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
   console.log('clear');
-  res.json(clearV1());
+  return res.json(clearV1());
 });
 
 // start server
