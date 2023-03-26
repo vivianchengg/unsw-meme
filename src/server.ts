@@ -3,6 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { channelRemoveOwnerV1 } from './channel';
 
 // Set up web app
 const app = express();
@@ -20,6 +21,11 @@ const HOST: string = process.env.IP || 'localhost';
 app.get('/echo', (req: Request, res: Response, next) => {
   const data = req.query.echo as string;
   return res.json(echo(data));
+});
+
+app.post('/channel/removeowner/v1', (req: Request, res: Response, next) => {
+  const { token, channelId, uId } = req.body;
+  return res.json(channelRemoveOwnerV1(token, channelId, uId));
 });
 
 // start server
