@@ -22,7 +22,6 @@ import { userProfileV1 } from './users';
 *  nameLast: string,
 *  handleStr: string
 *  }
-
 *
 *  To return the above:
 * - authUserId must be valid
@@ -278,4 +277,22 @@ export const channelMessagesV1 = (authUserId: number, channelId: number, start: 
     start: start,
     end: end,
   };
+};
+
+/**
+  * get user and check whether token is valid
+  *
+  * @param {string} token
+  * @returns {User}
+*/
+export const validTokenUser = (token: string) => {
+  const data = getData();
+  for (const user of data.users) {
+    for (const userToken of user.token) {
+      if (userToken === token) {
+        return user;
+      }
+    }
+  }
+  return null;
 };
