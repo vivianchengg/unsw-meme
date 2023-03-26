@@ -3,7 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import { channelsListAllV1 } from './channels';
+import { dmLeaveV1 } from './dm';
 
 // Set up web app
 const app = express();
@@ -23,9 +23,9 @@ app.get('/echo', (req: Request, res: Response, next) => {
   return res.json(echo(data));
 });
 
-app.get('/channels/listall/v2', (req: Request, res: Response) => {
-  const token = req.query.token as string;
-  return res.json(channelsListAllV1(token));
+app.post('/dm/leave/v1', (req: Request, res: Response) => {
+  const { token, dmId } = req.body;
+  return res.json(dmLeaveV1(token, dmId));
 });
 
 // start server
