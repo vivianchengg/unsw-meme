@@ -231,20 +231,6 @@ describe('channelAddOwnerV1 test', () => {
     expect(cDetail.ownerMembers).toContain(newUser.uId);
   });
 
-  test('Invalid token', () => {
-    const newChannel = {
-      token: user.token,
-      name: 'COMP1531',
-      isPublic: true
-    };
-    const channel = postRequest('/channels/create/v2', newChannel);
-    const channelData = {
-      token: user.token + '1',
-      channelId: channel.channelId
-    };
-    expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
-  });
-
   test('Valid add owner - global owner', () => {
     const user1Data = {
       email: 'vc1@unsw.edu.au',
