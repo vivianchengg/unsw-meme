@@ -279,3 +279,75 @@ export const channelMessagesV1 = (authUserId: number, channelId: number, start: 
     end: end,
   };
 };
+
+/**
+  * get user and check whether token is valid
+  *
+  * @param {string} token
+  * @returns {User}
+*/
+const validTokenUser = (token: string) => {
+  const data = getData();
+  for (const user of data.users) {
+    for (const userToken of user.token) {
+      if (userToken === token) {
+        return user;
+      }
+    }
+  }
+  return null;
+};
+
+/**
+  * check if the user is channel owner
+  *
+  * @param {number} uId
+  * @param {Channel} channel
+  * @returns {bool}
+*/
+const isChannelOwner = (uId: number, channel: Channel) => {
+  for (const ownerId of channel.ownerMembers) {
+    if (uId === ownerId) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+  * check whether email entered belong to a user
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @param {number} uId
+  * @returns {}
+*/
+export const channelAddOwnerV1 = (token: string, channelId: number, uId: number) => {
+  const data = getData();
+  const channel = data.channels.find(c => c.channelId === channelId);
+  const user = data.users.find(u => u.uId === uId);
+  if (channel === undefined) {
+    return { error: 'invalid channel' };
+  }
+
+  if (user === undefined) {
+    return { error: 'invalid user' };
+  }
+
+  const authUser = validTokenUser(token);
+  if (authUser === null) {
+    return { error: 'invalid token' };
+  }
+
+  if (!isMember(channel, uId)) {
+    return { error: 'user is not a member of the channel' };
+  }
+
+  if (authUser.pId !== 1 && !isChannelOwner(authUser.uId, channel)) {
+    return { error: 'user does not have owner permissions' };
+  }
+
+  channel.ownerMembers.push(uId);
+  setData(data);
+  return {};
+};
