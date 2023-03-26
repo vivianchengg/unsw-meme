@@ -315,7 +315,7 @@ const isChannelOwner = (uId: number, channel: Channel) => {
 };
 
 /**
-  * check whether email entered belong to a user
+  * Remove user with user id uId as an owner of the channel.
   *
   * @param {string} token
   * @param {number} channelId
