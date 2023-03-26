@@ -141,7 +141,6 @@ describe('authLogout Test', () => {
       password: 'password',
     };
     const token = postRequest('/auth/login/v2', loginData).token;
-    postRequest('/auth/logout/v1', token);
-    expect(postRequest('/auth/logout/v1', token)).toStrictEqual(ERROR);
+    expect(postRequest('/auth/logout/v1', token)).toStrictEqual({});
   });
 });

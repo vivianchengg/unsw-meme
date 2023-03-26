@@ -212,4 +212,5 @@ export const authLogoutV1 = (token: string) => {
     user.token = user.token.filter(t => t !== token);
   }
   setData(data);
+  return {};
 };
