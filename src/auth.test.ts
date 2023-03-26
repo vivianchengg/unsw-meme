@@ -2,7 +2,23 @@ import { authRegisterV1, authLoginV1 } from './auth';
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
 
+import request from 'sync-request';
+import { port, url } from './config.json';
+
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
+
+const postRequest = (url: string, data: any) => {
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
 
 beforeEach(() => {
   clearV1();
@@ -96,5 +112,36 @@ describe('authRegisterV1 Test', () => {
     const user2 = authRegisterV1('blah2@email.com', 'password1', 'abcdefghij', 'klmnopqrs');
     const handle2 = userProfileV1(user2.authUserId, user2.authUserId).user.handleStr;
     expect(handle2).toEqual('abcdefghijklmnopqrs0');
+  });
+});
+
+describe('authLogout Test', () => {
+  test('invalid token', () => {
+    const user1Data = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const token1 = postRequest('/auth/register/v2', user1Data).token;
+    expect(postRequest('/auth/logout/v1', token1 + '1')).toStrictEqual(ERROR);
+  });
+
+  test('test valid logout', () => {
+    const userData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    postRequest('/auth/register/v2', userData);
+
+    const loginData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+    };
+    const token = postRequest('/auth/login/v2', loginData).token;
+    postRequest('/auth/logout/v1', token);
+    expect(postRequest('/auth/logout/v1', token)).toStrictEqual(ERROR);
   });
 });
