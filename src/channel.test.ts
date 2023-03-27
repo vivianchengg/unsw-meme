@@ -1,9 +1,3 @@
-// Will remove once merged but needed now to fix linting errors
-import { channelJoinV1, channelInviteV1, channelMessagesV1, channelDetailsV1 } from './channel';
-import { channelsCreateV1 } from './channels';
-import { authRegisterV1 } from './auth';
-import { clearV1 } from './other';
-
 import request from 'sync-request';
 import { port, url } from './config.json';
 
@@ -70,7 +64,7 @@ beforeEach(() => {
 describe('channelDetailsV1 Test', () => {
   test('Invalid token', () => {
     const detailRequest = {
-      token: '',
+      token: user.token + '1',
       channelId: channel.channelId
     };
 
@@ -105,21 +99,22 @@ describe('channelDetailsV1 Test', () => {
   });
 
   test('Basic functionality', () => {
-    const profileRequest = {
-      token: user.token,
-      user: user.authUserId
-    };
-
-    const userProfile = getRequest('/user/profile/v2', profileRequest);
-
     const detailRequest = {
       token: user.token,
-      channelId: channel.channelId + 1
+      channelId: channel.channelId
     };
 
+    const profileData = {
+      token: user.token,
+      uId: user.authUserId
+    };
+    const profile = getRequest('/user/profile/v2', profileData);
+
     const cDetail = getRequest('/channel/details/v2', detailRequest);
-    expect(cDetail.ownerMembers).toContain(userProfile.user);
-    expect(cDetail.allMembers).toContain(userProfile.user);
+    expect(cDetail.name).toStrictEqual('COMP1531');
+    expect(cDetail.isPublic).toStrictEqual(true);
+    expect(cDetail.allMembers).toStrictEqual([profile.user]);
+    expect(cDetail.ownerMembers).toStrictEqual([profile.user]);
   });
 });
 
@@ -144,7 +139,7 @@ describe('channelJoinV1 function testing', () => {
       token: user.token,
       channelId: channel2.channelId + 1
     };
-    expect(postRequest('/channel/Join/v2', param)).toStrictEqual(ERROR));
+    expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
   });
 
   test('the authorised user is already a member of the channel', () => {
@@ -152,11 +147,11 @@ describe('channelJoinV1 function testing', () => {
       token: user.token,
       channelId: channel.channelId
     };
-    expect(postRequest('/channel/Join/v2', param)).toStrictEqual(ERROR);
+    expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
   });
 
   test('private channel: authUser not global owner', () => {
-    //not global owner
+    // not global owner
     const param2 = {
       email: 'dianahazea@gmail.com',
       password: 'january',
@@ -200,15 +195,15 @@ describe('channelJoinV1 function testing', () => {
       token: user.token + '1',
       channelId: channel2.channelId
     };
-    expect(postRequest('/channel/join/v2', param).toStrictEqual(ERROR));
+    expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
   });
 
   test('test sucessful channelJoinV2', () => {
     const user1Data = {
-    email: 'jr1@unsw.edu.au',
-    password: 'password',
-    nameFirst: 'Jake',
-    nameLast: 'Renzella'
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
     };
     const user1 = postRequest('/auth/register/v2', user1Data);
 

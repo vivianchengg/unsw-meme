@@ -54,7 +54,7 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
   * Creates an array of all channels a user is a member of
   *
   * @param {number} authUserId
-  * @returns {object} 
+  * @returns {object}
   *
 */
 export const channelsListV1 = (authUserId: number) => {
@@ -132,7 +132,7 @@ const isValidName = (name: string): boolean => {
 
 /**
   * Checks if the token is valid
-  * 
+  *
   * @param {string} token
   * @returns {bool}
 */
@@ -148,7 +148,7 @@ export const isValidToken = (token: string): boolean => {
 
 /**
   * Finds the authUserId given a token.
-  * 
+  *
   * @param {string} token
   * @returns {string} authUserId
 */

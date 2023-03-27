@@ -1,32 +1,46 @@
 import request from 'sync-request';
-import config from './config.json';
+import { port, url } from './config.json';
 
-const port = config.port;
-const url = config.url;
-
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-const SERVERurl = `${url}:${port}`;
 
-let user: any;
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
 
 const postRequest = (url: string, data: any) => {
-  const res = request('POST', SERVERurl + url, { json: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
 const deleteRequest = (url: string, data: any) => {
-  const res = request('DELETE', SERVERurl + url, { qs: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
-const getRequest = (url: string, data: any) => {
-  const res = request('GET', SERVERurl + url, { qs: data });
-  const body = JSON.parse(String(res.getBody()));
-  return body;
-};
-
+let user: any;
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
   const person = {
@@ -39,13 +53,14 @@ beforeEach(() => {
   user = postRequest('/auth/register/v2', person);
 });
 
-describe('HTTP - userProfileV2 tests', () => {
+describe('userProfileV2 tests', () => {
   test('Testing valid token + uId', () => {
     const param = {
       token: user.token,
       uId: user.authUserId,
     };
     const profile = getRequest('/user/profile/v2', param);
+
     expect(profile).toStrictEqual({
       user: {
         uId: user.authUserId,
@@ -59,7 +74,7 @@ describe('HTTP - userProfileV2 tests', () => {
 
   test('Testing invalid token', () => {
     const param = {
-      token: user.token + 'yay!',
+      token: user.token + '1',
       uId: user.authUserId,
     };
     const profile = getRequest('/user/profile/v2', param);

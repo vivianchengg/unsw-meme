@@ -1,5 +1,5 @@
 import { Channel, getData, setData } from './dataStore';
-import { userProfile } from './users';
+import { userProfileV1 } from './users';
 
 /** Function that lists details of members in the channel given that:
 *
@@ -18,41 +18,37 @@ import { userProfile } from './users';
 export const channelDetailsV1 = (token: string, channelId: number) => {
   const data = getData();
   const authUserId = extractUId(token);
-  const INVALID = -1;
-  if (authUserId === INVALID) {
+  if (authUserId === null) {
     return { error: 'Invalid token' };
   }
 
-  if (isValidChannel(channelId) === false) {
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel === undefined) {
     return { error: 'invalid channelId' };
   }
 
-  for (const channel of data.channels) {
-    if (channel.channelId === channelId) {
-      if (isMember(channel, authUserId) === false) {
-        return { error: 'user not member of channel' };
-      }
-
-      const allProfiles = [];
-      for (const userId of channel.allMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        allProfiles.push(userProfile.user);
-      }
-
-      const ownerProfiles = [];
-      for (const userId of channel.ownerMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        ownerProfiles.push(userProfile.user);
-      }
-
-      return {
-        name: channel.name,
-        isPublic: channel.isPublic,
-        ownerMembers: ownerProfiles,
-        allMembers: allProfiles
-      };
-    }
+  if (!isMember(channel, authUserId)) {
+    return { error: 'user not member of channel' };
   }
+
+  const allProfiles = [];
+  for (const userId of channel.allMembers) {
+    const userProfile = userProfileV1(token, userId);
+    allProfiles.push(userProfile.user);
+  }
+
+  const ownerProfiles = [];
+  for (const userId of channel.ownerMembers) {
+    const userProfile = userProfileV1(token, userId);
+    ownerProfiles.push(userProfile.user);
+  }
+
+  return {
+    name: channel.name,
+    isPublic: channel.isPublic,
+    ownerMembers: ownerProfiles,
+    allMembers: allProfiles
+  };
 };
 
 /** Function that returns user Id from token
@@ -62,16 +58,14 @@ export const channelDetailsV1 = (token: string, channelId: number) => {
  */
 export const extractUId = (token: string) => {
   const data = getData();
-  let userId = -1;
-
   for (const user of data.users) {
-    for (const tokenData of user.tokens) {
+    for (const tokenData of user.token) {
       if (token === tokenData) {
-        userId = user.uId;
+        return user.uId;
       }
     }
   }
-  return userId;
+  return null;
 };
 
 /** Function that checks if user id is valid
@@ -90,11 +84,17 @@ export const isValidUser = (userId: number): boolean => {
   return false;
 };
 
+/**
+  * check if token is valid
+  *
+  * @param {string} token
+  * @returns {bool}
+*/
 export const isValidToken = (token: string): boolean => {
   const data = getData();
   for (const user of data.users) {
-    for (const userTok of user.tokens) {
-      if (userTok === token) {
+    for (const userToken of user.token) {
+      if (userToken === token) {
         return true;
       }
     }
@@ -102,12 +102,11 @@ export const isValidToken = (token: string): boolean => {
 };
 
 /** Function that checks if channel id is valid
- *
- *
- * @param {number} channelId
- * @returns {boolean}
+  *
+  *
+  * @param {number} channelId
+  * @returns {boolean}
 */
-
 export const isValidChannel = (channelId: number): boolean => {
   const data = getData();
   for (const channel of data.channels) {
@@ -143,12 +142,20 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   return false;
 };
 
-export const channelJoinV2 = (token: string, channelId: number) => {
+/**
+  * Given a channelId of a channel that the authorised user can join,
+  * adds them to that channel.
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @returns {}
+*/
+export const channelJoinV1 = (token: string, channelId: number) => {
   const data = getData();
 
   const authUserId = extractUId(token);
 
-  if (isValidUser(authUserId) === false) {
+  if (authUserId === null) {
     return { error: 'invalid authUserId' };
   }
 

@@ -15,18 +15,17 @@ import { getData } from './dataStore';
 */
 export const userProfileV1 = (token: string, uId: number) => {
   const data = getData();
-  let authUserId;
 
   if (isValidToken(token) === false) {
     return { error: 'invalid token' };
-  } else {
-    authUserId = findUID(token);
   }
 
-  if (isValidUser(authUserId) === false) {
+  const authUserId = findUID(token);
+
+  if (!isValidUser(authUserId)) {
     return { error: 'invalid authUserId' };
   }
-  if (isValidUser(uId) === false) {
+  if (!isValidUser(uId)) {
     return { error: 'invalid uId' };
   }
 
@@ -42,6 +41,7 @@ export const userProfileV1 = (token: string, uId: number) => {
       };
     }
   }
+
   return {
     user: person,
   };
