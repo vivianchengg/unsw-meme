@@ -1,5 +1,12 @@
 import { getData, setData } from './dataStore';
 
+/**
+  * Owner of Dm deleting Dm.
+  * @param {string} token
+  * @param {number} dmId
+  * ...
+  * @returns {}
+*/
 export const dmRemoveV1 = (token: string, dmId: number) => {
   const data = getData();
   let authUserId;

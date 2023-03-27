@@ -19,6 +19,12 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
+const getRequest = (url: string, data: any) => {
+  const res = request('GET', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
 let user: any;
 let user2: any;
 let dm: any;
