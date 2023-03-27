@@ -1,5 +1,15 @@
 import { getData } from './dataStore';
 
+/**
+  * Returns a list of dms that the user is part of
+  * @param {string} token
+  * ...
+  * @returns {dms: [{
+  *   dmId: number,
+  *   name: string,
+  *   },
+  * ]}
+*/
 export const dmListV1 = (token: string) => {
   const data = getData();
   let authUserId;
