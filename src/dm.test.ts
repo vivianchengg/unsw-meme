@@ -86,4 +86,17 @@ describe('HTTP - /dm/remove/v1 tests', () => {
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
   });
+
+  test('Valid input', () => {
+    const param = {
+      token: user.token[0],
+      dmId: dm.dmId,
+    };
+    deleteRequest('/dm/remove/v1', param);
+
+    const newparam = {
+      token: user.token[0],
+    };
+    expect(getRequest('/dm/list/v1', newparam)).toStrictEqual(ERROR);
+  });
 });
