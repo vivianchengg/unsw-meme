@@ -19,9 +19,17 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
+const getRequest = (url: string, data: any) => {
+  const res = request('GET', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
 let user: any;
 let user2: any;
+let user3: any;
 let dm: any;
+let dm2: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
@@ -58,32 +66,31 @@ beforeEach(() => {
   dmParam = {
     token: user2.token[0],
     uIds: [user.authUserId, user3.authUserId],
-  }
+  };
   dm2 = postRequest('/dm/create/v1', dmParam);
 });
 
 describe('HTTP - /dm/list/v1 tests', () => {
-	test('Invalid token', () => {
+  test('Invalid token', () => {
     const param = {
       token: user3.token[0] + 1,
     };
-    expect(postRequest('/dm/list/v1', param)).toStrictEqual(ERROR);
+    expect(getRequest('/dm/list/v1', param)).toStrictEqual(ERROR);
   });
-	//dms: array of objects containing - {dmId,name}
-	test('Valid input', () => {
+
+  test('Valid input', () => {
     const param = {
       token: user3.token[0],
     };
-    expect(postRequest('/dm/list/v1', param)).toStrictEqual({
-			dms:
-			[{
-				dmId: dm.dmId,
-				name: dm.name,
-			}, {
-				dmId: dm2.dmId,
-				name: dm2.name,
-			}]
-		});
+    expect(getRequest('/dm/list/v1', param)).toStrictEqual({
+      dms:
+      [{
+        dmId: dm.dmId,
+        name: dm.name,
+      }, {
+        dmId: dm2.dmId,
+        name: dm2.name,
+      }]
+    });
   });
-
 });
