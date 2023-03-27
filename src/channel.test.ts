@@ -1,281 +1,249 @@
-import { Channel, getData, setData } from './dataStore';
-import { userProfileV1 } from './users';
+// Will remove once merged but needed now to fix linting errors
+import { channelJoinV1, channelInviteV1, channelMessagesV1, channelDetailsV1 } from './channel';
+import { channelsCreateV1 } from './channels';
+import { authRegisterV1 } from './auth';
+import { clearV1 } from './other';
 
-/** Function that lists details of members in the channel given that:
-*
-* @param {number} authUserId - User Id of individual asking for details of a channel
-* @param {number} channelId - Channel Id of channel that user is asking to access details of
-* @returns {object} channel
-*
-*  - Here, channel: {
-*  name: string,
-*  isPublic: boolean,
-*  ownerMembers: array,
-*  allMembers: array
-*  }
-*
-*  - Also, user: {
-*  uId: number,
-*  email: string,
-*  password: string,
-*  nameFirst: string,
-*  nameLast: string,
-*  handleStr: string
-*  }
+import request from 'sync-request';
+import { port, url } from './config.json';
 
-*
-*  To return the above:
-* - authUserId must be valid
-* - channelId must be valid and user must be member of channel
-*  Otherwise, {error: string} is returned
-*
-**/
+const SERVER_URL = `${url}:${port}`;
+const ERROR = { error: expect.any(String) };
 
-export const channelDetailsV1 = (authUserId: number, channelId: number) => {
-  const data = getData();
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid authUserId' };
-  }
-
-  if (isValidChannel(channelId) === false) {
-    return { error: 'invalid channelId' };
-  }
-
-  for (const channel of data.channels) {
-    if (channel.channelId === channelId) {
-      if (isMember(channel, authUserId) === false) {
-        return { error: 'user not member of channel' };
-      }
-
-      const allProfiles = [];
-      for (const userId of channel.allMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        allProfiles.push(userProfile.user);
-      }
-
-      const ownerProfiles = [];
-      for (const userId of channel.ownerMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        ownerProfiles.push(userProfile.user);
-      }
-
-      return {
-        name: channel.name,
-        isPublic: channel.isPublic,
-        ownerMembers: ownerProfiles,
-        allMembers: allProfiles
-      };
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
     }
-  }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
 };
 
-/** Function that checks if user id is valid
- *
- *
- * @param {number} userId
- * @returns {boolean}
- */
-export const isValidUser = (userId: number): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.uId === userId) {
-      return true;
+const postRequest = (url: string, data: any) => {
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
     }
-  }
-  return false;
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
 };
 
-/** Function that checks if channel id is valid
- *
- *
- * @param {number} channelId
- * @returns {boolean}
-*/
-
-export const isValidChannel = (channelId: number): boolean => {
-  const data = getData();
-  for (const channel of data.channels) {
-    if (channel.channelId === channelId) {
-      return true;
+const deleteRequest = (url: string, data: any) => {
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
     }
-  }
-  return false;
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
 };
 
-/** Function that checks if given user is member of channel
- *
- * @param {{
- *  channelId: number,
- *  name: string,
- *  isPublic: boolean,
- *  allMembers: array,
- *  ownerMembers: array,
- *  messages: array,
- *  start: number,
- *  end: number
- *  }} channel
- *
- * @param {number} userId
- * @returns {boolean}
- */
-export const isMember = (channel: Channel, userId: number): boolean => {
-  for (const member of channel.allMembers) {
-    if (member === userId) {
-      return true;
-    }
-  }
-  return false;
-};
+let user: any;
+let channel: any;
 
-/**
-  * Given a channelId of a channel that the authorised user can join, adds them to that channel.
-  * @param {number} authUserId
-  * @param {number} channelId
-  * @returns {}
-  *
-  * To return the above:
-  *  - channelId must refer to a valid chanel
-  *  - authorised user is not already a member of the channel
-  *  - channelId refers to a channel that is public
-  *  - authUserId is valid
-  * Otherwise, {error: string} is returned
-*
-*/
+describe('channelDetailsV1 Test', () => {
+  beforeEach(() => {
+    deleteRequest('/clear/v1', {});
 
-export const channelJoinV1 = (authUserId: number, channelId: number) => {
-  const data = getData();
+    const userData = {
+      email: 'jr@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
 
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
-  }
+    user = postRequest('/auth/register/v2', userData);
 
-  if (!isValidChannel(channelId)) {
-    return { error: 'channelId does not refer to a valid channel' };
-  }
+    const channelData = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
 
-  const channel = data.channels.find(c => c.channelId === channelId);
-  if (isMember(channel, authUserId)) {
-    return { error: 'the authorised user is already a member of the channel' };
-  }
+    channel = postRequest('/channels/create/v2', channelData);
+  });
 
-  const user = data.users.find((p) => p.uId === authUserId);
-  if (!channel.isPublic && user.pId !== 1) {
-    return { error: 'channel is private, when authorised user is not already a channel member and is not a global owner' };
-  }
+  test('Invalid token', () => {
+    const detailRequest = {
+      token: '',
+      channelId: channel.channelId
+    };
 
-  channel.allMembers.push(authUserId);
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
+  });
+  test('Invalid channelId', () => {
+    const detailRequest = {
+      token: user.token,
+      channelId: channel.channelId + 1
+    };
 
-  setData(data);
-  return {};
-};
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
+  });
+  test('Valid channelId and token but user is not in course', () => {
+    const outsideUserData = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
 
-/**
-  * Invites a user with ID uId to join a channel with ID channelId.
-  * Once invited, the user is added to the channel immediately.
-  * In both public and private channels, all members are able to invite users.
-  * @param {number} authUserId
-  * @param {number} channelId
-  * @param {number} uId
-  * @returns {}
-  *
-  * To return the above:
-  *  - channelId must refer to a valid chanel
-  *  - authorised user is already a member of the channel
-  *  - uId is not already a member of the channel
-  *  - authUserId refers to a valid user
-  *  - uId refers to a valid user
-  * Otherwise, {error: string} is returned
-*
-*/
+    const outsideUser = postRequest('/auth/register/v2', outsideUserData);
 
-export const channelInviteV1 = (authUserId: number, channelId: number, uId: number) => {
-  const data = getData();
+    const detailRequest = {
+      token: outsideUser.token,
+      channelId: channel.channelId
+    };
 
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
-  }
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
+  });
+  test('Basic functionality', () => {
+    const profileRequest = {
+      token: user.token,
+      user: user.authUserId
+    };
 
-  if (!isValidChannel(channelId)) {
-    return { error: 'channelId does not refer to a valid channel' };
-  }
+    const userProfile = getRequest('/user/profile/v2', profileRequest);
 
-  if (!isValidUser(uId)) {
-    return { error: 'uId does not refer to a valid user' };
-  }
+    const detailRequest = {
+      token: user.token,
+      channelId: channel.channelId + 1
+    };
 
-  const channel = data.channels.find(c => c.channelId === channelId);
-  if (isMember(channel, uId)) {
-    return { error: 'uId refers to a user who is already a member of the channel' };
-  }
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual({
+      name: 'COMP1531',
+      isPublic: true,
+      ownerMembers: [userProfile.user],
+      allMembers: [userProfile.user]
+    });
+  });
+});
 
-  if (!isMember(channel, authUserId)) {
-    return { error: 'channelId is valid and the authorised user is not a member of the channel' };
-  }
+describe('channelJoinV1 function testing', () => {
+  beforeEach(() => {
+    clearV1();
+    user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
+  });
+  test('channelId does not refer to a valid channel', () => {
+    channel = channelsCreateV1(user.authUserId, 'holidays', true);
+    expect(channelJoinV1(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
+  });
 
-  channel.allMembers.push(uId);
+  test('the authorised user is already a member of the channel', () => {
+    channel = channelsCreateV1(user.authUserId, 'games', true);
+    channelJoinV1(user.authUserId, channel.channelId);
+    expect(channelJoinV1(user.authUserId, channel.channelId)).toStrictEqual(ERROR);
+  });
 
-  setData(data);
-  return {};
-};
+  test('channelId refers to a channel that is private, when the authorised user is not already a channel member and is not a global owner', () => {
+    channel = channelsCreateV1(user.authUserId, 'sports', false);
+    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
+    expect(channelJoinV1(user2.authUserId, channel.channelId)).toStrictEqual(ERROR);
+  });
 
-/**
-  * Given a channel with ID channelId that the authorised user is a member of,
-  * returns up to 50 messages between index "start" and "start + 50".
-  * Message with index 0 (i.e. the first element in the returned array of messages) is the most recent message in the channel.
-  * This function returns a new index "end".
-  * If there are more messages to return after this function call, "end" equals "start + 50".
-  * If this function has returned the least recent messages in the channel,
-  * "end" equals -1 to indicate that there are no more messages to load after this return.
-  * @param {number} authUserId
-  * @param {number} channelId
-  * @param {number} start
-  * @returns {
-*   messages: string,
-*   start: number,
-*   end: number
-* }
-* To return the above:
-*  - channelId must refer to a valid chanel
-*  - authorised user is already a member of the channel
-*  - authUserId is valid
-*  - start must be less than or equal to the total number of messages in the channel
-* Otherwise, {error: string} is returned
-*
-*/
+  test('Test global owner can join private channel', () => {
+    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
+    channel = channelsCreateV1(user2.authUserId, 'sports', false);
+    channelJoinV1(user.authUserId, channel.channelId);
+    const cDetail = channelDetailsV1(user.authUserId, channel.channelId);
+    const owners = cDetail.ownerMembers.map(mem => mem.uId);
+    const allmems = cDetail.allMembers.map(mem => mem.uId);
+    expect(owners).toEqual(expect.not.arrayContaining([user.authUserId]));
+    expect(allmems).toContain(user.authUserId);
+  });
 
-export const channelMessagesV1 = (authUserId: number, channelId: number, start: number) => {
-  const data = getData();
+  test('authUserId is invalid', () => {
+    channel = channelsCreateV1(user.authUserId, 'music', true);
+    expect(channelJoinV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
+  });
 
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
-  }
+  test('valid input', () => {
+    channel = channelsCreateV1(user.authUserId, 'games', true);
+    const user2 = authRegisterV1('abc@gmail.com', 'password', 'Mary', 'Chan');
+    expect(channelJoinV1(user2.authUserId, channel.channelId)).toStrictEqual({});
+  });
+});
 
-  if (!isValidChannel(channelId)) {
-    return { error: 'channelId does not refer to a valid channel' };
-  }
+describe('channelInviteV1 function testing', () => {
+  beforeEach(() => {
+    clearV1();
+    user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
+  });
+  test('channelId does not refer to a valid channel', () => {
+    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    const channel = channelsCreateV1(user.authUserId, 'music', false);
+    expect(channelInviteV1(user.authUserId, channel.channelId + 1, newUser.authUserId)).toStrictEqual(ERROR);
+  });
 
-  const channel = data.channels.find(c => c.channelId === channelId);
-  if (!isMember(channel, authUserId)) {
-    return { error: 'hannelId is valid and the authorised user is not a member of the channel' };
-  }
+  test('uId does not refer to a valid user', () => {
+    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    const channel = channelsCreateV1(user.authUserId, 'music', false);
+    expect(channelInviteV1(user.authUserId, channel.channelId, newUser.authUserId + 1)).toStrictEqual(ERROR);
+  });
 
-  const messageLen = channel.messages.length;
-  const messages = channel.messages.slice();
+  test('uId refers to a user who is already a member of the channel', () => {
+    const user2 = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    const channel = channelsCreateV1(user.authUserId, 'music', false);
+    channelInviteV1(user.authUserId, channel.channelId, user2.authUserId);
+    expect(channelInviteV1(user.authUserId, channel.channelId, user2.authUserId)).toStrictEqual(ERROR);
+  });
+  test('channelId is valid and the authorised user is not a member of the channel', () => {
+    const channel = channelsCreateV1(user.authUserId, 'music', false);
+    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
+    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    expect(channelInviteV1(user2.authUserId, channel.channelId, newUser.authUserId)).toStrictEqual(ERROR);
+  });
+  test('authUserId is invalid', () => {
+    const channel = channelsCreateV1(user.authUserId, 'bored', false);
+    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    expect(channelInviteV1(user.authUserId + 1, channel.channelId, newUser.authUserId)).toStrictEqual(ERROR);
+  });
+  test('valid input ', () => {
+    const user2 = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
+    const channel = channelsCreateV1(user.authUserId, 'sports', true);
+    expect(channelInviteV1(user.authUserId, channel.channelId, user2.authUserId)).toStrictEqual({});
+  });
+});
 
-  if (start > messageLen) {
-    return { error: ' start is greater than the total number of messages in the channel' };
-  }
+describe('channelMessagesV1 function testing', () => {
+  beforeEach(() => {
+    clearV1();
+    user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
+  });
+  test('channelId does not refer to a valid channel', () => {
+    const channel = channelsCreateV1(user.authUserId, 'music', false);
+    expect(channelMessagesV1(user.authUserId, channel.channelId + 1, 0)).toStrictEqual(ERROR);
+  });
 
-  let end = 0;
-  if (messageLen > (start + 50)) {
-    end = start + 50;
-  } else {
-    end = -1;
-  }
+  test('start is greater than the total number of messages in the channel', () => {
+    const channel = channelsCreateV1(user.authUserId, 'sports', false);
+    expect(channelMessagesV1(user.authUserId, channel.channelId, 1)).toStrictEqual(ERROR);
+  });
 
-  return {
-    messages: messages,
-    start: start,
-    end: end,
-  };
-};
+  test('channelId is valid and the authorised user is not a member of the channel', () => {
+    const channel = channelsCreateV1(user.authUserId, 'gaming', false);
+    const user1 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
+    expect(channelMessagesV1(user1.authUserId, channel.channelId, 0)).toStrictEqual(ERROR);
+  });
+
+  test('authUserId is invalid', () => {
+    const channel = channelsCreateV1(user.authUserId, 'games', true);
+    expect(channelMessagesV1(user.authUserId + 1, channel.channelId, 0)).toStrictEqual(ERROR);
+  });
+
+  test('valid input', () => {
+    const channel = channelsCreateV1(user.authUserId, 'music', true);
+    expect(channelMessagesV1(user.authUserId, channel.channelId, 0)).toStrictEqual({
+      messages: [],
+      start: 0,
+      end: -1,
+    });
+  });
+});

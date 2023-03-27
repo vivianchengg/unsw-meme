@@ -3,38 +3,25 @@ import { userProfileV1 } from './users';
 
 /** Function that lists details of members in the channel given that:
 *
-* @param {number} authUserId - User Id of individual asking for details of a channel
+* @param {string} - Token of individual's session
 * @param {number} channelId - Channel Id of channel that user is asking to access details of
-* @returns {object} channel
+* @returns {Channel} channel
 *
-*  - Here, channel: {
-*  name: string,
-*  isPublic: boolean,
-*  ownerMembers: array,
-*  allMembers: array
-*  }
-*
-*  - Also, user: {
-*  uId: number,
-*  email: string,
-*  password: string,
-*  nameFirst: string,
-*  nameLast: string,
-*  handleStr: string
-*  }
-
+* Note that channel type is specificed in dataStore.ts
 *
 *  To return the above:
-* - authUserId must be valid
+* - token must be valid
 * - channelId must be valid and user must be member of channel
 *  Otherwise, {error: string} is returned
 *
 **/
 
-export const channelDetailsV1 = (authUserId: number, channelId: number) => {
+export const channelDetailsV1 = (token: string, channelId: number) => {
   const data = getData();
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid authUserId' };
+  const authUserId = extractUId(token);
+  const INVALID = -1;
+  if (authUserId === INVALID) {
+    return { error: 'Invalid token' };
   }
 
   if (isValidChannel(channelId) === false) {
@@ -67,6 +54,26 @@ export const channelDetailsV1 = (authUserId: number, channelId: number) => {
       };
     }
   }
+};
+
+/** Function that returns user Id from token
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
+  const data = getData();
+  let userId = -1;
+
+  for (const user of data.users) {
+    for (const tokenData of user.tokens) {
+      if (token === tokenData) {
+        userId = user.uId;
+      }
+    }
+  }
+
+  return userId;
 };
 
 /** Function that checks if user id is valid
