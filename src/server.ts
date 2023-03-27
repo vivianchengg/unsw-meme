@@ -4,6 +4,10 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import { channelDetailsV1 } from './channel';
+import { channelsCreateV1 } from './channels';
+import { clearV1 } from './other';
+import { userProfileV1 } from './users';
+import { authRegisterV1, authLoginV1 } from './auth';
 
 // Set up web app
 const app = express();
@@ -18,15 +22,38 @@ const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
 // Example get request
-app.get('/echo', (req: Request, res: Response, next) => {
+app.get('/echo', (req: Request, res: Response) => {
   const data = req.query.echo as string;
   return res.json(echo(data));
 });
 
-app.get('/channel/details/v2', (req: Request, res: Response) => {
-  const token = req.query.token as string;
-  const channelId = parseInt(req.query.channelId as string);
+app.delete('/clear/v1', (req: Request, res: Response) => {
+  return res.json(clearV1());
+});
 
+app.post('/auth/login/v2', (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  return res.json(authLoginV1(email, password));
+});
+
+app.post('/auth/register/v2', (req: Request, res: Response) => {
+  const { email, password, nameFirst, nameLast } = req.body;
+  return res.json(authRegisterV1(email, password, nameFirst, nameLast));
+});
+
+app.get('/user/profile/v2', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const uId = parseInt(req.query.uId as string);
+  return res.json(userProfileV1(token, uId));
+});
+
+app.post('/channels/create/v2', (req: Request, res: Response) => {
+  const { token, name, isPublic } = req.body;
+  return res.json(channelsCreateV1(token, name, isPublic));
+});
+
+app.get('/channel/details/v2', (req: Request, res: Response) => {
+  const { token, channelId }= req.query;
   return res.json(channelDetailsV1(token, channelId));
 });
 

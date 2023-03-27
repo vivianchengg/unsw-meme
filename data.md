@@ -10,6 +10,7 @@ let data = {
       handleStr: 'JohnSmith',
       password: 'Britain',
       pId: 1,
+      token:['1'],
     }
   ],
 
