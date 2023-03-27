@@ -28,7 +28,7 @@ const getRequest = (url: string, data: any) => {
 };
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', {});
+  deleteRequest('/clear/v1', null);
   const person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
@@ -42,7 +42,7 @@ beforeEach(() => {
 describe('HTTP - userProfileV2 tests', () => {
   test('Testing valid token + uId', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       uId: user.authUserId,
     };
     const profile = getRequest('/user/profile/v2', param);
@@ -59,7 +59,7 @@ describe('HTTP - userProfileV2 tests', () => {
 
   test('Testing invalid token', () => {
     const param = {
-      token: user.token[0] + 'yay!',
+      token: user.token + 'yay!',
       uId: user.authUserId,
     };
     const profile = getRequest('/user/profile/v2', param);
@@ -68,7 +68,7 @@ describe('HTTP - userProfileV2 tests', () => {
 
   test('Testing invalid uId', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       uId: user.authUserId + 1,
     };
     const profile = getRequest('/user/profile/v2', param);

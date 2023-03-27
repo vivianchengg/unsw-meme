@@ -41,7 +41,7 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', {});
+  deleteRequest('/clear/v1', null);
 });
 
 describe('authLoginV1 Test', () => {
@@ -98,7 +98,7 @@ describe('authLoginV1 Test', () => {
 
     const userData = {
       email: 'vc@unsw.edu.au',
-      password: 'pwd'
+      password: 'password'
     };
 
     const reg = postRequest('/auth/register/v2', regData);
