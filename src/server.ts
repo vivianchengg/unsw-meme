@@ -3,6 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { channelsCreateV1 } from './channels';
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
 import { authRegisterV1, authLoginV1 } from './auth';
@@ -23,6 +24,13 @@ const HOST: string = process.env.IP || 'localhost';
 app.get('/echo', (req: Request, res: Response) => {
   const data = req.query.echo as string;
   return res.json(echo(data));
+});
+
+// creates a channel - given token + name and isPublic
+app.post('/channels/create/v2', (req: Request, res: Response) => {
+  const { token, name } = req.body;
+  const isPublic = req.body.isPublic as boolean;
+  return res.json(channelsCreateV1(token, name, isPublic));
 });
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
