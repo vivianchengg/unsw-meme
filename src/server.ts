@@ -3,7 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import userProfileSetHandle from './users';
+import { userProfileSetHandleV1 } from './users';
 
 // Set up web app
 const app = express();
@@ -25,7 +25,7 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 app.put('/user/profile/sethandle/v1', (req: Request, res: Response) => {
   const { token, handleStr } = req.body;
-  return res.json(userProfileSetHandle(token, handleStr));
+  return res.json(userProfileSetHandleV1(token, handleStr));
 });
 
 // start server
