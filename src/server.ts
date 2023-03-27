@@ -3,7 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import userProfileSetEmail from './users';
+import { userProfileSetEmailV1 } from './users';
 
 // Set up web app
 const app = express();
@@ -25,7 +25,7 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 app.put('/user/profile/setemail/v1', (req: Request, res: Response, next) => {
   const { token, email } = req.body;
-  return res.json(userProfileSetEmail(token, email));
+  return res.json(userProfileSetEmailV1(token, email));
 });
 
 // start server
