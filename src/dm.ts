@@ -72,7 +72,11 @@ const extractUId = (token: string) => {
   let userId;
 
   for (const user of data.users) {
-    userId = user.tokens.find(tokenData => tokenData === token);
+    for (const tokenData of user.tokens) {
+      if (tokenData === token) {
+        userId = user.uId;
+      }
+    }
   }
 
   return userId;
