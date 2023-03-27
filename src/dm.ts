@@ -33,7 +33,7 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
   for (const dm of data.dms) {
     if (dm.dmId === dmId) {
       for (const memberNumber in dm.members) {
-        if (dm.members[memberNumber].userId === userId) {
+        if (dm.members[memberNumber] === userId) {
           newMembers = dm.members.splice(memberNumber, memberNumber);
           dm.members = newMembers;
         }
@@ -86,8 +86,8 @@ const isMemberOfDM = (dmId: number, userId: number) => {
   const data = getData();
 
   for (const dm of data.dms) {
-    for (const member of dm.members) {
-      if (member.userId === userId) {
+    for (const member of dm.allMembers) {
+      if (member === userId) {
         return true;
       }
     }
