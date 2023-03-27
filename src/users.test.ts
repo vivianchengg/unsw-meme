@@ -54,6 +54,42 @@ describe('HTTP - /user/profile/setname/v1', () => {
     expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
   });
 
+  test('0 length first name', () => {
+    const param = {
+      token: user.token[0],
+      nameFirst: '',
+      nameLast: 'my',
+    };
+    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('50 length first name', () => {
+    const param = {
+      token: user.token[0],
+      nameFirst: 'vVxXHvdFIFaYGy6YiWUXN8ub6QM47q9xR6mZ7JtA8jdutYtuZIlol',
+      nameLast: 'my',
+    };
+    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('0 length last name', () => {
+    const param = {
+      token: user.token[0],
+      nameFirst: 'yum',
+      nameLast: '',
+    };
+    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('50 length lastname name', () => {
+    const param = {
+      token: user.token[0],
+      nameFirst: 'yum',
+      nameLast: 'vVxXHvdFIFaYGy6YiWUXN8ub6QM47q9xR6mZ7JtA8jdutYtuZIlol',
+    };
+    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+  });
+
   test('Valid input', () => {
     const param = {
       token: user.token[0],
