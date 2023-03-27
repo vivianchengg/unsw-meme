@@ -28,14 +28,26 @@ export type Channel = {
   end: number,
 };
 
+export type Dm = {
+  dmId: number,
+  name: string,
+  allMembers: number[],
+  owner: number,
+  messages: Message[],
+  start: number,
+  end: number,
+};
+
 export type Data = {
   users: User[],
-  channels: Channel[]
+  channels: Channel[],
+  dms: Dm[]
 };
 
 let data: Data = {
   users: [],
-  channels: []
+  channels: [],
+  dms: []
 };
 
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
