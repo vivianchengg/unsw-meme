@@ -32,10 +32,11 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
 
   for (const dm of data.dms) {
     if (dm.dmId === dmId) {
-      for (const memberNumber in dm.members) {
-        if (dm.members[memberNumber] === userId) {
-          newMembers = dm.members.splice(memberNumber, memberNumber);
-          dm.members = newMembers;
+      for (const memberNumber in dm.allMembers) {
+        if (dm.allMembers[memberNumber] === userId) {
+          const index = parseInt(memberNumber);
+          newMembers = dm.allMembers.splice(index, index);
+          dm.allMembers = newMembers;
         }
       }
     }
@@ -70,7 +71,11 @@ const extractUId = (token: string) => {
   let userId;
 
   for (const user of data.users) {
-    userId = user.tokens.find(tokenData => tokenData === token);
+    for (const tokenData of user.tokens) {
+      if (tokenData === token) {
+        userId = user.uId;
+      }
+    }
   }
 
   return userId;
