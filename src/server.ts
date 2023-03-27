@@ -26,15 +26,7 @@ app.get('/echo', (req: Request, res: Response) => {
   return res.json(echo(data));
 });
 
-// creates a channel - given token + name and isPublic
-app.post('/channels/create/v2', (req: Request, res: Response) => {
-  const { token, name } = req.body;
-  const isPublic = req.body.isPublic as boolean;
-  return res.json(channelsCreateV1(token, name, isPublic));
-});
-
 app.delete('/clear/v1', (req: Request, res: Response) => {
-  console.log('clear');
   return res.json(clearV1());
 });
 
@@ -52,6 +44,11 @@ app.get('/user/profile/v2', (req: Request, res: Response) => {
 app.post('/auth/register/v2', (req: Request, res: Response) => {
   const { email, password, nameFirst, nameLast } = req.body;
   return res.json(authRegisterV1(email, password, nameFirst, nameLast));
+});
+
+app.post('/channels/create/v2', (req: Request, res: Response) => {
+  const { token, name, isPublic } = req.body;
+  return res.json(channelsCreateV1(token, name, isPublic));
 });
 
 // start server

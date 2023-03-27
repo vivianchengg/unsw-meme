@@ -5,24 +5,35 @@ const port = config.port;
 const url = config.url;
 
 const ERROR = { error: expect.any(String) };
-const SERVERurl = `${url}:${port}`;
-
-let user: any;
+const SERVER_URL = `${url}:${port}`;
 
 const postRequest = (url: string, data: any) => {
-  const res = request('POST', SERVERurl + url, { json: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
 const deleteRequest = (url: string, data: any) => {
-  const res = request('DELETE', SERVERurl + url, { qs: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
+let user: any;
 beforeEach(() => {
-  deleteRequest('/clear/v1', {});
+  deleteRequest('/clear/v1', null);
   const person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
@@ -36,7 +47,7 @@ beforeEach(() => {
 describe('HTTP - channelsCreateV2 Tests', () => {
   test('Testing valid token + name', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       name: 'pewpewpew!',
       isPublic: true,
     };
@@ -46,7 +57,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
 
   test('Testing invalid token', () => {
     const param = {
-      token: user.token[0] + 'yay!',
+      token: user.token + 'yay!',
       name: 'pewpewpew!',
       isPublic: true,
     };
@@ -56,7 +67,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
 
   test('Testing 20+ name length', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       name: 'verycoolchannelname1234567891011121314151617181920',
       isPublic: true,
     };
@@ -66,7 +77,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
 
   test('Testing 0 name length', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       name: '',
       isPublic: true,
     };

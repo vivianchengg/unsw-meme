@@ -7,7 +7,6 @@ import { isValidUser, isMember } from './channel';
   * @param {string} token
   * @param {string} name
   * @param {boolean} isPublic
-  * ...
   * @returns {{channelId: number}}
 */
 export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
@@ -55,13 +54,8 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
   * Creates an array of all channels a user is a member of
   *
   * @param {number} authUserId
-  * ...
-  * @returns {channels: [{
-*   channelId: number,
-*   name: string,
-*   },
-* ]}
-*
+  * @returns {object} 
+  *
 */
 export const channelsListV1 = (authUserId: number) => {
   const data = getData();
@@ -127,8 +121,7 @@ export const channelsListAllV1 = (authUserId: number) => {
   * Checks if name is valid
   *
   * @param {string} name
-  * ...
-  * @returns {boolean}
+  * @returns {bool}
 */
 const isValidName = (name: string): boolean => {
   if (name.length < 1 || name.length > 20) {
@@ -139,9 +132,9 @@ const isValidName = (name: string): boolean => {
 
 /**
   * Checks if the token is valid
+  * 
   * @param {string} token
-  * ...
-  * @returns {boolean}
+  * @returns {bool}
 */
 export const isValidToken = (token: string): boolean => {
   const data = getData();
@@ -155,8 +148,8 @@ export const isValidToken = (token: string): boolean => {
 
 /**
   * Finds the authUserId given a token.
+  * 
   * @param {string} token
-  * ...
   * @returns {string} authUserId
 */
 export const findUID = (token: string) => {
