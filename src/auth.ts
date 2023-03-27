@@ -200,6 +200,8 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     pId = 2;
   }
 
+  const token = getNewToken();
+
   const newUser = {
     uId: id,
     nameFirst: nameFirst,
@@ -208,6 +210,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     handleStr: handle,
     password: password,
     pId: pId,
+    token: [token],
   };
 
   data.users.push(newUser);
@@ -215,5 +218,6 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
 
   return {
     authUserId: id,
+    token: token,
   };
 };

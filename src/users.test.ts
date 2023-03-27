@@ -1,36 +1,77 @@
-import { clearV1 } from './other';
-import { userProfileV1 } from './users';
-import { authRegisterV1 } from './auth';
+import request from 'sync-request';
+import config from './config.json';
 
-beforeEach(() => {
-  clearV1();
-});
+const port = config.port;
+const url = config.url;
 
 const ERROR = { error: expect.any(String) };
+const SERVERurl = `${url}:${port}`;
 
-describe('VALID INPUT!', () => {
-  test('Test: valid authuserId and uId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    expect(userProfileV1(user.authUserId, user.authUserId)).toStrictEqual({
+let user: any;
+
+const postRequest = (url: string, data: any) => {
+  const res = request('POST', SERVERurl + url, { json: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+const deleteRequest = (url: string, data: any) => {
+  const res = request('DELETE', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+const getRequest = (url: string, data: any) => {
+  const res = request('GET', SERVERurl + url, { qs: data });
+  const body = JSON.parse(String(res.getBody()));
+  return body;
+};
+
+beforeEach(() => {
+  deleteRequest('/clear/v1', {});
+  const person = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  };
+
+  user = postRequest('/auth/register/v2', person);
+});
+
+describe('HTTP - userProfileV2 tests', () => {
+  test('Testing valid token + uId', () => {
+    const param = {
+      token: user.token[0],
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual({
       user: {
         uId: user.authUserId,
-        email: 'christine@gmail.com',
-        nameFirst: 'christine',
-        nameLast: 'chu',
-        handleStr: 'christinechu',
+        email: 'jr@unsw.edu.au',
+        nameFirst: 'Jake',
+        nameLast: 'Renzella',
+        handleStr: 'jakerenzella',
       }
     });
   });
-});
 
-describe('INVALID!', () => {
-  test('Test: invalid authUserId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    expect(userProfileV1(user.authUserId + 1, user.authUserId)).toStrictEqual(ERROR);
+  test('Testing invalid token', () => {
+    const param = {
+      token: user.token[0] + 'yay!',
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
   });
 
-  test('Test: invalid authUserId', () => {
-    const user = authRegisterV1('christine@gmail.com', 'password', 'christine', 'chu');
-    expect(userProfileV1(user.authUserId, user.authUserId + 1)).toStrictEqual(ERROR);
+  test('Testing invalid uId', () => {
+    const param = {
+      token: user.token[0],
+      uId: user.authUserId + 1,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
   });
 });
