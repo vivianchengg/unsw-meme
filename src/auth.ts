@@ -143,8 +143,13 @@ export const authLoginV1 = (email: string, password: string) => {
   }
 
   const id = user.uId;
+
+  const token = getNewToken();
+  user.token.push(token);
+
   return {
     authUserId: id,
+    token: token
   };
 };
 

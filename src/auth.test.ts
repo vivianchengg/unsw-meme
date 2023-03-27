@@ -46,20 +46,63 @@ beforeEach(() => {
 
 describe('authLoginV1 Test', () => {
   test('email entered does not belong to a user', () => {
-    expect(authLoginV1('vc@unsw.edu.au', 'password')).toStrictEqual(ERROR);
+    const user1Data = {
+      email: 'vc@unsw.edu.au',
+      password: 'password'
+    };
 
-    authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    expect(authLoginV1('vc1@unsw.edu.au', 'password')).toStrictEqual(ERROR);
+    expect(postRequest('/auth/login/v2', user1Data)).toStrictEqual(ERROR);
+
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    postRequest('/auth/register/v2', regData);
+
+    const user2Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password'
+    };
+
+    expect(postRequest('/auth/login/v2', user2Data)).toStrictEqual(ERROR);
   });
 
   test('password is not correct', () => {
-    authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    expect(authLoginV1('vc@unsw.edu.au', 'pwd')).toStrictEqual(ERROR);
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    postRequest('/auth/register/v2', regData);
+
+    const userData = {
+      email: 'vc@unsw.edu.au',
+      password: 'pwd'
+    };
+
+    expect(postRequest('/auth/login/v2', userData)).toStrictEqual(ERROR);
   });
 
   test('test login', () => {
-    const reg = authRegisterV1('vc@unsw.edu.au', 'password', 'Vivian', 'Cheng');
-    const user = authLoginV1('vc@unsw.edu.au', 'password');
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    const userData = {
+      email: 'vc@unsw.edu.au',
+      password: 'pwd'
+    };
+
+    const reg = postRequest('/auth/register/v2', regData);
+    const user = postRequest('/auth/login/v2', userData);
     expect(user.authUserId).toStrictEqual(reg.authUserId);
   });
 });
