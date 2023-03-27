@@ -32,7 +32,6 @@ const putRequest = (url: string, data: any) => {
 };
 
 let user: any;
-
 beforeEach(() => {
   deleteRequest('/clear/v1', {});
   const person = {
