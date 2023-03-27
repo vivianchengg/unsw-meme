@@ -1,9 +1,8 @@
 import express, { json, Request, Response } from 'express';
-import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import { channelDetailsV1 } from './channel';
+import { channelDetailsV1, channelJoinV2 } from './channel';
 import { channelsCreateV1 } from './channels';
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
@@ -56,6 +55,11 @@ app.get('/channel/details/v2', (req: Request, res: Response) => {
   const token = req.query.token as string;
   const channelId = parseInt(req.query.channelId as string);
   return res.json(channelDetailsV1(token, channelId));
+});
+
+app.post('/channel/joinv2', (req: Request, res: Response, next) => {
+  const { token, channelId } = req.body;
+  return res.json(channelJoinV2(token, channelId));
 });
 
 // start server

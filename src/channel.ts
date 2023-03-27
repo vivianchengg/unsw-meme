@@ -1,5 +1,5 @@
 import { Channel, getData, setData } from './dataStore';
-import { userProfileV1 } from './users';
+import { userProfile } from './users';
 
 /** Function that lists details of members in the channel given that:
 *
@@ -15,7 +15,6 @@ import { userProfileV1 } from './users';
 *  Otherwise, {error: string} is returned
 *
 **/
-
 export const channelDetailsV1 = (token: string, channelId: number) => {
   const data = getData();
   const authUserId = extractUId(token);
@@ -61,7 +60,7 @@ export const channelDetailsV1 = (token: string, channelId: number) => {
  * @param {string} token
  * @returns {number}
  */
-const extractUId = (token: string) => {
+export const extractUId = (token: string) => {
   const data = getData();
   let userId = -1;
 
@@ -72,7 +71,6 @@ const extractUId = (token: string) => {
       }
     }
   }
-
   return userId;
 };
 
@@ -90,6 +88,17 @@ export const isValidUser = (userId: number): boolean => {
     }
   }
   return false;
+};
+
+export const isValidToken = (token: string): boolean => {
+  const data = getData();
+  for (const user of data.users) {
+    for (const userTok of user.tokens) {
+      if (userTok === token) {
+        return true;
+      }
+    }
+  }
 };
 
 /** Function that checks if channel id is valid
@@ -134,26 +143,17 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   return false;
 };
 
-/**
-  * Given a channelId of a channel that the authorised user can join, adds them to that channel.
-  * @param {number} authUserId
-  * @param {number} channelId
-  * @returns {}
-  *
-  * To return the above:
-  *  - channelId must refer to a valid chanel
-  *  - authorised user is not already a member of the channel
-  *  - channelId refers to a channel that is public
-  *  - authUserId is valid
-  * Otherwise, {error: string} is returned
-*
-*/
-
-export const channelJoinV1 = (authUserId: number, channelId: number) => {
+export const channelJoinV2 = (token: string, channelId: number) => {
   const data = getData();
 
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
+  const authUserId = extractUId(token);
+
+  if (isValidUser(authUserId) === false) {
+    return { error: 'invalid authUserId' };
+  }
+
+  if (!isValidToken(token)) {
+    return { error: 'token is invalid' };
   }
 
   if (!isValidChannel(channelId)) {
@@ -171,118 +171,6 @@ export const channelJoinV1 = (authUserId: number, channelId: number) => {
   }
 
   channel.allMembers.push(authUserId);
-
   setData(data);
   return {};
-};
-
-/**
-  * Invites a user with ID uId to join a channel with ID channelId.
-  * Once invited, the user is added to the channel immediately.
-  * In both public and private channels, all members are able to invite users.
-  * @param {number} authUserId
-  * @param {number} channelId
-  * @param {number} uId
-  * @returns {}
-  *
-  * To return the above:
-  *  - channelId must refer to a valid chanel
-  *  - authorised user is already a member of the channel
-  *  - uId is not already a member of the channel
-  *  - authUserId refers to a valid user
-  *  - uId refers to a valid user
-  * Otherwise, {error: string} is returned
-*
-*/
-
-export const channelInviteV1 = (authUserId: number, channelId: number, uId: number) => {
-  const data = getData();
-
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
-  }
-
-  if (!isValidChannel(channelId)) {
-    return { error: 'channelId does not refer to a valid channel' };
-  }
-
-  if (!isValidUser(uId)) {
-    return { error: 'uId does not refer to a valid user' };
-  }
-
-  const channel = data.channels.find(c => c.channelId === channelId);
-  if (isMember(channel, uId)) {
-    return { error: 'uId refers to a user who is already a member of the channel' };
-  }
-
-  if (!isMember(channel, authUserId)) {
-    return { error: 'channelId is valid and the authorised user is not a member of the channel' };
-  }
-
-  channel.allMembers.push(uId);
-
-  setData(data);
-  return {};
-};
-
-/**
-  * Given a channel with ID channelId that the authorised user is a member of,
-  * returns up to 50 messages between index "start" and "start + 50".
-  * Message with index 0 (i.e. the first element in the returned array of messages) is the most recent message in the channel.
-  * This function returns a new index "end".
-  * If there are more messages to return after this function call, "end" equals "start + 50".
-  * If this function has returned the least recent messages in the channel,
-  * "end" equals -1 to indicate that there are no more messages to load after this return.
-  * @param {number} authUserId
-  * @param {number} channelId
-  * @param {number} start
-  * @returns {
-*   messages: string,
-*   start: number,
-*   end: number
-* }
-* To return the above:
-*  - channelId must refer to a valid chanel
-*  - authorised user is already a member of the channel
-*  - authUserId is valid
-*  - start must be less than or equal to the total number of messages in the channel
-* Otherwise, {error: string} is returned
-*
-*/
-
-export const channelMessagesV1 = (authUserId: number, channelId: number, start: number) => {
-  const data = getData();
-
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
-  }
-
-  if (!isValidChannel(channelId)) {
-    return { error: 'channelId does not refer to a valid channel' };
-  }
-
-  const channel = data.channels.find(c => c.channelId === channelId);
-  if (!isMember(channel, authUserId)) {
-    return { error: 'hannelId is valid and the authorised user is not a member of the channel' };
-  }
-
-  const messageLen = channel.messages.length;
-  const messages = channel.messages.slice();
-
-  if (start > messageLen) {
-    return { error: ' start is greater than the total number of messages in the channel' };
-  }
-
-  let end = 0;
-  if (messageLen > (start + 50)) {
-    end = start + 50;
-  } else {
-    end = -1;
-  }
-
-  return {
-    messages: messages,
-    start: start,
-    end: end,
-  };
 };
