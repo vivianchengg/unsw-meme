@@ -1,4 +1,5 @@
 import { getData } from './dataStore';
+import { userProfileV1 } from './users';
 
 /** Function that lists details of specific DM
  *
@@ -30,10 +31,16 @@ export const dmDetailsV1 = (token: string, dmId: number) => {
   }
 
   for (const dm of data.dms) {
+    const dmMembers = [];
+    for (const member of dm.allMembers) {
+      const memberProfile = userProfileV1(userId, member);
+      dmMembers.push(memberProfile.user);
+    }
+
     if (dm.dmId === dmId) {
       return {
         name: dm.name,
-        members: dm.members
+        members: dmMembers
       };
     }
   }
@@ -81,8 +88,8 @@ const isMemberOfDM = (dmId: number, userId: number) => {
   const data = getData();
 
   for (const dm of data.dms) {
-    for (const member of dm.members) {
-      if (member.userId === userId) {
+    for (const member of dm.allMembers) {
+      if (member === userId) {
         return true;
       }
     }
