@@ -3,6 +3,7 @@ import { echo } from './echo';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { dmListV1 } from './dm';
 
 // Set up web app
 const app = express();
