@@ -25,7 +25,7 @@ app.get('/echo', (req: Request, res: Response, next) => {
 
 app.get('/dm/details/v1', (req: Request, res: Response) => {
   const token = req.query.token as string;
-  const dmID = req.query.dmID as number;
+  const dmID = parseInt(req.query.dmID as string);
   return res.json(dmDetailsV1(token, dmID));
 });
 
