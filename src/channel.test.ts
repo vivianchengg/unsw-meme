@@ -354,3 +354,74 @@ describe('channelMessengesV1 test', () => {
     expect(result.end).toStrictEqual(-1);
   });
 });
+
+describe('channelLeaveV1 test', () => {
+  test('Invalid Channel', () => {
+    const channelData = {
+      token: user.token,
+      channelId: 0,
+    };
+    expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid token', () => {
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+    const channelData = {
+      token: user.token + '1',
+      channelId: channel.channelId
+    };
+    expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
+  });
+
+  test('not member', () => {
+    const user1Data = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    const channelData = {
+      token: user1.token,
+      channelId: channel.channelId,
+    };
+    expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
+  });
+
+  test('valid channel leave', () => {
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    const detail = {
+      token: user.token,
+      channelId: channel.channelId
+    };
+    const cDetail = getRequest('/channel/details/v2', detail);
+    expect(cDetail.name).toStrictEqual(newChannel.name);
+
+    const channelData = {
+      token: user.token,
+      channelId: channel.channelId,
+    };
+    const result = postRequest('/channel/leave/v1', channelData);
+    expect(result).toStrictEqual({});
+    expect(getRequest('/channel/details/v2', detail)).toStrictEqual(ERROR);
+  });
+});
