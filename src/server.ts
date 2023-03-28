@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import { echo } from './echo';
-import { channelDetailsV1, channelJoinV1, channelInviteV2 } from './channel';
+import { channelDetailsV1, channelJoinV1, channelInviteV2, channelMessagesV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
@@ -68,9 +68,16 @@ app.post('/channel/join/v2', (req: Request, res: Response) => {
   return res.json(channelJoinV1(token, channelId));
 });
 
-app.post('/channel/invite/v2', (req: Request, res: Response, next) => {
+app.post('/channel/invite/v2', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   res.json(channelInviteV2(token, channelId, uId));
+});
+
+app.get('/channel/messages/v2', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const channelId = parseInt(req.query.channelId as string);
+  const start = parseInt(req.query.start as string);
+  return res.json(channelMessagesV2(token, channelId, start));
 });
 
 app.get('/channels/list/v2', (req: Request, res: Response) => {

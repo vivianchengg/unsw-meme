@@ -171,3 +171,37 @@ export const channelJoinV1 = (token: string, channelId: number) => {
   setData(data);
   return {};
 };
+
+export const channelMessagesV2 = (token: string, channelId: number, start: number) => {
+  const data = getData();
+  const authUserId = findUID(token);
+  if (!isValidUser(authUserId)) {
+    return { error: 'authUserId is invalid' };
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (!isMember(channel, authUserId)) {
+    return { error: 'channelId is valid and the authorised user is not a member of the channel' };
+  }
+
+  const messageLen = channel.messages.length;
+  let messages;
+
+  if (start > messageLen) {
+    return { error: ' start is greater than the total number of messages in the channel' };
+  }
+  let end = 0;
+  if (messageLen > (start + 50)) {
+    end = start + 50;
+    messages = channel.messages.slice(start, end);
+  } else {
+    end = -1;
+    messages = channel.messages.slice(start);
+  }
+
+  return {
+    messages: messages,
+    start: start,
+    end: end,
+  };
+};
