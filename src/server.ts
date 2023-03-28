@@ -67,7 +67,7 @@ app.get('/channel/details/v2', (req: Request, res: Response) => {
   return res.json(channelDetailsV1(token, channelId));
 });
 
-app.post('/channel/join/v2', (req: Request, res: Response, next) => {
+app.post('/channel/join/v2', (req: Request, res: Response) => {
   const { token, channelId } = req.body;
   return res.json(channelJoinV1(token, channelId));
 });
