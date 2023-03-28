@@ -161,14 +161,13 @@ describe('channelJoinV1 function testing', () => {
 
   test('private channel: authUser not global owner', () => {
     // not global owner
-    const param2 = {
-      email: 'dianahazea@gmail.com',
-      password: 'january',
-      nameFirst: 'diana',
-      nameLast: 'haze'
->>>>>>> src/channel.test.ts
+    const user2Data = {
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
     };
-    const user2 = postRequest('/auth/register/v2', param2);
+    const user2 = postRequest('/auth/register/v2', user2Data);
 
     // private channel
     const channel2Data = {
@@ -232,7 +231,7 @@ describe('channelJoinV1 function testing', () => {
   });
 });
 
-describe('channelInviteV2 test', () => {
+describe('channelInviteV1 test', () => {
   test('channelId does not refer to a valid channel', () => {
     const inviteData = {
       token: user.token,
@@ -297,29 +296,17 @@ describe('channelInviteV2 test', () => {
   });
 });
 
-describe('channelMessengesV2 function testing', () => {
+describe('channelMessengesV1 test', () => {
   test('channelId does not refer to a valid channel', () => {
-    const param1 = {
-      token: user.token,
-      name: 'music',
-      isPublic: false
-    };
-    channel = postRequest('/channels/create/v2', param1);
     const param2 = {
       token: user.token,
-      channelId: channel.channelId + 1,
+      channelId: channel.channelId + 189,
       start: 0
     };
     expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
-  test('start is greater than the total number of messages in the channe', () => {
-    const param1 = {
-      token: user.token,
-      name: 'sports',
-      isPublic: false
-    };
-    const channel = postRequest('/channel/create/v2', param1);
+  test('start is greater than the total number of messages', () => {
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
@@ -328,32 +315,24 @@ describe('channelMessengesV2 function testing', () => {
     expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
-  test('channelId is valid and the authorised user is not a member of the channel', () => {
-    const param1 = {
-      token: user.token,
-      name: 'bird watching',
-      isPublic: true
+  test('authorised user is not channel member', () => {
+    const user1Data = {
+      email: 'jr@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
     };
-    channel = postRequest('/channels/create/v2', param1);
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
     const param2 = {
-      email: 'amychan@gmail.com',
-      password: 'dini',
-      nameFirst: 'amy',
-      nameLast: 'chan'
-      <<<<<<< src/channel.test.ts
+      token: user1.token,
       channelId: channel.channelId,
       start: 0
     };
-    expect(getRequest('/channel/messages/v2', param3)).toStrictEqual(ERROR);
+    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
   test('token is invalid', () => {
-    const param1 = {
-      token: user.token,
-      name: 'sports',
-      isPublic: false
-    };
-    channel = postRequest('/channel/create/v2', param1);
     const param2 = {
       token: user.token + 1,
       channelId: channel.channelId,
@@ -363,23 +342,15 @@ describe('channelMessengesV2 function testing', () => {
   });
 
   test('valid input', () => {
-    const param1 = {
-      token: user.token,
-      name: 'sports',
-      isPublic: false
-    };
-    channel = postRequest('/channel/create/v2', param1);
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
       start: 0
     };
-    const expectedRet = {
-      messages: {},
-      start: 0,
-      end: 50
-    };
 
-    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(expectedRet);
+    const result = getRequest('/channel/messages/v2', param2);
+    expect(result.messages).toStrictEqual([]);
+    expect(result.start).toStrictEqual(0);
+    expect(result.end).toStrictEqual(-1);
   });
 });

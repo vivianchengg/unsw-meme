@@ -107,7 +107,7 @@ export const channelDetailsV1 = (token: string, channelId: number) => {
   * @param {number} uId
   * @returns {}
  */
-export const channelInviteV2 = (token: string, channelId: number, uId: number) => {
+export const channelInviteV1 = (token: string, channelId: number, uId: number) => {
   const data = getData();
   const authUserId = findUID(token);
   if (authUserId === null) {
@@ -172,14 +172,19 @@ export const channelJoinV1 = (token: string, channelId: number) => {
   return {};
 };
 
-export const channelMessagesV2 = (token: string, channelId: number, start: number) => {
+export const channelMessagesV1 = (token: string, channelId: number, start: number) => {
   const data = getData();
   const authUserId = findUID(token);
-  if (!isValidUser(authUserId)) {
+  if (authUserId === null) {
     return { error: 'authUserId is invalid' };
   }
 
+  if (!isValidChannel(channelId)) {
+    return { error: 'invalid channelId' };
+  }
+
   const channel = data.channels.find(c => c.channelId === channelId);
+
   if (!isMember(channel, authUserId)) {
     return { error: 'channelId is valid and the authorised user is not a member of the channel' };
   }
