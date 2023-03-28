@@ -35,7 +35,7 @@ export const userProfileV1 = (authUserId: number, uId: number) => {
     }
   }
   return {
-    user: person,
+    user: person
   };
 };
 
@@ -71,6 +71,7 @@ export const userProfileSetName = (token: string, nameFirst: string, nameLast: s
     }
   }
   setData(data);
+  return {};
 };
 
 /**
