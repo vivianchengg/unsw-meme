@@ -22,7 +22,7 @@ export const dmListV1 = (token: string) => {
 
   const list = [];
   let detail = {};
-  for (const dm of data.Dm) {
+  for (const dm of data.dms) {
     if (dm.allMembers.includes(authUserId)) {
       detail = {
         dmId: dm.dmId,
