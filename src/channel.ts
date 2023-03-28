@@ -1,91 +1,20 @@
-import { Channel, getData } from './dataStore';
+import { Channel, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
+import { findUID } from './channels';
 
-/** Function that lists details of members in the channel given that:
-*
-* @param {string} token - Token of individual asking for details of a channel
-* @param {number} channelId - Channel Id of channel that user is asking to access details of
-* @returns {object} channel
-*
-*  - Here, channel: {
-*  name: string,
-*  isPublic: boolean,
-*  ownerMembers: array,
-*  allMembers: array
-*  }
-*
-*  - Also, user: {
-*  uId: number,
-*  email: string,
-*  password: string,
-*  nameFirst: string,
-*  nameLast: string,
-*  handleStr: string
-*  }
-
-*
-*  To return the above:
-* - authUserId must be valid
-* - channelId must be valid and user must be member of channel
-*  Otherwise, {error: string} is returned
-*
-**/
-
-export const channelDetailsV1 = (authUserId: number, channelId: number) => {
-  const data = getData();
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid authUserId' };
-  }
-
-  if (isValidChannel(channelId) === false) {
-    return { error: 'invalid channelId' };
-  }
-
-  for (const channel of data.channels) {
-    if (channel.channelId === channelId) {
-      if (isMember(channel, authUserId) === false) {
-        return { error: 'user not member of channel' };
-      }
-
-      const allProfiles = [];
-      for (const userId of channel.allMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        allProfiles.push(userProfile.user);
-      }
-
-      const ownerProfiles = [];
-      for (const userId of channel.ownerMembers) {
-        const userProfile = userProfileV1(authUserId, userId);
-        ownerProfiles.push(userProfile.user);
-      }
-
-      return {
-        name: channel.name,
-        isPublic: channel.isPublic,
-        ownerMembers: ownerProfiles,
-        allMembers: allProfiles
-      };
-    }
-  }
-};
-
-/** Function that returns user Id from token
- *
- * @param {string} token
- * @returns {number}
+/** check if user is channel member
+  *
+  * @param {Channel} channel
+  * @param {number} userId
+  * @returns {bool}
  */
-
-const extractUId = (token: string) => {
-  const data = getData();
-  let userId = -1;
-  for (const user of data.users) {
-    for (const tokenData of user.tokens) {
-      if (token === tokenData) {
-        userId = user.uId;
-      }
+export const isMember = (channel: Channel, userId: number): boolean => {
+  for (const member of channel.allMembers) {
+    if (member === userId) {
+      return true;
     }
   }
-  return userId;
+  return false;
 };
 
 /** Function that checks if user id is valid
@@ -104,25 +33,12 @@ export const isValidUser = (userId: number): boolean => {
   return false;
 };
 
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    for (const tokenData of user.tokens) {
-      if (token === tokenData) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
 /** Function that checks if channel id is valid
- *
- *
- * @param {number} channelId
- * @returns {boolean}
+  *
+  *
+  * @param {number} channelId
+  * @returns {boolean}
 */
-
 export const isValidChannel = (channelId: number): boolean => {
   const data = getData();
   for (const channel of data.channels) {
@@ -133,40 +49,134 @@ export const isValidChannel = (channelId: number): boolean => {
   return false;
 };
 
-/** Function that checks if given user is member of channel
- *
- * @param {{
- *  channelId: number,
- *  name: string,
- *  isPublic: boolean,
- *  allMembers: array,
- *  ownerMembers: array,
- *  messages: array,
- *  start: number,
- *  end: number
- *  }} channel
- *
- * @param {number} userId
- * @returns {boolean}
- */
-export const isMember = (channel: Channel, userId: number): boolean => {
-  for (const member of channel.allMembers) {
-    if (member === userId) {
-      return true;
-    }
+/** Function that lists details of members in the channel given that:
+*
+* @param {string} - Token of individual's session
+* @param {number} channelId - Channel Id of channel that user is asking to access details of
+* @returns {Channel} channel
+*
+* Note that channel type is specificed in dataStore.ts
+*
+*  To return the above:
+* - token must be valid
+* - channelId must be valid and user must be member of channel
+*  Otherwise, {error: string} is returned
+*
+**/
+export const channelDetailsV1 = (token: string, channelId: number) => {
+  const data = getData();
+  const authUserId = findUID(token);
+  if (authUserId === null) {
+    return { error: 'Invalid token' };
   }
-  return false;
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel === undefined) {
+    return { error: 'invalid channelId' };
+  }
+
+  if (!isMember(channel, authUserId)) {
+    return { error: 'user not member of channel' };
+  }
+
+  const allProfiles = [];
+  for (const userId of channel.allMembers) {
+    const userProfile = userProfileV1(token, userId);
+    allProfiles.push(userProfile.user);
+  }
+
+  const ownerProfiles = [];
+  for (const userId of channel.ownerMembers) {
+    const userProfile = userProfileV1(token, userId);
+    ownerProfiles.push(userProfile.user);
+  }
+
+  return {
+    name: channel.name,
+    isPublic: channel.isPublic,
+    ownerMembers: ownerProfiles,
+    allMembers: allProfiles
+  };
 };
 
-export const channelMessagesV2 = (token: string, channelId: number, start: number) => {
+/** Invite user to channel
+  *
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @param {number} uId
+  * @returns {}
+ */
+export const channelInviteV2 = (token: string, channelId: number, uId: number) => {
   const data = getData();
-  const authUserId = extractUId(token);
-  if (!isValidUser(authUserId)) {
-    return { error: 'authUserId is invalid' };
+  const authUserId = findUID(token);
+  if (authUserId === null) {
+    return { error: 'token is invalid' };
   }
 
   if (!isValidChannel(channelId)) {
     return { error: 'channelId does not refer to a valid channel' };
+  }
+
+  if (!isValidUser(uId)) {
+    return { error: 'uId does not refer to a valid user' };
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (isMember(channel, uId)) {
+    return { error: 'uId refers to a user who is already a member of the channel' };
+  }
+
+  if (!isMember(channel, authUserId)) {
+    return { error: 'channelId is valid and the authorised user is not a member of the channel' };
+  }
+
+  channel.allMembers.push(uId);
+  setData(data);
+  return {};
+};
+
+/**
+  * Given a channelId of a channel that the authorised user can join,
+  * adds them to that channel.
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @returns {}
+*/
+export const channelJoinV1 = (token: string, channelId: number) => {
+  const data = getData();
+
+  const authUserId = findUID(token);
+
+  if (authUserId === null) {
+    return { error: 'token is invalid' };
+  }
+
+  if (!isValidChannel(channelId)) {
+    return { error: 'channelId does not refer to a valid channel' };
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (isMember(channel, authUserId)) {
+    return { error: 'the authorised user is already a member of the channel' };
+  }
+
+  const user = data.users.find((p) => p.uId === authUserId);
+  if (!channel.isPublic && user.pId !== 1) {
+    return { error: 'channel is private, when authorised user is not already a channel member and is not a global owner' };
+  }
+
+  channel.allMembers.push(authUserId);
+  setData(data);
+  return {};
+};
+
+export const channelMessagesV2 = (token: string, channelId: number, start: number) => {
+  const data = getData();
+  const authUserId = findUID(token);
+  if (!isValidUser(authUserId)) {
+    return { error: 'authUserId is invalid' };
   }
 
   const channel = data.channels.find(c => c.channelId === channelId);
