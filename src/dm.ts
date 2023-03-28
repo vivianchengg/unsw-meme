@@ -63,9 +63,6 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
   setData(data);
 
   return {
-    dms: {
-      dmId: dmId,
-      name: dmName,
-    }
+    dmId: dmId
   };
 };

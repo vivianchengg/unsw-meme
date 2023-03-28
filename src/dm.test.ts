@@ -4,18 +4,6 @@ import { port, url } from './config.json';
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
 
-const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
 const postRequest = (url: string, data: any) => {
   const res = request(
     'POST',
@@ -147,10 +135,26 @@ describe('dmCreateV1 test', () => {
       uIds: [user1.uId, user2.uId]
     };
     const dm = postRequest('/dm/create/v1', dmData);
-    const dmDetailData = {
+
+    const dmRemoveData = {
       token: owner.token,
-      dmId: dm.dms.dmId
+      dmId: dm.dmId
     };
-    expect(getRequest('/dm/details/v1', dmDetailData).name).toStrictEqual(dm.dms.name);
+
+    expect(postRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
+  });
+
+  test('test valid dm create: empty uId', () => {
+    const dmData = {
+      token: owner.token,
+      uIds: []
+    };
+    const dm = postRequest('/dm/create/v1', dmData);
+
+    const dmRemoveData = {
+      token: owner.token,
+      dmId: dm.dmId
+    };
+    expect(postRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
   });
 });
