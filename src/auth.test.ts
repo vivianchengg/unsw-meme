@@ -333,7 +333,11 @@ describe('authLogout Test', () => {
       nameLast: 'Cheng'
     };
     const token1 = postRequest('/auth/register/v2', user1Data).token;
-    expect(postRequest('/auth/logout/v1', token1 + '1')).toStrictEqual(ERROR);
+
+    const logoutData = {
+      token: token1 + '1'
+    };
+    expect(postRequest('/auth/logout/v1', logoutData)).toStrictEqual(ERROR);
   });
 
   test('test valid logout', () => {
@@ -346,10 +350,14 @@ describe('authLogout Test', () => {
     postRequest('/auth/register/v2', userData);
 
     const loginData = {
-      email: 'vc@unsw.edu.au',
-      password: 'password',
+      email: userData.email,
+      password: userData.password
     };
     const token = postRequest('/auth/login/v2', loginData).token;
-    expect(postRequest('/auth/logout/v1', token)).toStrictEqual({});
+
+    const logoutData = {
+      token: token
+    };
+    expect(postRequest('/auth/logout/v1', logoutData)).toStrictEqual({});
   });
 });

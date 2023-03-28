@@ -146,6 +146,7 @@ export const authLoginV1 = (email: string, password: string) => {
 
   const token = getNewToken();
   user.token.push(token);
+  setData(data);
 
   return {
     authUserId: id,
