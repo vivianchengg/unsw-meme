@@ -1,4 +1,4 @@
-import { User, Channel, getData, setData } from './dataStore';
+import { Channel, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
 import { findUID } from './channels';
 
@@ -262,6 +262,7 @@ export const channelLeaveV1 = (token: string, channelId: number) => {
   return {};
 };
 
+/**
   * check if the user is channel owner
   *
   * @param {number} uId
@@ -306,8 +307,13 @@ export const channelAddOwnerV1 = (token: string, channelId: number, uId: number)
     return { error: 'user is not a member of the channel' };
   }
 
+  if (isChannelOwner(uId, channel)) {
+    return { error: 'user is already owner' };
+  }
+
+  // authUser is not global owner or channel owner
   if (authUser.pId !== 1 && !isChannelOwner(authUser.uId, channel)) {
-    return { error: 'user does not have owner permissions' };
+    return { error: 'authUser does not have owner permissions' };
   }
 
   channel.ownerMembers.push(uId);
