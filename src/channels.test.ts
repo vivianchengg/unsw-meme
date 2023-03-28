@@ -1,8 +1,8 @@
 import request from 'sync-request';
 import { port, url } from './config.json';
 
-const ERROR = { error: expect.any(String) };
 const SERVER_URL = `${url}:${port}`;
+const ERROR = { error: expect.any(String) };
 
 const getRequest = (url: string, data: any) => {
   const res = request(
@@ -82,6 +82,117 @@ describe('HTTP - channelsListV2 Tests', () => {
     };
 
     expect(getRequest('/channels/list/v2', param)).toStrictEqual(ERROR);
+  });
+});
+
+describe('channelListAllV1 Tests', () => {
+  test('Invalid token', () => {
+    const listRequest = {
+      token: user.token + 'yay'
+    };
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Basic functionality', () => {
+    const channel2Data = {
+      token: user.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const listRequest = {
+      token: user.token
+    };
+
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
+      channels: [{
+        channelId: channel.channelId,
+        name: 'COMP1531'
+      }, {
+        channelId: channel2.channelId,
+        name: 'COMP2511'
+      }]
+    });
+  });
+
+  test('Includes private with public channels', () => {
+    const channel2Data = {
+      token: user.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const channelPrivData = {
+      token: user.token,
+      name: 'COMP3311',
+      isPublic: false
+    };
+
+    const channelPriv = postRequest('/channels/create/v2', channelPrivData);
+
+    const listRequest = {
+      token: user.token
+    };
+
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
+      channels: [{
+        channelId: channel.channelId,
+        name: 'COMP1531'
+      }, {
+        channelId: channel2.channelId,
+        name: 'COMP2511'
+      }, {
+        channelId: channelPriv.channelId,
+        name: 'COMP3311'
+      }]
+    });
+  });
+
+  test('Includes channels user is not part of', () => {
+    const outsideUserData = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const outsideUser = postRequest('/auth/register/v2', outsideUserData);
+
+    const channel2Data = {
+      token: user.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const channelPrivData = {
+      token: user.token,
+      name: 'COMP3311',
+      isPublic: false
+    };
+
+    const channelPriv = postRequest('/channels/create/v2', channelPrivData);
+
+    const listRequest = {
+      token: outsideUser.token
+    };
+
+    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
+      channels: [{
+        channelId: channel.channelId,
+        name: 'COMP1531'
+      }, {
+        channelId: channel2.channelId,
+        name: 'COMP2511'
+      }, {
+        channelId: channelPriv.channelId,
+        name: 'COMP3311'
+      }]
+    });
   });
 });
 
