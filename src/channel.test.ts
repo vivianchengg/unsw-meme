@@ -40,11 +40,12 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
-let user: any;
-let channel: any;
+let user : any;
+let invitedUser: any;
+let channel : any;
+
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
-
   const userData = {
     email: 'jr@unsw.edu.au',
     password: 'password',
@@ -59,6 +60,79 @@ beforeEach(() => {
     isPublic: true
   };
   channel = postRequest('/channels/create/v2', channelData);
+
+  const param1 = {
+      email: 'arialee@gmail.com',
+      password: 'dynamite',
+      nameFirst: 'aria',
+      nameLast: 'lee'
+    };
+    invitedUser = postRequest('/auth/register/v2', param1);
+});
+
+describe('HTTP tests using Jest for channelInviteV2', () => {
+  test('channelId does not refer to a valid channel', () => {
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId + 1,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData).toStrictEqual(ERROR));
+  });
+
+  test('uId does not refer to a valid user', () => {
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId + 189
+    };
+    expect(postRequest('/channel/invite/v2', inviteData).toStrictEqual(ERROR));
+  });
+
+  test('invalid token', () => {
+    const inviteData = {
+      token: user.token + 'yay',
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData).toStrictEqual(ERROR));
+  });
+
+  test('uId refers to a user who is already a member of the channel', () => {
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
+  });
+
+  test('channelId is valid and the authorised user is not a member of the channel', () => {
+    const user1Data = {
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const inviteData = {
+      token: user1.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
+  });
+
+  test('test valid invite', () => {
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual({});
+  });
 });
 
 describe('channelDetailsV1 Test', () => {
@@ -152,6 +226,7 @@ describe('channelJoinV1 function testing', () => {
 
   test('private channel: authUser not global owner', () => {
     // not global owner
+>>>>>>> src/channel.test.ts
     const param2 = {
       email: 'dianahazea@gmail.com',
       password: 'january',
@@ -159,6 +234,42 @@ describe('channelJoinV1 function testing', () => {
       nameLast: 'haze'
     };
     const user2 = postRequest('/auth/register/v2', param2);
+<<<<<<< src/channel.test.ts
+    const param3 = {
+      token: user2.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', param3)).toStrictEqual(ERROR);
+  });
+  test('token is invalid', () => {
+    const param1 = {
+      token: user.token,
+      name: 'holidays',
+      isPublic: false
+    };
+    channel = postRequest('/channels/create/v2', param1);
+    const param2 = {
+      token: user.token + 1,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', param2)).toStrictEqual(ERROR);
+  });
+  test('valid channelInviteV2', () => {
+    const param1 = {
+      token: user.token,
+      name: 'holidays',
+      isPublic: false
+    };
+    channel = postRequest('/channels/create/v2', param1);
+    const param2 = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', param2)).toStrictEqual({});
+=======
 
     // private channel
     const channel2Data = {
@@ -219,5 +330,6 @@ describe('channelJoinV1 function testing', () => {
       channelId: channel2.channelId
     };
     expect(postRequest('/channel/join/v2', param)).toStrictEqual({});
+>>>>>>> src/channel.test.ts
   });
 });
