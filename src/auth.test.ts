@@ -323,3 +323,33 @@ describe('authRegisterV1 Test', () => {
     expect(person3.user.handleStr).toEqual('abcdefghijklmnopqrs0');
   });
 });
+
+describe('authLogout Test', () => {
+  test('invalid token', () => {
+    const user1Data = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const token1 = postRequest('/auth/register/v2', user1Data).token;
+    expect(postRequest('/auth/logout/v1', token1 + '1')).toStrictEqual(ERROR);
+  });
+
+  test('test valid logout', () => {
+    const userData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    postRequest('/auth/register/v2', userData);
+
+    const loginData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+    };
+    const token = postRequest('/auth/login/v2', loginData).token;
+    expect(postRequest('/auth/logout/v1', token)).toStrictEqual({});
+  });
+});

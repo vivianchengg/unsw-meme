@@ -7,7 +7,7 @@ import { channelDetailsV1, channelJoinV1 } from './channel';
 import { channelsCreateV1 } from './channels';
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
-import { authRegisterV1, authLoginV1 } from './auth';
+import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
 
 // Set up web app
 const app = express();
@@ -27,6 +27,10 @@ app.get('/echo', (req: Request, res: Response) => {
   return res.json(echo(data));
 });
 
+app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
+  const { token } = req.body;
+  return res.json(authLogoutV1(token));
+});
 app.delete('/clear/v1', (req: Request, res: Response) => {
   return res.json(clearV1());
 });
@@ -39,6 +43,11 @@ app.post('/auth/login/v2', (req: Request, res: Response) => {
 app.post('/auth/register/v2', (req: Request, res: Response) => {
   const { email, password, nameFirst, nameLast } = req.body;
   return res.json(authRegisterV1(email, password, nameFirst, nameLast));
+});
+
+app.post('/auth/logout/v1', (req: Request, res: Response) => {
+  const { token } = req.body;
+  return res.json(authLogoutV1(token));
 });
 
 app.get('/user/profile/v2', (req: Request, res: Response) => {
@@ -58,7 +67,7 @@ app.get('/channel/details/v2', (req: Request, res: Response) => {
   return res.json(channelDetailsV1(token, channelId));
 });
 
-app.post('/channel/join/v2', (req: Request, res: Response, next) => {
+app.post('/channel/join/v2', (req: Request, res: Response) => {
   const { token, channelId } = req.body;
   return res.json(channelJoinV1(token, channelId));
 });
