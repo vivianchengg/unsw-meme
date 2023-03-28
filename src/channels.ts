@@ -53,21 +53,32 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
 /**
   * Creates an array of all channels a user is a member of
   *
-  * @param {number} authUserId
-  * @returns {object}
+  * @param {string} token
+  * @returns {channels: [{
+  *   channelId: number,
+  *   name: string,
+  *   },
+  * ]}
   *
 */
-export const channelsListV1 = (authUserId: number) => {
+export const channelsListV1 = (token: string) => {
   const data = getData();
-  if (isValidUser(authUserId) === false) {
+  let authUserId;
+
+  if (!isValidToken(token)) {
+    return { error: 'invalid token' };
+  } else {
+    authUserId = findUID(token);
+  }
+
+  if (!isValidUser(authUserId)) {
     return { error: 'invalid authUserId' };
   }
 
   const channelList = [];
-  let channelDetail = {};
   for (const channel of data.channels) {
-    if (isMember(channel, authUserId) === true) {
-      channelDetail = {
+    if (isMember(channel, authUserId)) {
+      const channelDetail = {
         channelId: channel.channelId,
         name: channel.name,
       };
@@ -132,9 +143,8 @@ const isValidName = (name: string): boolean => {
 
 /**
   * Checks if the token is valid
-  *
   * @param {string} token
-  * @returns {bool}
+  * @returns {boolean}
 */
 export const isValidToken = (token: string): boolean => {
   const data = getData();

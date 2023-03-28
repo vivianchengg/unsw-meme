@@ -4,7 +4,7 @@ import config from './config.json';
 import cors from 'cors';
 import { echo } from './echo';
 import { channelDetailsV1, channelJoinV1 } from './channel';
-import { channelsCreateV1 } from './channels';
+import { channelsCreateV1, channelsListV1 } from './channels';
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
@@ -27,10 +27,6 @@ app.get('/echo', (req: Request, res: Response) => {
   return res.json(echo(data));
 });
 
-app.post('/auth/logout/v1', (req: Request, res: Response, next) => {
-  const { token } = req.body;
-  return res.json(authLogoutV1(token));
-});
 app.delete('/clear/v1', (req: Request, res: Response) => {
   return res.json(clearV1());
 });
@@ -70,6 +66,11 @@ app.get('/channel/details/v2', (req: Request, res: Response) => {
 app.post('/channel/join/v2', (req: Request, res: Response) => {
   const { token, channelId } = req.body;
   return res.json(channelJoinV1(token, channelId));
+});
+
+app.get('/channels/list/v2', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  return res.json(channelsListV1(token));
 });
 
 // start server
