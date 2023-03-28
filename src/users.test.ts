@@ -106,9 +106,9 @@ describe('HTTP - /user/profile/setname/v1', () => {
       user: {
         uId: details.uId,
         email: details.email,
-        nameFirst: 'yum',
-        nameLast: 'my',
-        handleStr: 'yummy',
+        nameFirst: details.nameFirst,
+        nameLast: details.nameLast,
+        handleStr: details.handleStr,
       }
     });
   });
