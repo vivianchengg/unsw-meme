@@ -172,6 +172,14 @@ export const channelJoinV1 = (token: string, channelId: number) => {
   return {};
 };
 
+/**
+  * return up to 50 messages in channel
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @param {number} start
+  * @returns {object}
+*/
 export const channelMessagesV1 = (token: string, channelId: number, start: number) => {
   const data = getData();
   const authUserId = findUID(token);
@@ -279,7 +287,6 @@ const isChannelOwner = (uId: number, channel: Channel) => {
 };
 
 /**
-<<<<<<< src/channel.ts
   * Make user with user id uId an owner of the channel.
   *
   * @param {string} token
