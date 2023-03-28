@@ -601,3 +601,331 @@ describe('channelAddOwnerV1 test', () => {
     expect(postRequest('/channel/addowner/v1', channelData)).toStrictEqual(ERROR);
   });
 });
+
+describe('channelRemoveOwnerV1 test', () => {
+  test('Valid remove owner - channel owner', () => {
+    // new channel, user is channel owner
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // new user
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const ownerData = inviteData;
+    postRequest('/channel/addowner/v1', ownerData);
+
+    const detailData = {
+      token: user.token,
+      channelId: channel.channelId
+    };
+    let cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toContain(newUser.uId);
+
+    // remove owner
+    postRequest('/channel/removeowner/v1', ownerData);
+    cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).not.toContain(newUser.uId);
+  });
+
+  test('Valid remove owner - global owner', () => {
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    // new channel
+    const newChannel = {
+      token: user1.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // new user
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user1.token,
+      channelId: channel.channelId,
+      uId: newUser.uId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    expect(user.pId).toStrictEqual(1);
+    expect(user1.pId).toStrictEqual(2);
+    // add owner by GLOBAL OWNER
+    const channelData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId,
+    };
+    postRequest('/channel/addowner/v1', channelData);
+
+    const detailData = {
+      token: user1.token,
+      channelId: channel.channelId
+    };
+    let cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toContain(newUser.uId);
+
+    // remove owner
+    postRequest('/channel/removeowner/v1', channelData);
+    cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).not.toContain(newUser.uId);
+  });
+
+  test('Invalid channel', () => {
+    // new channel, user is channel owner
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // new user
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const channelData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId,
+    };
+    postRequest('/channel/addowner/v1', channelData);
+
+    // remove owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId + 1,
+      uId: newUser.uId,
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid token', () => {
+    // new channel, user is channel owner
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // new user
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const channelData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId,
+    };
+    postRequest('/channel/addowner/v1', channelData);
+
+    // remove owner
+    const ownerData = {
+      token: user.token + '1',
+      channelId: channel.channelId,
+      uId: newUser.uId,
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid uId', () => {
+    // new channel, user is channel owner
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // new user
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const channelData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId + 1,
+    };
+    postRequest('/channel/addowner/v1', channelData);
+
+    // remove owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId + 1,
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('uId is not owner', () => {
+    // new channel, user is channel owner
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // new user
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // remove owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId,
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('uId is the only owner', () => {
+    // new channel, user is channel owner
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // remove owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: user.uId,
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('authId not owner permission', () => {
+    // new channel, user is channel owner
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    // new user
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    expect(user1.pId).toStrictEqual(2);
+    // add owner
+    const channelData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: newUser.uId,
+    };
+    postRequest('/channel/addowner/v1', channelData);
+
+    // remove owner
+    const ownerData = {
+      token: user1.token,
+      channelId: channel.channelId,
+      uId: newUser.uId,
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+});

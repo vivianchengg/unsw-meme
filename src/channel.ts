@@ -279,6 +279,7 @@ const isChannelOwner = (uId: number, channel: Channel) => {
 };
 
 /**
+<<<<<<< src/channel.ts
   * Make user with user id uId an owner of the channel.
   *
   * @param {string} token
@@ -317,6 +318,48 @@ export const channelAddOwnerV1 = (token: string, channelId: number, uId: number)
   }
 
   channel.ownerMembers.push(uId);
+  setData(data);
+  return {};
+};
+
+/**
+  * Remove user with user id uId as an owner of the channel.
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @param {number} uId
+  * @returns {}
+*/
+export const channelRemoveOwnerV1 = (token: string, channelId: number, uId: number) => {
+  const data = getData();
+  const channel = data.channels.find(c => c.channelId === channelId);
+  const user = data.users.find(u => u.uId === uId);
+  if (channel === undefined) {
+    return { error: 'invalid channel' };
+  }
+
+  if (user === undefined) {
+    return { error: 'invalid user' };
+  }
+
+  const authUser = validTokenUser(token);
+  if (authUser === null) {
+    return { error: 'invalid token' };
+  }
+
+  if (!isChannelOwner(uId, channel)) {
+    return { error: 'user is not a owner of the channel' };
+  }
+
+  if (channel.ownerMembers.length === 1) {
+    return { error: 'user is the only owner' };
+  }
+
+  if (authUser.pId !== 1 && !isChannelOwner(authUser.uId, channel)) {
+    return { error: 'user does not have owner permissions' };
+  }
+
+  channel.ownerMembers = channel.ownerMembers.filter(id => id !== uId);
   setData(data);
   return {};
 };
