@@ -25,9 +25,10 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
     return { error: 'dm is valid but not the creator' };
   }
 
-  const newList = data.Dm.filter(d => d.dmId !== dmId);
-  data.Dm = newList;
+  const newList = data.dms.filter(d => d.dmId !== dmId);
+  data.dms = newList;
   setData(data);
+  return {};
 };
 
 /**
@@ -39,7 +40,7 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
 */
 const isValidOwner = (authUserId: number, dmId: number) => {
   const data = getData();
-  const dm = data.Dm.find(d => d.dmId === dmId);
+  const dm = data.dms.find(d => d.dmId === dmId);
   if (dm.owner === authUserId) {
     return true;
   }
@@ -55,7 +56,7 @@ const isValidOwner = (authUserId: number, dmId: number) => {
 */
 const isValidMember = (authUserId: number, dmId: number) => {
   const data = getData();
-  const dm = data.Dm.find(d => d.dmId === dmId);
+  const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
     return false;
   }
