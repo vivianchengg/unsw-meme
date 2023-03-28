@@ -11,12 +11,10 @@ import { isValidUser, isMember } from './channel';
 */
 export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
-  let authUserId;
 
-  if (isValidToken(token) === false) {
+  const authUserId = findUID(token);
+  if (authUserId === null) {
     return { error: 'invalid token' };
-  } else {
-    authUserId = findUID(token);
   }
 
   if (isValidUser(authUserId) === false) {
@@ -105,14 +103,11 @@ export const channelsListV1 = (token: string) => {
  *
  * Otherwise, {error: string} is returned
  */
-
-// Function lists details of all channels the user is in
 export const channelsListAllV1 = (token: string) => {
   const data = getData();
-  const userId = extractUId(token);
-  const INVALID = -1;
+  const userId = findUID(token);
 
-  if (userId === INVALID) {
+  if (userId === null) {
     return { error: 'Invalid token' };
   }
 
@@ -129,26 +124,6 @@ export const channelsListAllV1 = (token: string) => {
   return {
     channels: channelList
   };
-};
-
-/** Function that returns user Id from token
- *
- * @param {string} token
- * @returns {number}
- */
-const extractUId = (token: string) => {
-  const data = getData();
-  let userId = -1;
-
-  for (const user of data.users) {
-    for (const tokenData of user.tokens) {
-      if (token === tokenData) {
-        userId = user.uId;
-      }
-    }
-  }
-
-  return userId;
 };
 
 /**
