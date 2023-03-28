@@ -1,6 +1,6 @@
 import { Channel, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
-import { findUID, isValidToken } from './channels'
+import { findUID } from './channels';
 
 /** check if user is channel member
   *

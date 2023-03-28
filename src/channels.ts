@@ -2,6 +2,50 @@ import { Message, getData, setData } from './dataStore';
 import { isValidUser, isMember } from './channel';
 
 /**
+  * Finds the authUserId given a token.
+  *
+  * @param {string} token
+  * @returns {string} authUserId
+*/
+export const findUID = (token: string) => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return user.uId;
+    }
+  }
+  return null;
+};
+
+/**
+  * Checks if name is valid
+  *
+  * @param {string} name
+  * @returns {bool}
+*/
+export const isValidName = (name: string): boolean => {
+  if (name.length < 1 || name.length > 20) {
+    return false;
+  }
+  return true;
+};
+
+/**
+  * Checks if the token is valid
+  * @param {string} token
+  * @returns {boolean}
+*/
+export const isValidToken = (token: string): boolean => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
   * Creates a channel for authUserId.
   *
   * @param {string} token
@@ -124,48 +168,4 @@ export const channelsListAllV1 = (token: string) => {
   return {
     channels: channelList
   };
-};
-
-/**
-  * Checks if name is valid
-  *
-  * @param {string} name
-  * @returns {bool}
-*/
-const isValidName = (name: string): boolean => {
-  if (name.length < 1 || name.length > 20) {
-    return false;
-  }
-  return true;
-};
-
-/**
-  * Checks if the token is valid
-  * @param {string} token
-  * @returns {boolean}
-*/
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return true;
-    }
-  }
-  return false;
-};
-
-/**
-  * Finds the authUserId given a token.
-  *
-  * @param {string} token
-  * @returns {string} authUserId
-*/
-export const findUID = (token: string) => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
-    }
-  }
-  return null;
 };
