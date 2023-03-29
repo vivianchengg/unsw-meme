@@ -1,6 +1,5 @@
 import fs from 'fs';
 
-// YOU SHOULD MODIFY THIS OBJECT BELOW
 export type User = {
   uId: number,
   nameFirst: string,
@@ -46,12 +45,11 @@ export type Data = {
   dms: Dm[]
 };
 
-// let data: Data = {
-//   users: [],
-//   channels: []
-// };
-
-// YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
+export const data: Data = {
+  users: [],
+  channels: [],
+  dms: []
+};
 
 /*
 Example usage
