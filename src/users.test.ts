@@ -67,7 +67,7 @@ beforeEach(() => {
 describe('HTTP - /user/profile/setname/v1', () => {
   test('Invalid token', () => {
     const param = {
-      token: user.token[0] - 1,
+      token: user.token + '1',
       nameFirst: 'yum',
       nameLast: 'my',
     };
@@ -76,7 +76,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
 
   test('0 length first name', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       nameFirst: '',
       nameLast: 'my',
     };
@@ -85,7 +85,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
 
   test('50 length first name', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       nameFirst: 'vVxXHvdFIFaYGy6YiWUXN8ub6QM47q9xR6mZ7JtA8jdutYtuZIlol',
       nameLast: 'my',
     };
@@ -94,7 +94,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
 
   test('0 length last name', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       nameFirst: 'yum',
       nameLast: '',
     };
@@ -103,7 +103,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
 
   test('50 length lastname name', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       nameFirst: 'yum',
       nameLast: 'vVxXHvdFIFaYGy6YiWUXN8ub6QM47q9xR6mZ7JtA8jdutYtuZIlol',
     };
@@ -112,14 +112,14 @@ describe('HTTP - /user/profile/setname/v1', () => {
 
   test('Valid input', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       nameFirst: 'yum',
       nameLast: 'my',
     };
     putRequest('/user/profile/setname/v1', param);
 
     const newparam = {
-      token: user.token[0],
+      token: user.token,
       uId: user.authUserId,
     };
     const details = getRequest('/user/profile/v2', newparam);
