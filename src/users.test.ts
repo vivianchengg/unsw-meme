@@ -125,11 +125,11 @@ describe('HTTP - /user/profile/setname/v1', () => {
     const details = getRequest('/user/profile/v2', newparam);
     expect(details).toStrictEqual({
       user: {
-        uId: details.uId,
-        email: details.email,
-        nameFirst: details.nameFirst,
-        nameLast: details.nameLast,
-        handleStr: details.handleStr,
+        uId: user.authUserId,
+        email: 'jr@unsw.edu.au',
+        nameFirst: 'yum',
+        nameLast: 'my',
+        handleStr: 'jakerenzella',
       }
     });
   });
