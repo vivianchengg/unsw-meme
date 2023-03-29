@@ -23,7 +23,7 @@ const isValidDm = (dmId: number) => {
 const isMemberOfDm = (dmId: number, userId: number) => {
   const data = getData();
   for (const dm of data.dms) {
-    if (dm.allmembers.includes(userId)) {
+    if (dm.allMembers.includes(userId)) {
       return true;
     }
   }
@@ -44,21 +44,6 @@ export const isValidUser = (userId: number): boolean => {
     }
   }
   return false;
-};
-
-/** Function that checks if a token is valid
- *
- *
- * @param {string} token
- * @returns {boolean}
- */
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token === token) {
-      return true;
-    }
-  }
 };
 
 /** Function that returns user Id from token
@@ -113,11 +98,11 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
     return { error: 'start is greater than the total number of messages in the channel' };
   }
   const authUser = extractUid(token);
+  if (authUser === undefined) {
+    return { error: 'token is invalid' };
+  }
   if (!isMemberOfDm(dmId, authUser)) {
     return { error: 'dmId is valid and the authorised user is not a member of the DM' };
-  }
-  if (!isValidToken(token)) {
-    return { error: 'token is invalid' };
   }
   let end = 0;
   let messages = null;
