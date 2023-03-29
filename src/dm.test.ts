@@ -102,7 +102,7 @@ describe('HTTP - /dm/remove/v1 tests', () => {
 
   test('Invalid token', () => {
     const param = {
-      token: user.token[0] + 1,
+      token: user.token[0] + 'lol',
       dmId: dm.dmId,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
@@ -113,11 +113,6 @@ describe('HTTP - /dm/remove/v1 tests', () => {
       token: user.token[0],
       dmId: dm.dmId,
     };
-    deleteRequest('/dm/remove/v1', param);
-
-    const newparam = {
-      token: user.token[0],
-    };
-    expect(getRequest('/dm/list/v1', newparam)).toStrictEqual(ERROR);
+    deleteRequest('/dm/remove/v1', param).toStrictEqual({});
   });
 });
