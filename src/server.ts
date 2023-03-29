@@ -1,5 +1,5 @@
 import express, { json, Request, Response } from 'express';
-import { echo } from './echo';
+import { dmMessagesV1 } from './dm';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
@@ -16,10 +16,9 @@ app.use(morgan('dev'));
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
 
-// Example get request
-app.get('/echo', (req: Request, res: Response, next) => {
-  const data = req.query.echo as string;
-  return res.json(echo(data));
+app.get('/dm/messages/v1', (req: Request, res: Response, next) => {
+  const { token, uIds } = req.query;
+  res.json(dmMessagesV1(token, uIds));
 });
 
 // start server
@@ -32,3 +31,4 @@ const server = app.listen(PORT, HOST, () => {
 process.on('SIGINT', () => {
   server.close(() => console.log('Shutting down server gracefully.'));
 });
+
