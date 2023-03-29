@@ -112,7 +112,7 @@ describe('userProfileSetHandleV1 tests', () => {
       handleStr: user2.handleStr
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
   });
 
   test('Basic functionality', () => {
@@ -121,7 +121,7 @@ describe('userProfileSetHandleV1 tests', () => {
       handleStr: 'theJAKErenzella'
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual({});
   });
 });
 
