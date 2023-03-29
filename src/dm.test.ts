@@ -30,7 +30,7 @@ const deleteRequest = (url: string, data: any) => {
 
 let owner: any;
 let user: any;
-let dm: any;
+let dm1: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
@@ -97,9 +97,18 @@ describe('dmLeaveV1 Test', () => {
     expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
   });
 
-  test('Basic functionality', () => {
+  test('Basic functionality: member', () => {
     const detailRequest = {
       token: user.token,
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
+  });
+
+  test('Basic functionality: owner', () => {
+    const detailRequest = {
+      token: owner.token,
       dmId: dm1.dmId
     };
 
