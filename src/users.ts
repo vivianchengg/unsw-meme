@@ -1,4 +1,5 @@
 import { getData, setData } from './dataStore';
+import validator from 'validator';
 
 /**
 * Returns information about a user
@@ -163,6 +164,7 @@ const findUID = (token: string) => {
 };
 
 /**
+<<<<<<< HEAD
  * Updates authorised user's handle
  * @param {string} token
  * @param {string} handleStr
@@ -203,6 +205,41 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 
   return {};
 };
+
+/**
+* Updates authorised user's email address
+* @param {string} token
+* @param {string} email
+* @returns {}
+*
+* Will return error if:
+*  - email entered is not valid, defined by validator
+*  - email is already taken by another user
+*  - token is invalid
+*/
+export const userProfileSetEmailV1 = (token: string, email: string) => {
+  const data = getData();
+
+  if (!isValidToken(token)) {
+    return { error: 'Invalid token' };
+  }
+
+  if (!validator.isEmail(email)) {
+    return { error: 'Invalid email entered' };
+  }
+
+  if (data.users.find(u => u.email === email) !== undefined) {
+    return { error: 'Email already taken by another user' };
+  }
+
+  const userId = findUID(token);
+  const user = data.users.find(u => u.uId === userId);
+
+  user.email = email;
+  setData(data);
+
+  return {};
+};    
 
 /**
  * Checks if entered string is alphanumeric

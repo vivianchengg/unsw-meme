@@ -56,6 +56,7 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 let user: any;
+
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
   const person = {
@@ -127,6 +128,60 @@ describe('userProfileSetHandleV1 tests', () => {
     };
 
     expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual({});
+  });
+});
+
+describe('userProfileSetEmailV1 tests', () => {
+  test('Invalid token', () => {
+    const param = {
+      token: user.token + 'buffer',
+      email: 'jake23@unsw.edu.au'
+    };
+
+    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid email', () => {
+    const param = {
+      token: user.token,
+      email: 'buffer'
+    };
+
+    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Email already taken', () => {
+    const person2 = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const user2 = postRequest('/auth/register/v2', person2);
+
+    const profileParam = {
+      token: user2.token,
+      uId: user2.authUserId
+    };
+
+    const user2Profile = getRequest('/user/profile/v2', profileParam);
+
+    const param = {
+      token: user.token,
+      email: user2Profile.user.email
+    };
+
+    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Basic functionality', () => {
+    const param = {
+      token: user.token,
+      email: 'JR@unsw.edu.au'
+    };
+
+    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
   });
 });
 
