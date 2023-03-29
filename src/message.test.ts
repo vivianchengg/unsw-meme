@@ -32,7 +32,7 @@ beforeEach(() => {
   user = postRequest('/auth/register/v2', param);
 });
 
-describe('HTTP tests using Jest for messageSentV1', () => {
+describe('HTTP tests using Jest for messageSendV1', () => {
   test('channelId does not refer to a valid channel', () => {
     const param1 = {
       token: user.token,
@@ -45,7 +45,7 @@ describe('HTTP tests using Jest for messageSentV1', () => {
       channelId: channel.channelId + 1,
       message: 'Heyyy, how is ur day going'
     };
-    expect(postRequest('/message/sent/v1', param2)).toStrictEqual(ERROR);
+    expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
   test('length of message is less than 1 characters', () => {
     const param1 = {
@@ -59,7 +59,7 @@ describe('HTTP tests using Jest for messageSentV1', () => {
       channelId: channel.channelId,
       message: ''
     };
-    expect(postRequest('/message/sent/v1', param2)).toStrictEqual(ERROR);
+    expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
   test('length of message is over 1000 characters', () => {
     const param1 = {
@@ -73,7 +73,7 @@ describe('HTTP tests using Jest for messageSentV1', () => {
       channelId: channel.channelId,
       message: 'Australia, officially the Commonwealth of Australia, is a sovereign country comprising the mainland of the Australian continent, the island of Tasmania, and numerous smaller islands. With an area of 7,617,930 square kilometres (2,941,300 sq mi), Australia is the largest country by area in Oceania and the worlds sixth-largest country. Australia is the oldest, flattest, and driest inhabited continent, with the least fertile soils. It is a megadiverse country, and its size gives it a wide variety of landscapes and climates, with deserts in the centre, tropical rainforests in the north-east, and mountain ranges in the south-east. The ancestors of Aboriginal Australians began arriving from south-east Asia approximately 65,000 years ago, during the last ice age. Arriving by sea, they settled the continent and had formed approximately 250 distinct language groups by the time of European settlement, maintaining some of the longest known continuing artistic and religious traditions in the world.'
     };
-    expect(postRequest('/message/sent/v1', param2)).toStrictEqual(ERROR);
+    expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
   test('channelId is valid and the authorised user is not a member of the channel', () => {
     const param1 = {
@@ -94,7 +94,7 @@ describe('HTTP tests using Jest for messageSentV1', () => {
       channelId: channel.channelId,
       message: 'Heyyy, how is ur day going'
     };
-    expect(postRequest('/message/sent/v1', param3).toStrictEqual(ERROR));
+    expect(postRequest('/message/send/v1', param3).toStrictEqual(ERROR));
   });
   test('token is invalid', () => {
     const param1 = {
