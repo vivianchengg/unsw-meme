@@ -127,12 +127,10 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 
   const data = getData();
   const userId = findUID(token);
-  for (const user of data.users) {
-    if (user.uId === userId) {
-      user.handleStr = handleStr;
-      setData(data);
-    }
-  }
+
+  const user = data.users.find(u => u.uId === userId);
+  user.handleStr = handleStr;
+  setData(data);
 };
 
 /**
