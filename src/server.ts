@@ -29,7 +29,8 @@ app.get('/echo', (req: Request, res: Response) => {
 });
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
-  return res.json(clearV1());
+  const result = clearV1();
+  return res.json(result);
 });
 
 app.post('/auth/login/v2', (req: Request, res: Response) => {
