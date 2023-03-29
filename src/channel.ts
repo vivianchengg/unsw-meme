@@ -1,4 +1,4 @@
-import { User, Channel, getData, setData } from './dataStore';
+import { Channel, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
 import { findUID } from './channels';
 
@@ -217,7 +217,7 @@ export const channelMessagesV1 = (token: string, channelId: number, start: numbe
   * @param {string} token
   * @returns {User}
 */
-const validTokenUser = (token: string): User => {
+const validTokenUser = (token: string) => {
   const data = getData();
   for (const user of data.users) {
     for (const userToken of user.token) {
@@ -258,6 +258,65 @@ export const channelLeaveV1 = (token: string, channelId: number) => {
   channel.allMembers = channel.allMembers.filter(id => id !== user.uId);
   channel.ownerMembers = channel.ownerMembers.filter(id => id !== user.uId);
 
+  setData(data);
+  return {};
+};
+
+/**
+  * check if the user is channel owner
+  *
+  * @param {number} uId
+  * @param {Channel} channel
+  * @returns {bool}
+*/
+const isChannelOwner = (uId: number, channel: Channel) => {
+  for (const ownerId of channel.ownerMembers) {
+    if (uId === ownerId) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+  * Make user with user id uId an owner of the channel.
+  *
+  * @param {string} token
+  * @param {number} channelId
+  * @param {number} uId
+  * @returns {}
+*/
+export const channelAddOwnerV1 = (token: string, channelId: number, uId: number) => {
+  const data = getData();
+  const channel = data.channels.find(c => c.channelId === channelId);
+  const user = data.users.find(u => u.uId === uId);
+  if (channel === undefined) {
+    return { error: 'invalid channel' };
+  }
+
+  if (user === undefined) {
+    return { error: 'invalid user' };
+  }
+
+  const authUser = validTokenUser(token);
+  if (authUser === null) {
+    return { error: 'invalid token' };
+  }
+
+  if (!isMember(channel, uId)) {
+    return { error: 'user is not a member of the channel' };
+  }
+
+  if (isChannelOwner(uId, channel)) {
+    return { error: 'user is already owner' };
+  }
+
+  // authUser is not global owner or channel owner
+  if (authUser.pId !== 1 && !isChannelOwner(authUser.uId, channel)) {
+    return { error: 'authUser does not have owner permissions' };
+  }
+
+  channel.ownerMembers.push(uId);
   setData(data);
   return {};
 };
