@@ -12,12 +12,10 @@ import { getData } from './dataStore';
 */
 export const dmListV1 = (token: string) => {
   const data = getData();
-  let authUserId;
 
-  if (!isValidToken(token)) {
+  const authUserId = extractUId(token);
+  if (authUserId === undefined) {
     return { error: 'invalid token' };
-  } else {
-    authUserId = findUID(token);
   }
 
   const list = [];
@@ -33,38 +31,26 @@ export const dmListV1 = (token: string) => {
   }
 
   return {
-    dms: list,
+    dms: list
   };
 };
 
-/**
-  * Checks if the token is valid
-  * @param {string} token
-  * ...
-  * @returns {boolean}
-*/
-const isValidToken = (token: string): boolean => {
+/** Function that returns user Id from token
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
   const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return true;
-    }
-  }
-  return false;
-};
+  let userId;
 
-/**
-  * Finds the authUserId given a token.
-  * @param {string} token
-  * ...
-  * @returns {string} authUserId
-*/
-const findUID = (token: string) => {
-  const data = getData();
   for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
+    for (const tokenData of user.tokens) {
+      if (tokenData === token) {
+        userId = user.uId;
+      }
     }
   }
-  return null;
+
+  return userId;
 };
