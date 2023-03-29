@@ -121,12 +121,10 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 
   const data = getData();
   const userId = findUID(token);
-  for (const user of data.users) {
-    if (user.uId === userId) {
-      user.email = email;
-      setData(data);
-    }
-  }
+
+  const user = data.users.find(u => u.uId === userId);
+  user.email = email;
+  setData(data);
 };
 
 /**
