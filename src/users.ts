@@ -132,6 +132,8 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 
   user.handleStr = handleStr;
   setData(data);
+
+  return {};
 };
 
 /**
