@@ -55,18 +55,6 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
-const putRequest = (url: string, data: any) => {
-  const res = request(
-    'PUT',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
 let user: any;
 
 beforeEach(() => {
