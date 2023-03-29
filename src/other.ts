@@ -10,6 +10,7 @@ export const clearV1 = () => {
   const data = getData();
   data.users = [];
   data.channels = [];
+  data.dms = [];
   setData(data);
   return {};
 };
