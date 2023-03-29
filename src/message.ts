@@ -29,6 +29,24 @@ const msgSentByUser = (authId: number, messageId: number) => {
   return false;
 };
 
+/** Function that checks if an authorised user is a member of channel/dm
+ *
+ * @param {number} authId
+ * @param {number} messageId
+ * @returns {number}
+ */
+const isOwnerChannel = (authId: number, messageId: number): boolean => {
+  const data = getData();
+  const channel = data.channels.find(c => c.messages.messageId === messageId);
+  const dm = data.dm.find(dm => dm.messages.messageId === messageId);
+  if (channel.ownerMembers.includes(authId)) {
+    return true;
+  } else if (dm.owner === authId) {
+    return true;
+  }
+  return false;
+};
+
 /** Function that returns user Id from token
  *
  * @param {string} token
@@ -93,15 +111,14 @@ export const isValidToken = (token: string): boolean => {
 * - message must be sent by authorised user making the request and the user must have owner permissions in the channel/DM
 *  Otherwise, {error: string} is returned
 */
-
 export const messageRemoveV1 = (token: number, messageId: number) => {
   const data = getData();
   const authId = extractUId(token);
   if (!msgValid(authId, messageId)) {
     return { error: 'messageId does not refer to a valid message within a channel/DM that the authorised user has joined' };
   }
-  if (!msgSentByUser(authId, messageId)) {
-    return { error: 'the message was not sent by the authorised user making this request and the user does not have owner permissions in the channel/DM' };
+  if (!msgSentByUser(authId, messageId) && !isOwnerChannel(authId, messageId)) {
+    return { error: 'auth user making this request did not send this message, and is also not a user of the channel/DM' };
   }
   if (!isValidToken(token)) {
     return { error: 'token is invalid' };
