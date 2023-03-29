@@ -9,90 +9,46 @@ import { getData, setData } from './dataStore';
 */
 export const dmRemoveV1 = (token: string, dmId: number) => {
   const data = getData();
-  let authUserId;
 
-  if (!isValidToken(token)) {
-    return { error: 'invalid token' };
-  } else {
-    authUserId = findUID(token);
+  const authUserId = extractUId(token);
+  if (authUserId === undefined) {
+    return { error: 'token is invalid' };
   }
 
-  if (!isValidMember(authUserId, dmId)) {
-    return { error: 'either dmId does not exist or user is not a member' };
+  const dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    return { error: 'invalid dmId' };
   }
 
-  if (!isValidOwner(authUserId, dmId)) {
-    return { error: 'dm is valid but not the creator' };
+  if (!dm.allMembers.includes(authUserId)) {
+    return { error: 'user is not a member' };
   }
 
-  const newList = data.dms.filter(d => d.dmId !== dmId);
-  data.dms = newList;
+  if (!dm.owner.includes(authUserId)) {
+    return { error: 'user is not the owner of dm' };
+  }
+
+  data.dms = data.dms.filter(d => d.dmId !== dmId);
   setData(data);
   return {};
 };
 
-/**
-  * Checks if user is owner of dm
-  * @param {number} authUserId
-  * @param {number} dmId
-  * ...
-  * @returns {boolean}
-*/
-const isValidOwner = (authUserId: number, dmId: number) => {
+/** Function that returns user Id from token
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
   const data = getData();
-  const dm = data.dms.find(d => d.dmId === dmId);
-  if (dm.owner === authUserId) {
-    return true;
-  }
-  return false;
-};
+  let userId;
 
-/**
-  * Checks if dm exist and if user is a member
-  * @param {number} authUserId
-  * @param {number} dmId
-  * ...
-  * @returns {boolean}
-*/
-const isValidMember = (authUserId: number, dmId: number) => {
-  const data = getData();
-  const dm = data.dms.find(d => d.dmId === dmId);
-  if (dm === undefined) {
-    return false;
-  }
-  if (!dm.allMembers.includes(authUserId)) {
-    return false;
-  }
-};
-
-/**
-  * Checks if the token is valid
-  * @param {string} token
-  * ...
-  * @returns {boolean}
-*/
-const isValidToken = (token: string): boolean => {
-  const data = getData();
   for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return true;
+    for (const tokenData of user.tokens) {
+      if (tokenData === token) {
+        userId = user.uId;
+      }
     }
   }
-  return false;
-};
 
-/**
-  * Finds the authUserId given a token.
-  * @param {string} token
-  * ...
-  * @returns {string} authUserId
-*/
-const findUID = (token: string) => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
-    }
-  }
-  return null;
+  return userId;
 };
