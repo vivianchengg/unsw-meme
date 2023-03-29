@@ -1,4 +1,4 @@
-import { getData } from './dataStore';
+import { getData, setData } from './dataStore';
 import validator from 'validator';
 
 /**
@@ -124,6 +124,7 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
   for (const user of data.users) {
     if (user.uId === userId) {
       user.email = email;
+      setData(data);
     }
   }
 };
