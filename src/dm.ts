@@ -1,4 +1,4 @@
-import { getData } from './dataStore';
+import { getData, Dm } from './dataStore';
 import { userProfileV1 } from './users';
 
 /** Function that lists details of specific DM
@@ -16,88 +16,45 @@ import { userProfileV1 } from './users';
  */
 export const dmDetailsV1 = (token: string, dmId: number) => {
   const data = getData();
+  const dm: Dm = data.dms.find(d => d.dmId === dmId);
 
-  if (!isValidDMId(dmId)) {
+  if (dm === undefined) {
     return { error: 'dmId does not refer to valid DM' };
   }
 
-  const userId = extractUId(token);
+  const userId = findUID(token);
   if (userId === undefined) {
     return { error: 'Invalid token' };
   }
 
-  if (!isMemberOfDM(dmId, userId)) {
+  if (!dm.allMembers.includes(userId)) {
     return { error: 'User is not member of DM' };
   }
 
-  for (const dm of data.dms) {
-    const dmMembers = [];
-    for (const member of dm.allMembers) {
-      const memberProfile = userProfileV1(token, member);
-      dmMembers.push(memberProfile.user);
-    }
-
-    if (dm.dmId === dmId) {
-      return {
-        name: dm.name,
-        members: dmMembers
-      };
-    }
-  }
-};
-
-/** Function checks if DMId refers to valid DM or not
- *
- * @param {number} dmId
- * @returns {boolean}
- */
-export const isValidDMId = (dmId: number) => {
-  const data = getData();
-  for (const dm of data.dms) {
-    if (dm.dmId === dmId) {
-      return true;
-    }
+  const dmMembers = [];
+  for (const member of dm.allMembers) {
+    const memberProfile = userProfileV1(token, member);
+    dmMembers.push(memberProfile.user);
   }
 
-  return false;
+  return {
+    name: dm.name,
+    members: dmMembers
+  };
 };
 
-/** Function that returns user Id from token
- *
- * @param {string} token
- * @returns {number}
- */
-const extractUId = (token: string) => {
+/**
+  * Finds the authUserId given a token.
+  *
+  * @param {string} token
+  * @returns {string} authUserId
+*/
+export const findUID = (token: string) => {
   const data = getData();
-  let userId;
-
   for (const user of data.users) {
-    for (const tokenData of user.token) {
-      if (tokenData === token) {
-        userId = user.uId;
-      }
+    if (user.token.includes(token)) {
+      return user.uId;
     }
   }
-
-  return userId;
-};
-
-/** Checks if user is member of DM
- *
- * @param {number} dmId
- * @param {number} userId
- * @returns {boolean}
- */
-const isMemberOfDM = (dmId: number, userId: number) => {
-  const data = getData();
-
-  for (const dm of data.dms) {
-    for (const member of dm.allMembers) {
-      if (member === userId) {
-        return true;
-      }
-    }
-  }
-
-  return false;
+  return null;
 };
