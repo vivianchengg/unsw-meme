@@ -107,6 +107,8 @@ const findUID = (token: string) => {
  *  - token is invalid
  */
 export const userProfileSetEmailV1 = (token: string, email: string) => {
+  const data = getData();
+
   if (!isValidToken(token)) {
     return { error: 'Invalid token' };
   }
@@ -115,30 +117,13 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
     return { error: 'Invalid email entered' };
   }
 
-  if (!isEmailFree(email)) {
+  if (data.users.find(u => u.email === email) !== undefined) {
     return { error: 'Email already taken by another user' };
   }
 
-  const data = getData();
   const userId = findUID(token);
-
   const user = data.users.find(u => u.uId === userId);
+
   user.email = email;
   setData(data);
-};
-
-/**
- * Checks if another user already has the inputted email
- * @param {string} email
- * @returns {boolean}
- */
-const isEmailFree = (email: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.email === email) {
-      return false;
-    }
-  }
-
-  return true;
 };
