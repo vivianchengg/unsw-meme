@@ -1,4 +1,4 @@
-import { getData } from './dataStore';
+import { getData, setData } from './dataStore';
 
 /** Function that removes member from DM
  *
@@ -37,6 +37,8 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
           const index = parseInt(memberNumber);
           newMembers = dm.allMembers.splice(index, index);
           dm.allMembers = newMembers;
+
+          setData(data);
         }
       }
     }
