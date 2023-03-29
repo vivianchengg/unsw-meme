@@ -56,16 +56,25 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 let user: any;
+let user3: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
-  const person = {
+  let person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
   user = postRequest('/auth/register/v2', person);
+
+  person = {
+    email: 'abc@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'abby',
+    nameLast: 'boo',
+  };
+  user3 = postRequest('/auth/register/v2', person);
 });
 
 describe('userProfileSetHandleV1 tests', () => {
@@ -257,16 +266,6 @@ describe('HTTP - /user/profile/setname/v1', () => {
 });
 
 describe('HTTP - /users/all/v1', () => {
-  let user2: any;
-  beforeEach(() => {
-    const person2 = {
-      email: 'abc@unsw.edu.au',
-      password: 'password',
-      nameFirst: 'abby',
-      nameLast: 'boo',
-    };
-    user2 = postRequest('/auth/register/v2', person2);
-  });
 
   test('Invalid Token', () => {
     const param = {
@@ -277,7 +276,7 @@ describe('HTTP - /users/all/v1', () => {
 
   test('Valid Token', () => {
     const param = {
-      token: user2.token,
+      token: user3.token,
     };
     expect(getRequest('/users/all/v1', param)).toStrictEqual({
       users: [
@@ -288,7 +287,7 @@ describe('HTTP - /users/all/v1', () => {
           nameLast: 'Renzella',
           handleStr: 'jakerenzella'
         }, {
-          uId: user2.authUserId,
+          uId: user3.authUserId,
           email: 'abc@unsw.edu.au',
           nameFirst: 'abby',
           nameLast: 'boo',
