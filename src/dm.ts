@@ -1,4 +1,4 @@
-import { Message, Dm, setData, getData } from './dataStore';
+import { Message, setData, getData } from './dataStore';
 import { isValidUser, validTokenUser } from './channel';
 import { findUID } from './channels';
 
@@ -81,9 +81,9 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
   *
  */
 export const dmLeaveV1 = (token: string, dmId: number) => {
-  let data = getData();
-  
-  let dm = data.dms.find(d => d.dmId === dmId);
+  const data = getData();
+
+  const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
     return { error: 'dmId does not refer to valid DM' };
   }
@@ -126,7 +126,7 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
     return { error: 'invalid dmId' };
   }
 
-  if (dm.owner === authUserId) {
+  if (dm.owner !== authUserId) {
     return { error: 'user is not the owner of dm' };
   }
 

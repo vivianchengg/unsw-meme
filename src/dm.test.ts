@@ -4,18 +4,6 @@ import { port, url } from './config.json';
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
 
-const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
 const postRequest = (url: string, data: any) => {
   const res = request(
     'POST',
@@ -148,7 +136,7 @@ describe('dmCreateV1 test', () => {
 
     const dmData = {
       token: owner.token,
-      uIds: [user1.uId, user2.uId, user2.uId + 1]
+      uIds: [user1.authUserId, user2.authUserId, user2.authUserId + 1]
     };
     expect(postRequest('/dm/create/v1', dmData)).toStrictEqual(ERROR);
   });
@@ -172,7 +160,7 @@ describe('dmCreateV1 test', () => {
 
     const dmData = {
       token: owner.token,
-      uIds: [user1.uId, user2.uId, user2.uId]
+      uIds: [user1.authUserId, user2.authUserId, user2.authUserId]
     };
 
     expect(postRequest('/dm/create/v1', dmData)).toStrictEqual(ERROR);
@@ -197,7 +185,7 @@ describe('dmCreateV1 test', () => {
 
     const dmData = {
       token: owner.token + '1',
-      uIds: [user1.uId, user2.uId]
+      uIds: [user1.authUserId, user2.authUserId]
     };
     expect(postRequest('/dm/create/v1', dmData)).toStrictEqual(ERROR);
   });
@@ -221,7 +209,7 @@ describe('dmCreateV1 test', () => {
 
     const dmData = {
       token: owner.token,
-      uIds: [user1.uId, user2.uId]
+      uIds: [user1.authUserId, user2.authUserId]
     };
     const dm = postRequest('/dm/create/v1', dmData);
 
@@ -230,13 +218,13 @@ describe('dmCreateV1 test', () => {
       dmId: dm.dmId
     };
 
-    expect(postRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
+    expect(deleteRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
   });
 
   test('test valid dm create: empty uId', () => {
     const dmData = {
       token: owner.token,
-      uIds: []
+      uIds: [] as number[]
     };
     const dm = postRequest('/dm/create/v1', dmData);
 
@@ -244,11 +232,11 @@ describe('dmCreateV1 test', () => {
       token: owner.token,
       dmId: dm.dmId
     };
-    expect(postRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
+    expect(deleteRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
   });
 });
 
-describe('HTTP - /dm/remove/v1 tests', () => {
+describe('dm remove tests', () => {
   test('Dm does not refer to valid dm', () => {
     const param = {
       token: owner.token,
@@ -292,6 +280,6 @@ describe('HTTP - /dm/remove/v1 tests', () => {
       token: owner.token,
       dmId: dm1.dmId,
     };
-    deleteRequest('/dm/remove/v1', param).toStrictEqual({});
+    expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual({});
   });
 });

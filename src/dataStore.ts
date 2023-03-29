@@ -46,7 +46,7 @@ export type Data = {
   dms: Dm[],
 };
 
-let data: Data = {
+export const data: Data = {
   users: [],
   channels: [],
   dms: [],
