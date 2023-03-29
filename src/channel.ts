@@ -1,4 +1,4 @@
-import { Channel, getData, setData } from './dataStore';
+import { Channel, User, getData, setData } from './dataStore';
 import { userProfileV1 } from './users';
 import { findUID } from './channels';
 
@@ -225,7 +225,7 @@ export const channelMessagesV1 = (token: string, channelId: number, start: numbe
   * @param {string} token
   * @returns {User}
 */
-const validTokenUser = (token: string) => {
+export const validTokenUser = (token: string): User => {
   const data = getData();
   for (const user of data.users) {
     for (const userToken of user.token) {

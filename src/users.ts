@@ -14,6 +14,7 @@ import validator from 'validator';
 *   handleStr: string,
 * }} user
 */
+
 export const userProfileV1 = (token: string, uId: number) => {
   const data = getData();
 
@@ -44,8 +45,39 @@ export const userProfileV1 = (token: string, uId: number) => {
   }
 
   return {
-    user: person,
+    user: person
   };
+};
+
+/**
+* Changes the first and last name of user
+* @param {string} token
+* @param {string} nameFirst
+* @param {string} nameLast
+* ...
+* @returns {}
+  */
+export const userProfileSetName = (token: string, nameFirst: string, nameLast: string) => {
+  const data = getData();
+
+  if (!invalidName(nameLast)) {
+    return { error: 'name length +51 or less than 1' };
+  }
+  if (!invalidName(nameFirst)) {
+    return { error: 'name length +51 or less than 1' };
+  }
+
+  const authUserId = extractUId(token);
+  if (authUserId === undefined) {
+    return { error: 'invalid token' };
+  }
+
+  const user = data.users.find(d => d.uId === authUserId);
+  user.nameFirst = nameFirst;
+  user.nameLast = nameLast;
+
+  setData(data);
+  return {};
 };
 
 /**
@@ -61,6 +93,42 @@ const isValidUser = (userId: number): boolean => {
     }
   }
   return false;
+};
+
+/** Function that returns user Id from token
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
+  const data = getData();
+  let userId;
+
+  for (const user of data.users) {
+    for (const tokenData of user.token) {
+      if (tokenData === token) {
+        userId = user.uId;
+      }
+    }
+  }
+
+  return userId;
+};
+
+/**
+  * Checks if name last and name first is valid length
+  * @param {string} nameLast
+  * ...
+  * @returns {boolean}
+*/
+const invalidName = (name: string) => {
+  const length = name.length;
+  const min = 1;
+  const max = 50;
+  if (length < min || length > max) {
+    return false;
+  }
+  return true;
 };
 
 /**
