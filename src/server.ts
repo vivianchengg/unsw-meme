@@ -8,7 +8,7 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels'
 import { clearV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
-import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1 } from './dm';
+import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1 } from './dm';
 
 // Set up web app
 const app = express();
@@ -136,6 +136,11 @@ app.delete('/dm/remove/v1', (req: Request, res: Response) => {
 app.post('/dm/leave/v1', (req: Request, res: Response) => {
   const { token, dmId } = req.body;
   return res.json(dmLeaveV1(token, dmId));
+});
+
+app.get('/dm/list/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  return res.json(dmListV1(token));
 });
 
 app.put('/user/profile/setname/v1', (req: Request, res: Response) => {
