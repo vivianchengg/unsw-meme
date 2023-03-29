@@ -127,6 +127,8 @@ describe('userProfileSetHandleV1 tests', () => {
     };
 
     expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual({});
+  });
+});
 
 describe('HTTP - /user/profile/setname/v1', () => {
   test('Invalid token', () => {
@@ -196,7 +198,6 @@ describe('HTTP - /user/profile/setname/v1', () => {
         handleStr: 'jakerenzella',
       }
     });
->>>>>>> src/users.test.ts
   });
 });
 
