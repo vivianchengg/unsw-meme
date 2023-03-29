@@ -107,9 +107,16 @@ describe('userProfileSetHandleV1 tests', () => {
 
     const user2 = postRequest('/auth/register/v2', person2);
 
+    const profileParam = {
+      token: user2.token,
+      uId: user2.authUserId
+    };
+
+    const user2Profile = getRequest('/user/profile/v2', profileParam);
+
     const param = {
       token: user.token,
-      handleStr: user2.handleStr
+      handleStr: user2Profile.user.handleStr
     };
 
     expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
