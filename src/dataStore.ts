@@ -1,4 +1,5 @@
-// YOU SHOULD MODIFY THIS OBJECT BELOW
+import fs from 'fs';
+
 export type User = {
   uId: number,
   nameFirst: string,
@@ -7,6 +8,7 @@ export type User = {
   handleStr: string,
   password: string,
   pId: number,
+  token: string[],
 };
 
 export type Message = {
@@ -27,17 +29,27 @@ export type Channel = {
   end: number,
 };
 
+export type Dm = {
+  dmId: number,
+  name: string,
+  allMembers: number[],
+  owner: number,
+  messages: Message[],
+  start: number,
+  end: number,
+};
+
 export type Data = {
   users: User[],
-  channels: Channel[]
+  channels: Channel[],
+  dms: Dm[]
 };
 
-let data: Data = {
+export const data: Data = {
   users: [],
-  channels: []
+  channels: [],
+  dms: []
 };
-
-// YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
 /*
 Example usage
@@ -55,6 +67,8 @@ Example usage
 
 // Use get() to access the data
 export const getData = (): Data => {
+  const json = fs.readFileSync('./src/data.json', { flag: 'r' });
+  const data = JSON.parse(json.toString());
   return data;
 };
 
@@ -63,5 +77,6 @@ export const getData = (): Data => {
 // - Javascript uses pass-by-reference for objects... read more here: https://stackoverflow.com/questions/13104494/does-javascript-pass-by-reference
 // Hint: this function might be useful to edit in iteration 2
 export const setData = (newData: Data) => {
-  data = newData;
+  const dataString = JSON.stringify(newData);
+  fs.writeFileSync('./src/data.json', dataString, { flag: 'w' });
 };
