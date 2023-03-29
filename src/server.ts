@@ -105,7 +105,7 @@ app.post('/channel/removeowner/v1', (req: Request, res: Response, next) => {
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
 });
 
-app.put('/user/profile/setemail/v1', (req: Request, res: Response, next) => {
+app.put('/user/profile/setemail/v1', (req: Request, res: Response) => {
   const { token, email } = req.body;
   return res.json(userProfileSetEmailV1(token, email));
 });
