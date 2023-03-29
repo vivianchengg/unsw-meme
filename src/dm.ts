@@ -20,12 +20,12 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
     return { error: 'invalid dmId' };
   }
 
-  if (!dm.allMembers.includes(authUserId)) {
-    return { error: 'user is not a member' };
-  }
-
   if (!dm.owner.includes(authUserId)) {
     return { error: 'user is not the owner of dm' };
+  }
+
+  if (!dm.allMembers.includes(authUserId)) {
+    return { error: 'user is an owner who is no longer in dm' };
   }
 
   data.dms = data.dms.filter(d => d.dmId !== dmId);
