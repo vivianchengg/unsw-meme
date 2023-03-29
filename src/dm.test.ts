@@ -29,8 +29,12 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 let owner: any;
+let user: any;
+let dm1: any;
+
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
+
   const ownerData = {
     email: 'vc@unsw.edu.au',
     password: 'password',
@@ -38,6 +42,78 @@ beforeEach(() => {
     nameLast: 'Cheng'
   };
   owner = postRequest('/auth/register/v2', ownerData);
+
+  const userData = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  };
+
+  user = postRequest('/auth/register/v2', userData);
+
+  const dm1Data = {
+    token: owner.token,
+    uIds: [user.authUserId]
+  };
+
+  dm1 = postRequest('/dm/create/v1', dm1Data);
+});
+
+describe('dmLeaveV1 Test', () => {
+  test('Invalid token', () => {
+    const detailRequest = {
+      token: user.token + 'yay',
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid dmId', () => {
+    const detailRequest = {
+      token: user.token,
+      dmId: dm1.dmId + 1
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('authUser not member of dm', () => {
+    const user2Data = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    const detailRequest = {
+      token: user2.token,
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Basic functionality: member', () => {
+    const detailRequest = {
+      token: user.token,
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
+  });
+
+  test('Basic functionality: owner', () => {
+    const detailRequest = {
+      token: owner.token,
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
+  });
 });
 
 describe('dmCreateV1 test', () => {
@@ -86,6 +162,7 @@ describe('dmCreateV1 test', () => {
       token: owner.token,
       uIds: [user1.uId, user2.uId, user2.uId]
     };
+
     expect(postRequest('/dm/create/v1', dmData)).toStrictEqual(ERROR);
   });
 

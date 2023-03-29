@@ -1,5 +1,6 @@
-import { Message, setData, getData } from './dataStore';
+import { Message, Dm, setData, getData } from './dataStore';
 import { isValidUser, validTokenUser } from './channel';
+import { findUID } from './channels';
 
 /**
   * check whether email entered belong to a user
@@ -65,4 +66,42 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
   return {
     dmId: dmId
   };
+};
+
+/** Function that removes member from DM
+  *
+  * @param {string} token
+  * @param {number} dmId
+  *
+  * @returns {}
+  *
+  * To return the above:
+  * - token must be valid
+  * - dmId must refer to valid DM and user is member of DM
+  *
+ */
+export const dmLeaveV1 = (token: string, dmId: number) => {
+  let data = getData();
+  
+  let dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    return { error: 'dmId does not refer to valid DM' };
+  }
+
+  const userId = findUID(token);
+  if (userId === null) {
+    return { error: 'Invalid token' };
+  }
+
+  if (!dm.allMembers.includes(userId)) {
+    return { error: 'User is not member of DM' };
+  }
+
+  dm.allMembers = dm.allMembers.filter(d => d !== userId);
+  if (dm.owner === userId) {
+    dm.owner = null;
+  }
+
+  setData(data);
+  return {};
 };

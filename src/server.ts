@@ -9,6 +9,7 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels'
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
+import { dmLeaveV1 } from './dm';
 
 // Set up web app
 const app = express();
@@ -109,6 +110,11 @@ app.post('/channel/addowner/v1', (req: Request, res: Response) => {
 app.post('/channel/removeowner/v1', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
+});
+
+app.post('/dm/leave/v1', (req: Request, res: Response) => {
+  const { token, dmId } = req.body;
+  return res.json(dmLeaveV1(token, dmId));
 });
 
 // start server
