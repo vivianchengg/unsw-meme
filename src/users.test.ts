@@ -7,7 +7,17 @@ const url = config.url;
 const ERROR = { error: expect.any(String) };
 const SERVER_URL = `${url}:${port}`;
 
-let user: any;
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
 
 const postRequest = (url: string, data: any) => {
   const res = request(
@@ -45,8 +55,10 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
+let user: any;
+
 beforeEach(() => {
-  deleteRequest('/clear/v1', {});
+  deleteRequest('/clear/v1', null);
   const person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
@@ -101,5 +113,43 @@ describe('userProfileSetEmailV1 tests', () => {
     };
 
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
+  });
+});
+
+describe('userProfileV2 tests', () => {
+  test('Testing valid token + uId', () => {
+    const param = {
+      token: user.token,
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+
+    expect(profile).toStrictEqual({
+      user: {
+        uId: user.authUserId,
+        email: 'jr@unsw.edu.au',
+        nameFirst: 'Jake',
+        nameLast: 'Renzella',
+        handleStr: 'jakerenzella',
+      }
+    });
+  });
+
+  test('Testing invalid token', () => {
+    const param = {
+      token: user.token + '1',
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
+  });
+
+  test('Testing invalid uId', () => {
+    const param = {
+      token: user.token,
+      uId: user.authUserId + 1,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
   });
 });
