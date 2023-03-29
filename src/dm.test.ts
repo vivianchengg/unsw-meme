@@ -28,30 +28,40 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
+let creatorUser: any;
 let user: any;
 let dm: any;
 
+beforeEach(() => {
+  deleteRequest('/clear/v1', {});
+
+  const creatorUserData = {
+    email: 'rp@unsw.edu.au',
+    password: 'pASSWORD',
+    nameFirst: 'Random',
+    nameLast: 'Person'
+  };
+
+  creatorUser = postRequest('/auth/register/v2', creatorUserData);
+
+  const userData = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  };
+
+  user = postRequest('/auth/register/v2', userData);
+
+  const dmData = {
+    token: creatorUser.token,
+    uIds: [user.authUserId]
+  };
+
+  dm = postRequest('/dm/create/v1', dmData);
+});
+
 describe('dmLeaveV1 Test', () => {
-  beforeEach(() => {
-    deleteRequest('/clear/v1', {});
-
-    const userData = {
-      email: 'jr@unsw.edu.au',
-      password: 'password',
-      nameFirst: 'Jake',
-      nameLast: 'Renzella'
-    };
-
-    user = postRequest('/auth/register/v2', userData);
-
-    const dmData = {
-      token: user.token,
-      uIds: user.authUserId
-    };
-
-    dm = postRequest('/dm/create/v1', dmData);
-  });
-
   test('Invalid token', () => {
     const detailRequest = {
       token: '',
