@@ -122,9 +122,11 @@ app.post('/dm/create/v1', (req: Request, res: Response) => {
   return res.json(dmCreateV1(token, uIds));
 });
 
-app.get('/dm/messages/v1', (req: Request, res: Response, next) => {
-  const { token, uIds } = req.query;
-  res.json(dmMessagesV1(token, uIds));
+app.get('/dm/messages/v1', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const dmId = parseInt(req.query.dmId as string);
+  const start = parseInt(req.query.start as string);
+  res.json(dmMessagesV1(token, dmId, start));
 });
 
 app.delete('/dm/remove/v1', (req: Request, res: Response) => {
