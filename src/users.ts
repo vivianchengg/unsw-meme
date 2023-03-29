@@ -49,7 +49,6 @@ export const userProfileV1 = (authUserId: number, uId: number) => {
   */
 export const userProfileSetName = (token: string, nameFirst: string, nameLast: string) => {
   const data = getData();
-  let authUserId;
 
   if (!invalidLastName(nameLast)) {
     return { error: 'name length +51 or less than 1' };
@@ -58,18 +57,15 @@ export const userProfileSetName = (token: string, nameFirst: string, nameLast: s
     return { error: 'name length +51 or less than 1' };
   }
 
-  if (!isValidToken(token)) {
+  const authUserId = extractUId(token);
+  if (authUserId === undefined) {
     return { error: 'invalid token' };
-  } else {
-    authUserId = findUID(token);
   }
 
-  for (const user of data.users) {
-    if (user.uId === authUserId) {
-      user.nameFirst = nameFirst;
-      user.nameLast = nameLast;
-    }
-  }
+  const user = data.users.find(d => d.uId === authUserId);
+  user.nameFirst = nameFirst;
+  user.nameLast = nameLast;
+
   setData(data);
   return {};
 };
@@ -89,36 +85,24 @@ const isValidUser = (userId: number): boolean => {
   return false;
 };
 
-/**
-  * Checks if the token is valid
-  * @param {string} token
-  * ...
-  * @returns {boolean}
-*/
-const isValidToken = (token: string): boolean => {
+/** Function that returns user Id from token
+ *
+ * @param {string} token
+ * @returns {number}
+ */
+const extractUId = (token: string) => {
   const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return true;
-    }
-  }
-  return false;
-};
+  let userId;
 
-/**
-  * Finds the authUserId given a token.
-  * @param {string} token
-  * ...
-  * @returns {string} authUserId
-*/
-const findUID = (token: string) => {
-  const data = getData();
   for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
+    for (const tokenData of user.tokens) {
+      if (tokenData === token) {
+        userId = user.uId;
+      }
     }
   }
-  return null;
+
+  return userId;
 };
 
 /**
