@@ -4,8 +4,8 @@ import config from './config.json';
 const port = config.port;
 const url = config.url;
 
-const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
+const SERVER_URL = `${url}:${port}`;
 
 const getRequest = (url: string, data: any) => {
   const res = request(

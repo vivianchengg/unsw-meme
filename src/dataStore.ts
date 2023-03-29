@@ -47,11 +47,10 @@ export type Data = {
 };
 
 // let data: Data = {
-//  users: [],
-//  channels: [],
-//  dms: []
+//   users: [],
+//   channels: []
+//   dms: []
 // };
-
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
 /*
