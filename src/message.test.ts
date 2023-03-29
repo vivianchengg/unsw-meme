@@ -1,20 +1,29 @@
 import request from 'sync-request';
-import config from './config.json';
-
+import { port, url } from './config.json';
 const ERROR = { error: expect.any(String) };
-const port = config.port;
-const url = config.url;
 const SERVERurl = `${url}:${port}`;
 
 const postRequest = (url: string, data: any) => {
-  const res = request('POST', SERVERurl + url, { json: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'POST',
+    SERVERurl + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
 const deleteRequest = (url: string, data: any) => {
-  const res = request('DELETE', SERVERurl + url, { qs: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'DELETE',
+    SERVERurl + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
@@ -94,7 +103,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       channelId: channel.channelId,
       message: 'Heyyy, how is ur day going'
     };
-    expect(postRequest('/message/send/v1', param3).toStrictEqual(ERROR));
+    expect(postRequest('/message/send/v1', param3)).toStrictEqual(ERROR);
   });
   test('token is invalid', () => {
     const param1 = {
@@ -104,7 +113,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     };
     channel = postRequest('/channels/create/v2', param1);
     const param2 = {
-      token: user.token + 1,
+      token: user.token + '1',
       channelId: channel.channelId,
       message: 'no thanks'
     };

@@ -106,6 +106,11 @@ app.post('/channel/removeowner/v1', (req: Request, res: Response, next) => {
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
 });
 
+app.post('/message/send/v1', (req: Request, res: Response, next) => {
+  const { token, channelId, message } = req.body;
+  return res.json(messageSendV1(token, channelId, message));
+});
+
 // start server
 const server = app.listen(PORT, HOST, () => {
   // DO NOT CHANGE THIS LINE

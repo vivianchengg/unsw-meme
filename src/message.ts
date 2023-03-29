@@ -87,19 +87,16 @@ export const extractUId = (token: string) => {
 const createId = () => {
   const data = getData();
   let length = 0;
-
-  if (data.channels.length !== 0) {
+  if (data.channels!= undefined && data.channels.length !== 0) {
     for (const channel of data.channels) {
       length = length + channel.messages.length;
     }
   }
-
-  if (data.dms.length !== 0) {
+  if (data.dms != undefined && data.dms.length !== 0) {
     for (const dm of data.dms) {
       length = length + dm.messages.length;
     }
   }
-
   length = length + 1;
   return length;
 };
@@ -117,7 +114,7 @@ const createId = () => {
 *  Otherwise, {error: string} is returned
 *
 **/
-export const messageSendV1 = (token: number, channelId: number, message: string) => {
+export const messageSendV1 = (token: string, channelId: number, message: string) => {
   const data = getData();
   const uId = extractUId(token);
   if (!isValidToken(token)) {
