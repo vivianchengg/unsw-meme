@@ -78,4 +78,3 @@ export const getData = (): Data => {
 export const setData = (newData: Data) => {
   data = newData;
 };
-
