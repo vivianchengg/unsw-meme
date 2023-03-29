@@ -119,7 +119,7 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
     return { error: 'Length of handleStr is not between 3-20 characters' };
   }
 
-  if (data.users.find(u => u.handleStr === handleStr)) {
+  if (data.users.find(u => u.handleStr === handleStr) !== undefined) {
     return { error: 'Handle already taken by another user' };
   }
 
