@@ -1,168 +1,836 @@
-import { channelJoinV1, channelInviteV1, channelMessagesV1, channelDetailsV1 } from './channel';
-import { channelsCreateV1 } from './channels';
-import { authRegisterV1 } from './auth';
-import { clearV1 } from './other';
-import { userProfileV1 } from './users';
+import request from 'sync-request';
+import { port, url } from './config.json';
 
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
 
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const postRequest = (url: string, data: any) => {
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+const deleteRequest = (url: string, data: any) => {
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
+let user : any;
+let invitedUser: any;
+let channel : any;
+
 beforeEach(() => {
-  clearV1();
+  deleteRequest('/clear/v1', null);
+  const userData = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  };
+  user = postRequest('/auth/register/v2', userData);
+
+  const channelData = {
+    token: user.token,
+    name: 'COMP1531',
+    isPublic: true
+  };
+  channel = postRequest('/channels/create/v2', channelData);
+
+  const param1 = {
+    email: 'arialee@gmail.com',
+    password: 'dynamite',
+    nameFirst: 'aria',
+    nameLast: 'lee'
+  };
+  invitedUser = postRequest('/auth/register/v2', param1);
 });
 
 describe('channelDetailsV1 Test', () => {
-  test('Invalid authUserId', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-    expect(channelDetailsV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
+  test('Invalid token', () => {
+    const detailRequest = {
+      token: user.token + '1',
+      channelId: channel.channelId
+    };
+
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
   });
+
   test('Invalid channelId', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-    expect(channelDetailsV1(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
+    const detailRequest = {
+      token: user.token,
+      channelId: channel.channelId + 1
+    };
+
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
   });
-  test('Valid channelId and authUserId but user is not in course', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-    const outsideUser = authRegisterV1('yj@unsw.edu.au', 'PASSWORD', 'Yuchao', 'Jiang');
-    expect(channelDetailsV1(outsideUser.authUserId, channel.channelId)).toStrictEqual(ERROR);
+
+  test('Valid channelId and token but user is not in course', () => {
+    const outsideUserData = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const outsideUser = postRequest('/auth/register/v2', outsideUserData);
+
+    const detailRequest = {
+      token: outsideUser.token,
+      channelId: channel.channelId
+    };
+
+    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
   });
+
   test('Basic functionality', () => {
-    const user = authRegisterV1('jr@unsw.edu.au', 'password', 'Jake', 'Renzella');
-    const channel = channelsCreateV1(user.authUserId, 'COMP1531', true);
-    const userProfile = userProfileV1(user.authUserId, user.authUserId);
-    expect(channelDetailsV1(user.authUserId, channel.channelId)).toStrictEqual({
-      name: 'COMP1531',
-      isPublic: true,
-      ownerMembers: [userProfile.user],
-      allMembers: [userProfile.user],
-    });
+    const detailRequest = {
+      token: user.token,
+      channelId: channel.channelId
+    };
+
+    const profileData = {
+      token: user.token,
+      uId: user.authUserId
+    };
+    const profile = getRequest('/user/profile/v2', profileData);
+
+    const cDetail = getRequest('/channel/details/v2', detailRequest);
+    expect(cDetail.name).toStrictEqual('COMP1531');
+    expect(cDetail.isPublic).toStrictEqual(true);
+    expect(cDetail.allMembers).toStrictEqual([profile.user]);
+    expect(cDetail.ownerMembers).toStrictEqual([profile.user]);
   });
 });
 
 describe('channelJoinV1 function testing', () => {
   test('channelId does not refer to a valid channel', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'holidays', true);
-    expect(channelJoinV1(user.authUserId, channel.channelId + 1)).toStrictEqual(ERROR);
+    const user1Data = {
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const channel2Data = {
+      token: user1.token,
+      name: 'COMP1511',
+      isPublic: true
+    };
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const param = {
+      token: user.token,
+      channelId: channel2.channelId + 1
+    };
+    expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
   });
 
   test('the authorised user is already a member of the channel', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'games', true);
-    channelJoinV1(user.authUserId, channel.channelId);
-    expect(channelJoinV1(user.authUserId, channel.channelId)).toStrictEqual(ERROR);
+    const param = {
+      token: user.token,
+      channelId: channel.channelId
+    };
+    expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
   });
 
-  test('channelId refers to a channel that is private, when the authorised user is not already a channel member and is not a global owner', () => {
-    const user1 = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user1.authUserId, 'sports', false);
-    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
-    expect(channelJoinV1(user2.authUserId, channel.channelId)).toStrictEqual(ERROR);
+  test('private channel: authUser not global owner', () => {
+    // not global owner
+    const user2Data = {
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    // private channel
+    const channel2Data = {
+      token: user.token,
+      name: 'COMP1511',
+      isPublic: false
+    };
+    const privChannel = postRequest('/channels/create/v2', channel2Data);
+
+    const param3 = {
+      token: user2.token,
+      channelId: privChannel.channelId
+    };
+    expect(postRequest('/channel/join/v2', param3)).toStrictEqual(ERROR);
   });
 
-  test('Test global owner can join private channel', () => {
-    const user1 = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
-    const channel = channelsCreateV1(user2.authUserId, 'sports', false);
-    channelJoinV1(user1.authUserId, channel.channelId);
-    const cDetail = channelDetailsV1(user1.authUserId, channel.channelId);
-    const owners = cDetail.ownerMembers.map(mem => mem.uId);
-    const allmems = cDetail.allMembers.map(mem => mem.uId);
-    expect(owners).toEqual(expect.not.arrayContaining([user1.authUserId]));
-    expect(allmems).toContain(user1.authUserId);
+  test('token is invalid', () => {
+    const user1Data = {
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const channel2Data = {
+      token: user1.token,
+      name: 'COMP1511',
+      isPublic: true
+    };
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const param = {
+      token: user.token + '1',
+      channelId: channel2.channelId
+    };
+    expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
   });
 
-  test('authUserId is invalid', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'music', true);
-    expect(channelJoinV1(user.authUserId + 1, channel.channelId)).toStrictEqual(ERROR);
-  });
+  test('test sucessful channelJoinV2', () => {
+    const user1Data = {
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
 
-  test('valid input', () => {
-    const user1 = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user1.authUserId, 'games', true);
-    const user2 = authRegisterV1('abc@gmail.com', 'password', 'Mary', 'Chan');
-    expect(channelJoinV1(user2.authUserId, channel.channelId)).toStrictEqual({});
+    const channel2Data = {
+      token: user1.token,
+      name: 'COMP1511',
+      isPublic: true
+    };
+    const channel2 = postRequest('/channels/create/v2', channel2Data);
+
+    const param = {
+      token: user.token,
+      channelId: channel2.channelId
+    };
+    expect(postRequest('/channel/join/v2', param)).toStrictEqual({});
   });
 });
 
-describe('channelInviteV1 function testing', () => {
+describe('channelInviteV1 test', () => {
   test('channelId does not refer to a valid channel', () => {
-    const user1 = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
-    const channel = channelsCreateV1(user1.authUserId, 'music', false);
-    expect(channelInviteV1(user1.authUserId, channel.channelId + 1, newUser.authUserId)).toStrictEqual(ERROR);
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId + 1,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
   });
 
   test('uId does not refer to a valid user', () => {
-    const user1 = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
-    const channel = channelsCreateV1(user1.authUserId, 'music', false);
-    expect(channelInviteV1(user1.authUserId, channel.channelId, newUser.authUserId + 1)).toStrictEqual(ERROR);
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId + 189
+    };
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
+  });
+
+  test('invalid token', () => {
+    const inviteData = {
+      token: user.token + 'yay',
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
   });
 
   test('uId refers to a user who is already a member of the channel', () => {
-    const user1 = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const user2 = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
-    const channel = channelsCreateV1(user1.authUserId, 'music', false);
-    channelInviteV1(user1.authUserId, channel.channelId, user2.authUserId);
-    expect(channelInviteV1(user1.authUserId, channel.channelId, user2.authUserId)).toStrictEqual(ERROR);
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
   });
-  test('channelId is valid and the authorised user is not a member of the channel', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'music', false);
-    const user2 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
-    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
-    expect(channelInviteV1(user2.authUserId, channel.channelId, newUser.authUserId)).toStrictEqual(ERROR);
+
+  test('authorised user is not channel member', () => {
+    const user1Data = {
+      email: 'jr1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const inviteData = {
+      token: user1.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
   });
-  test('authUserId is invalid', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'bored', false);
-    const newUser = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
-    expect(channelInviteV1(user.authUserId + 1, channel.channelId, newUser.authUserId)).toStrictEqual(ERROR);
-  });
-  test('valid input ', () => {
-    const user1 = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const user2 = authRegisterV1('arialee@gmail.com', 'dynamite', 'aria', 'lee');
-    const channel = channelsCreateV1(user1.authUserId, 'sports', true);
-    expect(channelInviteV1(user1.authUserId, channel.channelId, user2.authUserId)).toStrictEqual({});
+
+  test('test valid invite', () => {
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual({});
   });
 });
 
-describe('channelMessagesV1 function testing', () => {
+describe('channelMessengesV1 test', () => {
   test('channelId does not refer to a valid channel', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'music', false);
-    expect(channelMessagesV1(user.authUserId, channel.channelId + 1, 0)).toStrictEqual(ERROR);
+    const param2 = {
+      token: user.token,
+      channelId: channel.channelId + 189,
+      start: 0
+    };
+    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
-  test('start is greater than the total number of messages in the channel', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'sports', false);
-    expect(channelMessagesV1(user.authUserId, channel.channelId, 1)).toStrictEqual(ERROR);
+  test('start is greater than the total number of messages', () => {
+    const param2 = {
+      token: user.token,
+      channelId: channel.channelId,
+      start: 1
+    };
+    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
-  test('channelId is valid and the authorised user is not a member of the channel', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'gaming', false);
-    const user1 = authRegisterV1('dianahazea@gmail.com', 'january', 'diana', 'haze');
-    expect(channelMessagesV1(user1.authUserId, channel.channelId, 0)).toStrictEqual(ERROR);
+  test('authorised user is not channel member', () => {
+    const user1Data = {
+      email: 'jr@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Jake',
+      nameLast: 'Renzella'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const param2 = {
+      token: user1.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
-  test('authUserId is invalid', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'games', true);
-    expect(channelMessagesV1(user.authUserId + 1, channel.channelId, 0)).toStrictEqual(ERROR);
+  test('token is invalid', () => {
+    const param2 = {
+      token: user.token + 1,
+      channelId: channel.channelId,
+      start: 0
+    };
+    expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
   test('valid input', () => {
-    const user = authRegisterV1('bridgetcosta@gmail.com', 'daffodil', 'bridget', 'costa');
-    const channel = channelsCreateV1(user.authUserId, 'music', true);
-    expect(channelMessagesV1(user.authUserId, channel.channelId, 0)).toStrictEqual({
-      messages: [],
-      start: 0,
-      end: -1,
-    });
+    const param2 = {
+      token: user.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+
+    const result = getRequest('/channel/messages/v2', param2);
+    expect(result.messages).toStrictEqual([]);
+    expect(result.start).toStrictEqual(0);
+    expect(result.end).toStrictEqual(-1);
+  });
+});
+
+describe('channelLeaveV1 test', () => {
+  test('Invalid Channel', () => {
+    const channelData = {
+      token: user.token,
+      channelId: 0,
+    };
+    expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid token', () => {
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+    const channelData = {
+      token: user.token + '1',
+      channelId: channel.channelId
+    };
+    expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
+  });
+
+  test('not member', () => {
+    const user1Data = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    const channelData = {
+      token: user1.token,
+      channelId: channel.channelId,
+    };
+    expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
+  });
+
+  test('valid channel leave', () => {
+    const newChannel = {
+      token: user.token,
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = postRequest('/channels/create/v2', newChannel);
+
+    const detail = {
+      token: user.token,
+      channelId: channel.channelId
+    };
+    const cDetail = getRequest('/channel/details/v2', detail);
+    expect(cDetail.name).toStrictEqual(newChannel.name);
+
+    const channelData = {
+      token: user.token,
+      channelId: channel.channelId,
+    };
+    const result = postRequest('/channel/leave/v1', channelData);
+    expect(result).toStrictEqual({});
+    expect(getRequest('/channel/details/v2', detail)).toStrictEqual(ERROR);
+  });
+});
+
+describe('channelAddOwnerV1 test', () => {
+  test('Valid add owner - channel owner', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+    const detailData = {
+      token: user.token,
+      channelId: channel.channelId
+    };
+    const cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        uId: invitedUser.authUserId
+      })
+    ]));
+  });
+
+  test('Valid add owner - global owner', () => {
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    // new channel
+    const newChannelData = {
+      token: user1.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+    const newChannel = postRequest('/channels/create/v2', newChannelData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user1.token,
+      channelId: newChannel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner by GLOBAL OWNER
+    const ownerData = {
+      token: user.token,
+      channelId: newChannel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+
+    const detailData = {
+      token: user1.token,
+      channelId: newChannel.channelId
+    };
+    const cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        uId: invitedUser.authUserId
+      })
+    ]));
+  });
+
+  test('Invalid channel', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId + 1,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid token', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const ownerData = {
+      token: user.token + '1',
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid uId', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId + 1,
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('uId is not member', () => {
+    // add owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('uId already owner', () => {
+    // add owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: user.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('authId no owner permission', () => {
+    // new user, act as fake owner
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const ownerData = {
+      token: newUser.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+});
+
+describe('channelRemoveOwnerV1 test', () => {
+  test('Valid remove owner - channel owner', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+    const detailData = {
+      token: user.token,
+      channelId: channel.channelId
+    };
+    let cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        uId: invitedUser.authUserId
+      })
+    ]));
+
+    // remove owner
+    postRequest('/channel/removeowner/v1', ownerData);
+    cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
+      expect.not.objectContaining({
+        uId: invitedUser.authUserId
+      })
+    ]));
+  });
+
+  test('Valid remove owner - global owner', () => {
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    // new channel
+    const newChannelData = {
+      token: user1.token,
+      name: 'COMP2511',
+      isPublic: true
+    };
+    const newChannel = postRequest('/channels/create/v2', newChannelData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user1.token,
+      channelId: newChannel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner by GLOBAL OWNER
+    const ownerData = {
+      token: user.token,
+      channelId: newChannel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+
+    const detailData = {
+      token: user1.token,
+      channelId: newChannel.channelId
+    };
+    let cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        uId: invitedUser.authUserId
+      })
+    ]));
+
+    // remove owner
+    postRequest('/channel/removeowner/v1', ownerData);
+    cDetail = getRequest('/channel/details/v2', detailData);
+    expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
+      expect.not.objectContaining({
+        uId: invitedUser.authUserId
+      })
+    ]));
+  });
+
+  test('Invalid channel', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    let ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+
+    // remove owner
+    ownerData = {
+      token: user.token,
+      channelId: channel.channelId + 1,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid token', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    let ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+
+    // remove owner
+    ownerData = {
+      token: user.token + 'yay',
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid uId', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    let ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+
+    // remove owner
+    ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId + 189
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('uId is not owner', () => {
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('uId is the only owner', () => {
+    // remove owner
+    const ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: user.authUserId
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
+  });
+
+  test('authId not owner permission', () => {
+    // new user, act as fake owner
+    const newUserData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const newUser = postRequest('/auth/register/v2', newUserData);
+
+    // invite new user to channel - member
+    const inviteData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/invite/v2', inviteData);
+
+    // add owner
+    let ownerData = {
+      token: user.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    postRequest('/channel/addowner/v1', ownerData);
+
+    // remove owner
+    ownerData = {
+      token: newUser.token,
+      channelId: channel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
   });
 });
