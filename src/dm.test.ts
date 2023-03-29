@@ -44,27 +44,27 @@ const deleteRequest = (url: string, data: any) => {
 let user: any;
 let dm: any;
 
+beforeEach(() => {
+  deleteRequest('/clear/v1', {});
+
+  const userData = {
+    email: 'jr@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Jake',
+    nameLast: 'Renzella'
+  };
+
+  user = postRequest('/auth/register/v2', userData);
+
+  const dmData = {
+    token: user.token,
+    uIds: user.authUserId
+  };
+
+  dm = postRequest('/dm/create/v1', dmData);
+});
+
 describe('dmDetailsV1 Test', () => {
-  beforeEach(() => {
-    deleteRequest('/clear/v1', {});
-
-    const userData = {
-      email: 'jr@unsw.edu.au',
-      password: 'password',
-      nameFirst: 'Jake',
-      nameLast: 'Renzella'
-    };
-
-    user = postRequest('/auth/register/v2', userData);
-
-    const dmData = {
-      token: user.token,
-      uIds: user.authUserId
-    };
-
-    dm = postRequest('/dm/create/v1', dmData);
-  });
-
   test('Invalid token', () => {
     const detailRequest = {
       token: '',
