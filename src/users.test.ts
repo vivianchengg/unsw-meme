@@ -256,6 +256,50 @@ describe('HTTP - /user/profile/setname/v1', () => {
   });
 });
 
+describe ('HTTP - /users/all/v1', () => {
+  const user2: any;
+  beforeEach(() => {
+    const person2 = {
+      email: 'abc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'abby',
+      nameLast: 'boo',
+    };
+    user2 = postRequest('/auth/register/v2', person2);
+  });
+
+  test('Valid Token', () => {
+    const param = {
+      token: user.token + 'lol',
+    }
+    expect(getRequest('/users/all/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Valid Token', () => {
+    const param = {
+      token: user2.token,
+    };
+    expect(getRequest('/users/all/v1', param)).toStrictEqual({
+      users: [
+        {
+          uId: user.authUserId,
+          email: 'jr@unsw.edu.au',
+          nameFirst: 'Jake',
+          nameLast: 'Renzella',
+          handleStr: 'jakerenzella'
+        }, {
+          uId: user2.authUserId,
+          email: 'abc@unsw.edu.au',
+          nameFirst: 'abby',
+          nameLast: 'boo',
+          handleStr: 'abbyboo'
+      }]
+    });
+  });
+
+
+});
+
 describe('userProfileV2 tests', () => {
   test('Testing valid token + uId', () => {
     const param = {

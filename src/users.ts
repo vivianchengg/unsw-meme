@@ -249,3 +249,4 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 const isAlphanumeric = (str: string): boolean => {
   return /^[a-zA-Z0-9]+$/.test(str);
 };
+
