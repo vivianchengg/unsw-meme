@@ -89,6 +89,40 @@ const getNewId = (): number => {
 };
 
 /**
+  * check if token exist
+  *
+  * @param {string}
+  * @returns {bool}
+*/
+const checkToken = (token: string) => {
+  const data = getData();
+  for (const user of data.users) {
+    for (const userToken of user.token) {
+      if (token === userToken) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+/**
+  * get new token
+  *
+  * @param {}
+  * @returns {string}
+*/
+const getNewToken = () => {
+  let tokenNum = Math.floor(Math.random() * 1000);
+  let tokenString = tokenNum.toString();
+  while (checkToken(tokenString)) {
+    tokenNum = Math.floor(Math.random() * 1000);
+    tokenString = tokenNum.toString();
+  }
+  return tokenString;
+};
+
+/**
   * Given a registered user's email and password, returns their authUserId value.
   *
   * @param {string} email
@@ -109,8 +143,13 @@ export const authLoginV1 = (email: string, password: string) => {
   }
 
   const id = user.uId;
+
+  const token = getNewToken();
+  user.token.push(token);
+
   return {
     authUserId: id,
+    token: token
   };
 };
 
@@ -161,6 +200,8 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     pId = 2;
   }
 
+  const token = getNewToken();
+
   const newUser = {
     uId: id,
     nameFirst: nameFirst,
@@ -169,6 +210,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     handleStr: handle,
     password: password,
     pId: pId,
+    token: [token],
   };
 
   data.users.push(newUser);
@@ -176,5 +218,6 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
 
   return {
     authUserId: id,
+    token: token,
   };
 };
