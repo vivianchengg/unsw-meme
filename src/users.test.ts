@@ -54,7 +54,7 @@ const putRequest = (url: string, data: any) => {
 
 let user: any;
 beforeEach(() => {
-  deleteRequest('/clear/v1', {});
+  deleteRequest('/clear/v1', null);
   const person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
@@ -132,5 +132,43 @@ describe('HTTP - /user/profile/setname/v1', () => {
         handleStr: details.handleStr,
       }
     });
+  });
+});
+
+describe('userProfileV2 tests', () => {
+  test('Testing valid token + uId', () => {
+    const param = {
+      token: user.token,
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+
+    expect(profile).toStrictEqual({
+      user: {
+        uId: user.authUserId,
+        email: 'jr@unsw.edu.au',
+        nameFirst: 'Jake',
+        nameLast: 'Renzella',
+        handleStr: 'jakerenzella',
+      }
+    });
+  });
+
+  test('Testing invalid token', () => {
+    const param = {
+      token: user.token + '1',
+      uId: user.authUserId,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
+  });
+
+  test('Testing invalid uId', () => {
+    const param = {
+      token: user.token,
+      uId: user.authUserId + 1,
+    };
+    const profile = getRequest('/user/profile/v2', param);
+    expect(profile).toStrictEqual(ERROR);
   });
 });
