@@ -107,7 +107,7 @@ describe('userProfileSetEmailV1 tests', () => {
 
     const param = {
       token: user.token,
-      email: user2Profile.email
+      email: user2Profile.user.email
     };
 
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
