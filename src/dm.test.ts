@@ -4,6 +4,18 @@ import { port, url } from './config.json';
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
 
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
 const postRequest = (url: string, data: any) => {
   const res = request(
     'POST',
@@ -281,5 +293,27 @@ describe('dm remove tests', () => {
       dmId: dm1.dmId,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual({});
+  });
+});
+
+describe('HTTP - /dm/list/v1 tests', () => {
+  test('Invalid token', () => {
+    const param = {
+      token: owner.token + 'lol',
+    };
+    expect(getRequest('/dm/list/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Valid input', () => {
+    const param = {
+      token: owner.token,
+    };
+    expect(getRequest('/dm/list/v1', param)).toStrictEqual({
+      dms:
+      [{
+        dmId: dm1.dmId,
+        name: dm1.name,
+      }]
+    });
   });
 });
