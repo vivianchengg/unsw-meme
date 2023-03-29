@@ -2,14 +2,13 @@ import express, { json, Request, Response } from 'express';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
-import { dmCreateV1 } from './dm';
 import { echo } from './echo';
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1, channelLeaveV1, channelAddOwnerV1, channelRemoveOwnerV1 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
-import { dmLeaveV1 } from './dm';
+import { dmCreateV1, dmRemoveV1, dmLeaveV1 } from './dm';
 
 // Set up web app
 const app = express();
@@ -70,11 +69,6 @@ app.post('/channel/join/v2', (req: Request, res: Response) => {
   return res.json(channelJoinV1(token, channelId));
 });
 
-app.post('/dm/create/v1', (req: Request, res: Response, next) => {
-  const { token, uIds } = req.body;
-  return res.json(dmCreateV1(token, uIds));
-});
-
 app.post('/channel/invite/v2', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   res.json(channelInviteV1(token, channelId, uId));
@@ -110,6 +104,17 @@ app.post('/channel/addowner/v1', (req: Request, res: Response) => {
 app.post('/channel/removeowner/v1', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
+});
+
+app.post('/dm/create/v1', (req: Request, res: Response) => {
+  const { token, uIds } = req.body;
+  return res.json(dmCreateV1(token, uIds));
+});
+
+app.delete('/dm/remove/v1', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const dmId = parseInt(req.query.dmId as string);
+  return res.json(dmRemoveV1(token, dmId));
 });
 
 app.post('/dm/leave/v1', (req: Request, res: Response) => {

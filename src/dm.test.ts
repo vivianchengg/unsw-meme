@@ -4,6 +4,18 @@ import { port, url } from './config.json';
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
 
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
 const postRequest = (url: string, data: any) => {
   const res = request(
     'POST',
@@ -233,5 +245,53 @@ describe('dmCreateV1 test', () => {
       dmId: dm.dmId
     };
     expect(postRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
+  });
+});
+
+describe('HTTP - /dm/remove/v1 tests', () => {
+  test('Dm does not refer to valid dm', () => {
+    const param = {
+      token: owner.token,
+      dmId: dm1.dmId + 1,
+    };
+    expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Dm is valid but User is not CREATOR', () => {
+    const param = {
+      token: user.token,
+      dmId: dm1.dmId,
+    };
+    expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Dm is valid but Creator is not longer in Dm', () => {
+    const detail = {
+      token: owner.token,
+      dmId: dm1.dmId,
+    };
+    postRequest('/dm/leave/v1', detail);
+
+    const param = {
+      token: owner.token,
+      dmId: dm1.dmId
+    };
+    expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid token', () => {
+    const param = {
+      token: owner.token + 'lol',
+      dmId: dm1.dmId,
+    };
+    expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Valid input', () => {
+    const param = {
+      token: owner.token,
+      dmId: dm1.dmId,
+    };
+    deleteRequest('/dm/remove/v1', param).toStrictEqual({});
   });
 });

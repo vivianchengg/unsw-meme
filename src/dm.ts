@@ -105,3 +105,36 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
   setData(data);
   return {};
 };
+
+/**
+  * Owner of Dm deleting Dm.
+  * @param {string} token
+  * @param {number} dmId
+  * ...
+  * @returns {}
+*/
+export const dmRemoveV1 = (token: string, dmId: number) => {
+  const data = getData();
+
+  const authUserId = findUID(token);
+  if (authUserId === null) {
+    return { error: 'token is invalid' };
+  }
+
+  const dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    return { error: 'invalid dmId' };
+  }
+
+  if (dm.owner === authUserId) {
+    return { error: 'user is not the owner of dm' };
+  }
+
+  if (!dm.allMembers.includes(authUserId)) {
+    return { error: 'user is an owner who is no longer in dm' };
+  }
+
+  data.dms = data.dms.filter(d => d.dmId !== dmId);
+  setData(data);
+  return {};
+};
