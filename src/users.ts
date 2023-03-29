@@ -107,6 +107,8 @@ const findUID = (token: string) => {
  *  - token is invalid
  */
 export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
+  const data = getData();
+
   if (!isValidToken(token)) {
     return { error: 'Invalid token' };
   }
@@ -117,7 +119,7 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
     return { error: 'Length of handleStr is not between 3-20 characters' };
   }
 
-  if (!isHandleFree(handleStr)) {
+  if (data.users.find(u => u.handleStr === handleStr)) {
     return { error: 'Handle already taken by another user' };
   }
 
@@ -125,28 +127,11 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
     return { error: 'Handle contains non-alphanumeric characters' };
   }
 
-  const data = getData();
   const userId = findUID(token);
-
   const user = data.users.find(u => u.uId === userId);
+
   user.handleStr = handleStr;
   setData(data);
-};
-
-/**
- * Checks if another user already has the inputted handle
- * @param {string} handleStr
- * @returns {boolean}
- */
-const isHandleFree = (handleStr: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.handleStr === handleStr) {
-      return false;
-    }
-  }
-
-  return true;
 };
 
 /**
