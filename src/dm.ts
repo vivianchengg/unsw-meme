@@ -71,7 +71,7 @@ const extractUId = (token: string) => {
   let userId;
 
   for (const user of data.users) {
-    for (const tokenData of user.tokens) {
+    for (const tokenData of user.token) {
       if (tokenData === token) {
         userId = user.uId;
       }
