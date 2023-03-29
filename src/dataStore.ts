@@ -30,15 +30,27 @@ export type Channel = {
   end: number,
 };
 
-export type Data = {
-  users: User[],
-  channels: Channel[]
+export type Dm = {
+  dmId: number,
+  name: string,
+  allMembers: number[],
+  owner: number,
+  messages: Message[],
+  start: number,
+  end: number,
 };
 
-// let data: Data = {
-//   users: [],
-//   channels: []
-// };
+export type Data = {
+  users: User[],
+  channels: Channel[],
+  dms: Dm[],
+};
+
+export const data: Data = {
+  users: [],
+  channels: [],
+  dms: [],
+};
 
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
