@@ -1,6 +1,5 @@
 import request from 'sync-request';
 import { port, url } from './config.json';
-import { getData } from './dataStore';
 
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
@@ -44,7 +43,6 @@ const deleteRequest = (url: string, data: any) => {
 let owner: any;
 let user: any;
 let dm1: any;
-let dm: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
@@ -66,76 +64,12 @@ beforeEach(() => {
 
   user = postRequest('/auth/register/v2', userData);
 
-  const dmData = {
-    token: user.token,
-    uIds: user.authUserId
+  const dm1Data = {
+    token: owner.token,
+    uIds: [user.authUserId]
   };
 
-  dm = postRequest('/dm/create/v1', dmData);
-});
-
-describe('dmDetailsV1 Test', () => {
-  test('Invalid token', () => {
-    const detailRequest = {
-      token: '',
-      dmId: dm.dmId
-    };
-
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
-  });
-
-  test('Invalid dmId', () => {
-    const detailRequest = {
-      token: user.token,
-      dmId: dm.dmId + 1
-    };
-
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
-  });
-
-  test('Valid dmId but user not member of DM', () => {
-    const user2Data = {
-      email: 'yj@unsw.edu.au',
-      password: 'PASSWORD',
-      nameFirst: 'Yuchao',
-      nameLast: 'Jiang'
-    };
-
-    const user2 = postRequest('/auth/register/v2', user2Data);
-
-    const detailRequest = {
-      token: user2.token,
-      dmId: dm.dmId
-    };
-
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
-  });
-
-  test('Basic functionality', () => {
-    const detailRequest = {
-      token: user.token,
-      dmId: dm.dmId
-    };
-
-    const data = getData();
-    let dmName: any;
-    for (const dmDetail of data.dms) {
-      if (dmDetail.dmId === dm.dmId) {
-        dmName = dmDetail.name;
-      }
-    }
-
-    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual({
-      name: dmName,
-      members: [{
-        uId: user.uId,
-        email: user.email,
-        nameFirst: user.nameFirst,
-        nameLast: user.nameLast,
-        handleStr: user.handleStr
-      }]
-    });
-  });
+  dm1 = postRequest('/dm/create/v1', dm1Data);
 });
 
 describe('dmLeaveV1 Test', () => {
@@ -391,6 +325,7 @@ describe('dmMessagesV1 test', () => {
     };
     expect(getRequest('/dm/messages/v1', param)).toStrictEqual(ERROR);
   });
+
   test('start is greater than the total number of messages in the channel', () => {
     const param = {
       token: owner.token,
@@ -416,6 +351,7 @@ describe('dmMessagesV1 test', () => {
     };
     expect(getRequest('/dm/messages/v1', param2)).toStrictEqual(ERROR);
   });
+
   test('token is invalid', () => {
     const param = {
       token: owner.token + 'yay',
@@ -424,6 +360,7 @@ describe('dmMessagesV1 test', () => {
     };
     expect(getRequest('/dm/messages/v1', param)).toStrictEqual(ERROR);
   });
+
   test('valid input', () => {
     const param = {
       token: owner.token,
@@ -435,5 +372,60 @@ describe('dmMessagesV1 test', () => {
     expect(result.messages).toEqual(expect.arrayContaining([]));
     expect(result.start).toStrictEqual(0);
     expect(result.end).toStrictEqual(-1);
+  });
+});
+
+describe('dmDetailsV1 Test', () => {
+  test('Invalid token', () => {
+    const detailRequest = {
+      token: owner.token + 'yay',
+      dmId: dm1.dmId
+    };
+
+    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid dmId', () => {
+    const detailRequest = {
+      token: owner.token,
+      dmId: dm1.dmId + 1
+    };
+
+    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Valid dmId but user not member of DM', () => {
+    const user2Data = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    const detailRequest = {
+      token: user2.token,
+      dmId: dm1.dmId
+    };
+
+    expect(getRequest('/dm/details/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Basic functionality', () => {
+    const detailRequest = {
+      token: owner.token,
+      dmId: dm1.dmId
+    };
+
+    const result = getRequest('/dm/details/v1', detailRequest);
+
+    const ownerProfileData = {
+      token: owner.token,
+      uId: owner.authUserId
+    };
+    const ownerProfile = getRequest('/user/profile/v2', ownerProfileData);
+
+    expect(result.members).toEqual(expect.arrayContaining([ownerProfile.user]));
   });
 });

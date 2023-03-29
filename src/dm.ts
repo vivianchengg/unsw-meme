@@ -1,49 +1,7 @@
 import { userProfileV1 } from './users';
-import { Message, Dm, setData, getData } from './dataStore';
+import { Message, setData, getData } from './dataStore';
 import { isValidUser, validTokenUser } from './channel';
 import { findUID } from './channels';
-
-/** Function that lists details of specific DM
- *
- * @param {string} token
- * @param {number} dmId
- *
- * @returns {string} name
- * @returns {User[]} members
- *
- * To return the above:
- * - token must be valid
- * - dmId must refer to valid DM and user is member of DM
- *
- */
-export const dmDetailsV1 = (token: string, dmId: number) => {
-  const data = getData();
-  const dm: Dm = data.dms.find(d => d.dmId === dmId);
-
-  if (dm === undefined) {
-    return { error: 'dmId does not refer to valid DM' };
-  }
-
-  const userId = findUID(token);
-  if (userId === undefined) {
-    return { error: 'Invalid token' };
-  }
-
-  if (!dm.allMembers.includes(userId)) {
-    return { error: 'User is not member of DM' };
-  }
-
-  const dmMembers = [];
-  for (const member of dm.allMembers) {
-    const memberProfile = userProfileV1(token, member);
-    dmMembers.push(memberProfile.user);
-  }
-
-  return {
-    name: dm.name,
-    members: dmMembers
-  };
-};
 
 /**
   * check whether email entered belong to a user
@@ -270,5 +228,41 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
     messages: messages,
     start: start,
     end: end
+  };
+};
+
+/** lists details of specific DM
+  *
+  * @param {string} token
+  * @param {number} dmId
+  * @returns {object}
+  *
+ */
+export const dmDetailsV1 = (token: string, dmId: number) => {
+  const data = getData();
+  const dm = data.dms.find(d => d.dmId === dmId);
+
+  if (dm === undefined) {
+    return { error: 'invalid dmId' };
+  }
+
+  const userId = findUID(token);
+  if (userId === null) {
+    return { error: 'Invalid token' };
+  }
+
+  if (!dm.allMembers.includes(userId)) {
+    return { error: 'User is not member of DM' };
+  }
+
+  const dmMembers = [];
+  for (const memberId of dm.allMembers) {
+    const memberProfile = userProfileV1(token, memberId);
+    dmMembers.push(memberProfile.user);
+  }
+
+  return {
+    name: dm.name,
+    members: dmMembers
   };
 };

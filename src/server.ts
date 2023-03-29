@@ -135,8 +135,8 @@ app.delete('/dm/remove/v1', (req: Request, res: Response) => {
 
 app.get('/dm/details/v1', (req: Request, res: Response) => {
   const token = req.query.token as string;
-  const dmID = parseInt(req.query.dmID as string);
-  return res.json(dmDetailsV1(token, dmID));
+  const dmId = parseInt(req.query.dmId as string);
+  return res.json(dmDetailsV1(token, dmId));
 });
 
 app.post('/dm/leave/v1', (req: Request, res: Response) => {
