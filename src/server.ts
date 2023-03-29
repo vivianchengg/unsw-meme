@@ -6,7 +6,7 @@ import { echo } from './echo';
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1, channelLeaveV1, channelAddOwnerV1, channelRemoveOwnerV1 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1 } from './other';
-import { userProfileV1 } from './users';
+import { userProfileV1, userProfileSetName } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1 } from './dm';
 
@@ -121,6 +121,11 @@ app.delete('/dm/remove/v1', (req: Request, res: Response) => {
 app.post('/dm/leave/v1', (req: Request, res: Response) => {
   const { token, dmId } = req.body;
   return res.json(dmLeaveV1(token, dmId));
+});
+
+app.put('/user/profile/setname/v1', (req: Request, res: Response) => {
+  const { token, nameFirst, nameLast } = req.body;
+  return res.json(userProfileSetName(token, nameFirst, nameLast));
 });
 
 // start server
