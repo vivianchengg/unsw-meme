@@ -68,6 +68,69 @@ beforeEach(() => {
   user = postRequest('/auth/register/v2', person);
 });
 
+describe('userProfileSetHandleV1 tests', () => {
+  test('Invalid token', () => {
+    const param = {
+      token: user.token + 'buffer',
+      handleStr: 'theJAKErenzella'
+    };
+
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('New handle not between 3-20 characters', () => {
+    const param = {
+      token: user.token,
+      handleStr: 'ohmygodILOVECOMP1531!!'
+    };
+
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('New handle contains non-alphanumeric characters', () => {
+    const param = {
+      token: user.token,
+      handleStr: 'やったCOMP1531が大好き!'
+    };
+
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('New handle already taken', () => {
+    const person2 = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const user2 = postRequest('/auth/register/v2', person2);
+
+    const profileParam = {
+      token: user2.token,
+      uId: user2.authUserId
+    };
+
+    const user2Profile = getRequest('/user/profile/v2', profileParam);
+
+    const param = {
+      token: user.token,
+      handleStr: user2Profile.user.handleStr
+    };
+
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Basic functionality', () => {
+    const param = {
+      token: user.token,
+      handleStr: 'theJAKErenzella'
+    };
+
+    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual({});
+  });
+});
+
 describe('userProfileSetEmailV1 tests', () => {
   test('Invalid token', () => {
     const param = {

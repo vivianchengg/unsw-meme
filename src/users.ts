@@ -164,16 +164,59 @@ const findUID = (token: string) => {
 };
 
 /**
- * Updates authorised user's email address
+<<<<<<< HEAD
+ * Updates authorised user's handle
  * @param {string} token
- * @param {string} email
+ * @param {string} handleStr
  * @returns {}
  *
  * Will return error if:
- *  - email entered is not valid, defined by validator
- *  - email is already taken by another user
+ *  - Length of handleStr is not between 3-20 characters
+ *  - Non-alphanumeric characters are contained in handleStr
+ *  - handleStr is already taken as handle for another user
  *  - token is invalid
  */
+export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
+  const data = getData();
+
+  if (!isValidToken(token)) {
+    return { error: 'Invalid token' };
+  }
+
+  const minimumLength = 3;
+  const maximumLength = 20;
+  if (handleStr.length > maximumLength || handleStr.length < minimumLength) {
+    return { error: 'Length of handleStr is not between 3-20 characters' };
+  }
+
+  if (data.users.find(u => u.handleStr === handleStr) !== undefined) {
+    return { error: 'Handle already taken by another user' };
+  }
+
+  if (!isAlphanumeric(handleStr)) {
+    return { error: 'Handle contains non-alphanumeric characters' };
+  }
+
+  const userId = findUID(token);
+  const user = data.users.find(u => u.uId === userId);
+
+  user.handleStr = handleStr;
+  setData(data);
+
+  return {};
+};
+
+/**
+* Updates authorised user's email address
+* @param {string} token
+* @param {string} email
+* @returns {}
+*
+* Will return error if:
+*  - email entered is not valid, defined by validator
+*  - email is already taken by another user
+*  - token is invalid
+*/
 export const userProfileSetEmailV1 = (token: string, email: string) => {
   const data = getData();
 
@@ -196,4 +239,13 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
   setData(data);
 
   return {};
+};
+
+/**
+ * Checks if entered string is alphanumeric
+ * @param {string} str
+ * @returns {boolean}
+ */
+const isAlphanumeric = (str: string): boolean => {
+  return /^[a-zA-Z0-9]+$/.test(str);
 };
