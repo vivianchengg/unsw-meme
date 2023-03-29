@@ -59,10 +59,10 @@ export const userProfileV1 = (token: string, uId: number) => {
 export const userProfileSetName = (token: string, nameFirst: string, nameLast: string) => {
   const data = getData();
 
-  if (!invalidLastName(nameLast)) {
+  if (!invalidName(nameLast)) {
     return { error: 'name length +51 or less than 1' };
   }
-  if (!invalidFirstName(nameFirst)) {
+  if (!invalidName(nameFirst)) {
     return { error: 'name length +51 or less than 1' };
   }
 
@@ -115,28 +115,16 @@ const extractUId = (token: string) => {
 };
 
 /**
-  * Checks if last name is of valid length
+  * Checks if name last and name first is valid length
   * @param {string} nameLast
   * ...
   * @returns {boolean}
 */
-const invalidLastName = (nameLast: string) => {
-  const length = nameLast.length;
-  if (length < 1 || length > 50) {
-    return false;
-  }
-  return true;
-};
-
-/**
-  * Checks if first name is of valid length
-  * @param {string} nameFirst
-  * ...
-  * @returns {boolean}
-*/
-const invalidFirstName = (nameFirst: string) => {
-  const length = nameFirst.length;
-  if (length < 1 || length > 50) {
+const invalidName = (name: string) => {
+  const length = name.length;
+  const min = 1;
+  const max = 50;
+  if (length < min || length > max) {
     return false;
   }
   return true;

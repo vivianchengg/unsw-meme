@@ -1,1 +1,1 @@
-{"users":[],"channels":[]}
+{"users":[{"uId":10,"nameFirst":"Jake","nameLast":"Renzella","email":"jr@unsw.edu.au","handleStr":"jakerenzella","password":"password","pId":1,"token":["641"]}],"channels":[{"channelId":1,"name":"COMP1531","isPublic":true,"ownerMembers":[10],"allMembers":[10],"messages":[],"start":-1,"end":-1}]}
