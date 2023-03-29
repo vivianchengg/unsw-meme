@@ -51,7 +51,7 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
       token: user.token,
       messageId: Message.messageId
     };
-    expect(deleteRequest('/message/removev1', param1)).toStrictEqual(ERROR);
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
   });
   test('the message was not sent by the authorised user making this request and the user does not have owner permissions in the channel/DM', () => {
     const param1 = {
