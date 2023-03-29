@@ -72,13 +72,13 @@ beforeEach(() => {
   user3 = postRequest('/auth/register/v2', person);
 
   let dmParam = {
-    token: user.token[0],
+    token: user.token,
     uIds: [user2.authUserId, user3.authUserId],
   };
   dm = postRequest('/dm/create/v1', dmParam);
 
   dmParam = {
-    token: user2.token[0],
+    token: user2.token,
     uIds: [user.authUserId, user3.authUserId],
   };
   dm2 = postRequest('/dm/create/v1', dmParam);
@@ -87,14 +87,14 @@ beforeEach(() => {
 describe('HTTP - /dm/list/v1 tests', () => {
   test('Invalid token', () => {
     const param = {
-      token: user3.token[0] + 1,
+      token: user3.token + 'lol',
     };
     expect(getRequest('/dm/list/v1', param)).toStrictEqual(ERROR);
   });
 
   test('Valid input', () => {
     const param = {
-      token: user3.token[0],
+      token: user3.token,
     };
     expect(getRequest('/dm/list/v1', param)).toStrictEqual({
       dms:
