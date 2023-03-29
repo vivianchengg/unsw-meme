@@ -126,4 +126,6 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 
   user.email = email;
   setData(data);
+
+  return {};
 };
