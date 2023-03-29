@@ -45,7 +45,7 @@ beforeEach(() => {
   Message = postRequest('/message/send/v1', param3);
 });
 
-describe('HTTP tests using Jest for messageRemove', () => {
+describe('HTTP tests using Jest for messageRemoveV1', () => {
   test('messageId does not refer to a valid message within a channel/DM that the authorised user has joined', () => {
     const param1 = {
       token: user.token,
@@ -65,20 +65,20 @@ describe('HTTP tests using Jest for messageRemove', () => {
       token: user2.token,
       messageId: Message.messageId
     };
-    expect(deleteRequest('/message/removev1', param2)).toStrictEqual(ERROR);
+    expect(deleteRequest('/message/remove/v1', param2)).toStrictEqual(ERROR);
   });
   test('token is invalid', () => {
     const param1 = {
       token: user.token + 'hi',
       messageId: Message.messageId
     };
-    expect(deleteRequest('/message/removev1', param1)).toStrictEqual(ERROR);
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
   });
   test('valid input', () => {
     const param = {
       token: user.token,
       messageId: Message.messageId
     };
-    expect(deleteRequest('/message/removev1', param)).toStrictEqual();
+    expect(deleteRequest('/message/remove/v1', param)).toStrictEqual();
   });
 });
