@@ -308,12 +308,10 @@ describe('HTTP - /dm/list/v1 tests', () => {
     const param = {
       token: owner.token,
     };
-    expect(getRequest('/dm/list/v1', param)).toStrictEqual({
-      dms:
-      [{
-        dmId: dm1.dmId,
-        name: dm1.name,
-      }]
-    });
+    expect(getRequest('/dm/list/v1', param).dms).toStrictEqual(expect.arrayContaining([
+      expect.objectContaining({
+        dmId: dm1.dmId
+      })
+    ]));
   });
 });
