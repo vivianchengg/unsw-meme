@@ -315,3 +315,59 @@ describe('HTTP - /dm/list/v1 tests', () => {
     ]));
   });
 });
+
+describe('dmMessagesV1 test', () => {
+  test('dmId does not refer to a valid DM', () => {
+    const param = {
+      token: owner.token,
+      dmId: dm1.dmId + 1,
+      start: 0
+    };
+    expect(getRequest('/dm/messages/v1', param)).toStrictEqual(ERROR);
+  });
+  test('start is greater than the total number of messages in the channel', () => {
+    const param = {
+      token: owner.token,
+      dmId: dm1.dmId,
+      start: 20
+    };
+    expect(getRequest('/dm/messages/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('dmId is valid and the authorised user is not a member of the DM', () => {
+    const person = {
+      email: 'kennyfarzie@gmail.com',
+      password: 'lonis',
+      nameFirst: 'kenny',
+      nameLast: 'farzie'
+    };
+    const nonMember = postRequest('/auth/register/v2', person);
+
+    const param2 = {
+      token: nonMember.token,
+      dmId: dm1.dmId,
+      start: 0
+    };
+    expect(getRequest('/dm/messages/v1', param2)).toStrictEqual(ERROR);
+  });
+  test('token is invalid', () => {
+    const param = {
+      token: owner.token + 'yay',
+      dmId: dm1.dmId,
+      start: 0
+    };
+    expect(getRequest('/dm/messages/v1', param)).toStrictEqual(ERROR);
+  });
+  test('valid input', () => {
+    const param = {
+      token: owner.token,
+      dmId: dm1.dmId,
+      start: 0
+    };
+
+    const result = getRequest('/dm/messages/v1', param);
+    expect(result.messages).toEqual(expect.arrayContaining([]));
+    expect(result.start).toStrictEqual(0);
+    expect(result.end).toStrictEqual(-1);
+  });
+});
