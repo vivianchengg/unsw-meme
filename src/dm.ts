@@ -204,3 +204,38 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
   setData(data);
   return {};
 };
+
+/**
+  * Returns a list of dms that the user is part of
+  * @param {string} token
+  * ...
+  * @returns {dms: [{
+  *   dmId: number,
+  *   name: string,
+  *   },
+  * ]}
+*/
+export const dmListV1 = (token: string) => {
+  const data = getData();
+
+  const authUserId = findUID(token);
+  if (authUserId === null) {
+    return { error: 'invalid token' };
+  }
+
+  const list = [];
+  let detail = {};
+  for (const dm of data.dms) {
+    if (dm.allMembers.includes(authUserId)) {
+      detail = {
+        dmId: dm.dmId,
+        name: dm.name,
+      };
+      list.push(detail);
+    }
+  }
+
+  return {
+    dms: list
+  };
+};
