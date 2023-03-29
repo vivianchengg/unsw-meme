@@ -239,7 +239,7 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
   setData(data);
 
   return {};
-};    
+};
 
 /**
  * Checks if entered string is alphanumeric
