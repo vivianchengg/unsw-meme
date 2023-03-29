@@ -146,6 +146,7 @@ export const authLoginV1 = (email: string, password: string) => {
 
   const token = getNewToken();
   user.token.push(token);
+  setData(data);
 
   return {
     authUserId: id,
@@ -220,4 +221,40 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     authUserId: id,
     token: token,
   };
+};
+
+/**
+  * Check if token is valid
+  *
+  * @param {string} token
+  * @returns {}
+*/
+export const isValidToken = (token: string): boolean => {
+  const data = getData();
+  for (const user of data.users) {
+    for (const userToken of user.token) {
+      if (userToken === token) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+/**
+  * Given an active token, invalidates the token to log the user out.
+  *
+  * @param {string} token
+  * @returns {}
+*/
+export const authLogoutV1 = (token: string) => {
+  const data = getData();
+  if (!isValidToken(token)) {
+    return { error: 'invalid token' };
+  }
+  for (const user of data.users) {
+    user.token = user.token.filter(t => t !== token);
+  }
+  setData(data);
+  return {};
 };

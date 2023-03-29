@@ -2,6 +2,50 @@ import { Message, getData, setData } from './dataStore';
 import { isValidUser, isMember } from './channel';
 
 /**
+  * Finds the authUserId given a token.
+  *
+  * @param {string} token
+  * @returns {string} authUserId
+*/
+export const findUID = (token: string) => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return user.uId;
+    }
+  }
+  return null;
+};
+
+/**
+  * Checks if name is valid
+  *
+  * @param {string} name
+  * @returns {bool}
+*/
+export const isValidName = (name: string): boolean => {
+  if (name.length < 1 || name.length > 20) {
+    return false;
+  }
+  return true;
+};
+
+/**
+  * Checks if the token is valid
+  * @param {string} token
+  * @returns {boolean}
+*/
+export const isValidToken = (token: string): boolean => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
   * Creates a channel for authUserId.
   *
   * @param {string} token
@@ -11,12 +55,10 @@ import { isValidUser, isMember } from './channel';
 */
 export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
-  let authUserId;
 
-  if (isValidToken(token) === false) {
+  const authUserId = findUID(token);
+  if (authUserId === null) {
     return { error: 'invalid token' };
-  } else {
-    authUserId = findUID(token);
   }
 
   if (isValidUser(authUserId) === false) {
@@ -53,21 +95,32 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
 /**
   * Creates an array of all channels a user is a member of
   *
-  * @param {number} authUserId
-  * @returns {object}
+  * @param {string} token
+  * @returns {channels: [{
+  *   channelId: number,
+  *   name: string,
+  *   },
+  * ]}
   *
 */
-export const channelsListV1 = (authUserId: number) => {
+export const channelsListV1 = (token: string) => {
   const data = getData();
-  if (isValidUser(authUserId) === false) {
+  let authUserId;
+
+  if (!isValidToken(token)) {
+    return { error: 'invalid token' };
+  } else {
+    authUserId = findUID(token);
+  }
+
+  if (!isValidUser(authUserId)) {
     return { error: 'invalid authUserId' };
   }
 
   const channelList = [];
-  let channelDetail = {};
   for (const channel of data.channels) {
-    if (isMember(channel, authUserId) === true) {
-      channelDetail = {
+    if (isMember(channel, authUserId)) {
+      const channelDetail = {
         channelId: channel.channelId,
         name: channel.name,
       };
@@ -81,7 +134,7 @@ export const channelsListV1 = (authUserId: number) => {
 
 /** Function lists details of all channels
  *
- * @param {number} authUserId - User ID of individual calling function
+ * @param {string} token - Token of individual's session
  * @returns {array} channels
  *
  * Here, channels: [{
@@ -90,16 +143,16 @@ export const channelsListV1 = (authUserId: number) => {
  * }]
  *
  * To return the above:
- * - authUserId must be valid
+ * - token must be valid
  *
  * Otherwise, {error: string} is returned
  */
-
-// Function lists details of all channels the user is in
-export const channelsListAllV1 = (authUserId: number) => {
+export const channelsListAllV1 = (token: string) => {
   const data = getData();
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid authUserId' };
+  const userId = findUID(token);
+
+  if (userId === null) {
+    return { error: 'Invalid token' };
   }
 
   const channelList = [];
@@ -115,49 +168,4 @@ export const channelsListAllV1 = (authUserId: number) => {
   return {
     channels: channelList
   };
-};
-
-/**
-  * Checks if name is valid
-  *
-  * @param {string} name
-  * @returns {bool}
-*/
-const isValidName = (name: string): boolean => {
-  if (name.length < 1 || name.length > 20) {
-    return false;
-  }
-  return true;
-};
-
-/**
-  * Checks if the token is valid
-  *
-  * @param {string} token
-  * @returns {bool}
-*/
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return true;
-    }
-  }
-  return false;
-};
-
-/**
-  * Finds the authUserId given a token.
-  *
-  * @param {string} token
-  * @returns {string} authUserId
-*/
-export const findUID = (token: string) => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
-    }
-  }
-  return null;
 };
