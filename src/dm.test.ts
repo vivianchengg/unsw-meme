@@ -1,5 +1,6 @@
 import request from 'sync-request';
 import { port, url } from './config.json';
+import { getData } from './dataStore';
 
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
@@ -43,6 +44,7 @@ const deleteRequest = (url: string, data: any) => {
 let owner: any;
 let user: any;
 let dm1: any;
+let dm: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);

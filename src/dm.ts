@@ -150,29 +150,6 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
 };
 
 /**
-  * Finds the authUserId given a token.
-  *
-  * @param {string} token
-  * @returns {string} authUserId
-*/
-export const findUID = (token: string) => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
-    }
-  }
-  return null;
-  dm.allMembers = dm.allMembers.filter(d => d !== userId);
-  if (dm.owner === userId) {
-    dm.owner = null;
-  }
-
-  setData(data);
-  return {};
-};
-
-/**
   * Owner of Dm deleting Dm.
   * @param {string} token
   * @param {number} dmId
