@@ -2,7 +2,7 @@ import { getData } from './dataStore';
 
 /**
 * Returns information about a user
-* @param {number} authUserId
+* @param {string} token
 * @param {number} uId
 * ...
 * @returns {{
@@ -13,13 +13,19 @@ import { getData } from './dataStore';
 *   handleStr: string,
 * }} user
 */
-
-export const userProfileV1 = (authUserId: number, uId: number) => {
+export const userProfileV1 = (token: string, uId: number) => {
   const data = getData();
-  if (isValidUser(authUserId) === false) {
+
+  if (isValidToken(token) === false) {
+    return { error: 'invalid token' };
+  }
+
+  const authUserId = findUID(token);
+
+  if (!isValidUser(authUserId)) {
     return { error: 'invalid authUserId' };
   }
-  if (isValidUser(uId) === false) {
+  if (!isValidUser(uId)) {
     return { error: 'invalid uId' };
   }
 
@@ -35,6 +41,7 @@ export const userProfileV1 = (authUserId: number, uId: number) => {
       };
     }
   }
+
   return {
     user: person,
   };
@@ -53,4 +60,36 @@ const isValidUser = (userId: number): boolean => {
     }
   }
   return false;
+};
+
+/**
+  * Checks if the token is valid
+  * @param {string} token
+  * ...
+  * @returns {boolean}
+*/
+const isValidToken = (token: string): boolean => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return true;
+    }
+  }
+  return false;
+};
+
+/**
+  * Finds the authUserId given a token.
+  * @param {string} token
+  * ...
+  * @returns {string} authUserId
+*/
+const findUID = (token: string) => {
+  const data = getData();
+  for (const user of data.users) {
+    if (user.token.includes(token)) {
+      return user.uId;
+    }
+  }
+  return null;
 };

@@ -33,7 +33,7 @@ export const dmDetailsV1 = (token: string, dmId: number) => {
   for (const dm of data.dms) {
     const dmMembers = [];
     for (const member of dm.allMembers) {
-      const memberProfile = userProfileV1(userId, member);
+      const memberProfile = userProfileV1(token, member);
       dmMembers.push(memberProfile.user);
     }
 
@@ -72,7 +72,7 @@ const extractUId = (token: string) => {
   let userId;
 
   for (const user of data.users) {
-    for (const tokenData of user.tokens) {
+    for (const tokenData of user.token) {
       if (tokenData === token) {
         userId = user.uId;
       }
