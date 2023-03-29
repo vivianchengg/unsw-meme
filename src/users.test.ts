@@ -256,8 +256,8 @@ describe('HTTP - /user/profile/setname/v1', () => {
   });
 });
 
-describe ('HTTP - /users/all/v1', () => {
-  const user2: any;
+describe('HTTP - /users/all/v1', () => {
+  let user2: any;
   beforeEach(() => {
     const person2 = {
       email: 'abc@unsw.edu.au',
@@ -268,10 +268,10 @@ describe ('HTTP - /users/all/v1', () => {
     user2 = postRequest('/auth/register/v2', person2);
   });
 
-  test('Valid Token', () => {
+  test('Invalid Token', () => {
     const param = {
       token: user.token + 'lol',
-    }
+    };
     expect(getRequest('/users/all/v1', param)).toStrictEqual(ERROR);
   });
 
@@ -293,11 +293,9 @@ describe ('HTTP - /users/all/v1', () => {
           nameFirst: 'abby',
           nameLast: 'boo',
           handleStr: 'abbyboo'
-      }]
+        }]
     });
   });
-
-
 });
 
 describe('userProfileV2 tests', () => {

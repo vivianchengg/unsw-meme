@@ -250,3 +250,25 @@ const isAlphanumeric = (str: string): boolean => {
   return /^[a-zA-Z0-9]+$/.test(str);
 };
 
+export const usersAllV1 = (token: string) => {
+  const data = getData();
+  if (isValidToken(token) === false) {
+    return { error: 'invalid token' };
+  }
+
+  let list = [];
+  for (const user of data.users) {
+    const detail = {
+      uId: user.uId,
+      email: user.email,
+      nameFirst: user.nameFirst,
+      nameLast: user.nameLast,
+      handleStr: user.handleStr
+    };
+    list.push(detail);
+  }
+
+  return {
+    users: list
+  }
+};
