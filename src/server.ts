@@ -8,6 +8,7 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels'
 import { clearV1 } from './other';
 import { userProfileV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
+import { dmCreateV1, dmRemoveV1, dmLeaveV1 } from './dm';
 
 // Set up web app
 const app = express();
@@ -28,7 +29,8 @@ app.get('/echo', (req: Request, res: Response) => {
 });
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
-  return res.json(clearV1());
+  const result = clearV1();
+  return res.json(result);
 });
 
 app.post('/auth/login/v2', (req: Request, res: Response) => {
@@ -90,19 +92,35 @@ app.get('/channels/listall/v2', (req: Request, res: Response) => {
   return res.json(channelsListAllV1(token));
 });
 
-app.post('/channel/leave/v1', (req: Request, res: Response, next) => {
+app.post('/channel/leave/v1', (req: Request, res: Response) => {
   const { token, channelId } = req.body;
   return res.json(channelLeaveV1(token, channelId));
 });
 
-app.post('/channel/addowner/v1', (req: Request, res: Response, next) => {
+app.post('/channel/addowner/v1', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   return res.json(channelAddOwnerV1(token, channelId, uId));
 });
 
-app.post('/channel/removeowner/v1', (req: Request, res: Response, next) => {
+app.post('/channel/removeowner/v1', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
+});
+
+app.post('/dm/create/v1', (req: Request, res: Response) => {
+  const { token, uIds } = req.body;
+  return res.json(dmCreateV1(token, uIds));
+});
+
+app.delete('/dm/remove/v1', (req: Request, res: Response) => {
+  const token = req.query.token as string;
+  const dmId = parseInt(req.query.dmId as string);
+  return res.json(dmRemoveV1(token, dmId));
+});
+
+app.post('/dm/leave/v1', (req: Request, res: Response) => {
+  const { token, dmId } = req.body;
+  return res.json(dmLeaveV1(token, dmId));
 });
 
 // start server
