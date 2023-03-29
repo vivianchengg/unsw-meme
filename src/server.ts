@@ -2,6 +2,7 @@ import express, { json, Request, Response } from 'express';
 import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
+import { dmCreateV1 } from './dm';
 import { echo } from './echo';
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1, channelLeaveV1, channelAddOwnerV1, channelRemoveOwnerV1 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
@@ -69,6 +70,11 @@ app.post('/channel/join/v2', (req: Request, res: Response) => {
   return res.json(channelJoinV1(token, channelId));
 });
 
+app.post('/dm/create/v1', (req: Request, res: Response, next) => {
+  const { token, uIds } = req.body;
+  return res.json(dmCreateV1(token, uIds));
+});
+
 app.post('/channel/invite/v2', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   res.json(channelInviteV1(token, channelId, uId));
@@ -91,17 +97,17 @@ app.get('/channels/listall/v2', (req: Request, res: Response) => {
   return res.json(channelsListAllV1(token));
 });
 
-app.post('/channel/leave/v1', (req: Request, res: Response, next) => {
+app.post('/channel/leave/v1', (req: Request, res: Response) => {
   const { token, channelId } = req.body;
   return res.json(channelLeaveV1(token, channelId));
 });
 
-app.post('/channel/addowner/v1', (req: Request, res: Response, next) => {
+app.post('/channel/addowner/v1', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   return res.json(channelAddOwnerV1(token, channelId, uId));
 });
 
-app.post('/channel/removeowner/v1', (req: Request, res: Response, next) => {
+app.post('/channel/removeowner/v1', (req: Request, res: Response) => {
   const { token, channelId, uId } = req.body;
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
 });

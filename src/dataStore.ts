@@ -43,14 +43,15 @@ export type Dm = {
 export type Data = {
   users: User[],
   channels: Channel[],
-  dms: Dm[]
+  dms: Dm[],
 };
 
-// let data: Data = {
-//   users: [],
-//   channels: [],
-//   dms: []
-// };
+let data: Data = {
+  users: [],
+  channels: [],
+  dms: [],
+};
+
 // YOU SHOULDNT NEED TO MODIFY THE FUNCTIONS BELOW IN ITERATION 1
 
 /*
