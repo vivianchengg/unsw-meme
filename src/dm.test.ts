@@ -72,7 +72,7 @@ beforeEach(() => {
 describe('HTTP - /dm/remove/v1 tests', () => {
   test('Dm does not refer to valid dm', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       dmId: dm.dmId - 1,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
@@ -80,7 +80,7 @@ describe('HTTP - /dm/remove/v1 tests', () => {
 
   test('Dm is valid but User is not CREATOR', () => {
     const param = {
-      token: user2.token[0],
+      token: user2.token,
       dmId: dm.dmId,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
@@ -88,13 +88,13 @@ describe('HTTP - /dm/remove/v1 tests', () => {
 
   test('Dm is valid but Creator is not longer in Dm', () => {
     const detail = {
-      token: user.token[0],
+      token: user.token,
       dmId: dm.dmId,
     };
     postRequest('/dm/leave/v1', detail);
 
     const param = {
-      token: user.token[0],
+      token: user.token,
       dmId: dm.dmId
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
@@ -102,7 +102,7 @@ describe('HTTP - /dm/remove/v1 tests', () => {
 
   test('Invalid token', () => {
     const param = {
-      token: user.token[0] + 'lol',
+      token: user.token + 'lol',
       dmId: dm.dmId,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
@@ -110,7 +110,7 @@ describe('HTTP - /dm/remove/v1 tests', () => {
 
   test('Valid input', () => {
     const param = {
-      token: user.token[0],
+      token: user.token,
       dmId: dm.dmId,
     };
     deleteRequest('/dm/remove/v1', param).toStrictEqual({});
