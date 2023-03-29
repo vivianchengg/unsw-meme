@@ -1,27 +1,42 @@
 import request from 'sync-request';
-import config from './config.json';
+import { port, url } from './config.json';
 
-const port = config.port;
-const url = config.url;
-
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-const SERVERurl = `${url}:${port}`;
+
+const getRequest = (url: string, data: any) => {
+  const res = request(
+    'GET',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
 
 const postRequest = (url: string, data: any) => {
-  const res = request('POST', SERVERurl + url, { json: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'POST',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
 const deleteRequest = (url: string, data: any) => {
-  const res = request('DELETE', SERVERurl + url, { qs: data });
-  const body = JSON.parse(String(res.getBody()));
-  return body;
-};
-
-const getRequest = (url: string, data: any) => {
-  const res = request('GET', SERVERurl + url, { qs: data });
-  const body = JSON.parse(String(res.getBody()));
+  const res = request(
+    'DELETE',
+    SERVER_URL + url,
+    {
+      qs: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
