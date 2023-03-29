@@ -40,78 +40,257 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
+let owner: any;
 let user: any;
-let user2: any;
-let dm: any;
+let dm1: any;
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', {});
-  let person = {
+  deleteRequest('/clear/v1', null);
+
+  const ownerData = {
+    email: 'vc@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Vivian',
+    nameLast: 'Cheng'
+  };
+  owner = postRequest('/auth/register/v2', ownerData);
+
+  const userData = {
     email: 'jr@unsw.edu.au',
     password: 'password',
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  user = postRequest('/auth/register/v2', person);
 
-  person = {
-    email: 'ab@unsw.edu.au',
-    password: 'password',
-    nameFirst: 'Abby',
-    nameLast: 'Boo'
-  };
-  user2 = postRequest('/auth/register/v2', person);
+  user = postRequest('/auth/register/v2', userData);
 
-  const dmParam = {
-    token: user.token[0],
-    uIds: [user2.authUserId],
+  const dm1Data = {
+    token: owner.token,
+    uIds: [user.authUserId]
   };
-  dm = postRequest('/dm/create/v1', dmParam);
+
+  dm1 = postRequest('/dm/create/v1', dm1Data);
+});
+
+describe('dmLeaveV1 Test', () => {
+  test('Invalid token', () => {
+    const detailRequest = {
+      token: user.token + 'yay',
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Invalid dmId', () => {
+    const detailRequest = {
+      token: user.token,
+      dmId: dm1.dmId + 1
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('authUser not member of dm', () => {
+    const user2Data = {
+      email: 'yj@unsw.edu.au',
+      password: 'PASSWORD',
+      nameFirst: 'Yuchao',
+      nameLast: 'Jiang'
+    };
+
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    const detailRequest = {
+      token: user2.token,
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
+  });
+
+  test('Basic functionality: member', () => {
+    const detailRequest = {
+      token: user.token,
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
+  });
+
+  test('Basic functionality: owner', () => {
+    const detailRequest = {
+      token: owner.token,
+      dmId: dm1.dmId
+    };
+
+    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
+  });
+});
+
+describe('dmCreateV1 test', () => {
+  test('invalid uId exists', () => {
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const user2Data = {
+      email: 'vc2@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    const dmData = {
+      token: owner.token,
+      uIds: [user1.uId, user2.uId, user2.uId + 1]
+    };
+    expect(postRequest('/dm/create/v1', dmData)).toStrictEqual(ERROR);
+  });
+
+  test('duplicate uId exists', () => {
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const user2Data = {
+      email: 'vc2@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    const dmData = {
+      token: owner.token,
+      uIds: [user1.uId, user2.uId, user2.uId]
+    };
+
+    expect(postRequest('/dm/create/v1', dmData)).toStrictEqual(ERROR);
+  });
+
+  test('invalid token', () => {
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const user2Data = {
+      email: 'vc2@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    const dmData = {
+      token: owner.token + '1',
+      uIds: [user1.uId, user2.uId]
+    };
+    expect(postRequest('/dm/create/v1', dmData)).toStrictEqual(ERROR);
+  });
+
+  test('test valid dm create', () => {
+    const user1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user1 = postRequest('/auth/register/v2', user1Data);
+
+    const user2Data = {
+      email: 'vc2@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+    const user2 = postRequest('/auth/register/v2', user2Data);
+
+    const dmData = {
+      token: owner.token,
+      uIds: [user1.uId, user2.uId]
+    };
+    const dm = postRequest('/dm/create/v1', dmData);
+
+    const dmRemoveData = {
+      token: owner.token,
+      dmId: dm.dmId
+    };
+
+    expect(postRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
+  });
+
+  test('test valid dm create: empty uId', () => {
+    const dmData = {
+      token: owner.token,
+      uIds: []
+    };
+    const dm = postRequest('/dm/create/v1', dmData);
+
+    const dmRemoveData = {
+      token: owner.token,
+      dmId: dm.dmId
+    };
+    expect(postRequest('/dm/remove/v1', dmRemoveData)).toStrictEqual({});
+  });
 });
 
 describe('HTTP - /dm/remove/v1 tests', () => {
   test('Dm does not refer to valid dm', () => {
     const param = {
-      token: user.token,
-      dmId: dm.dmId - 1,
+      token: owner.token,
+      dmId: dm1.dmId + 1,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
   });
 
   test('Dm is valid but User is not CREATOR', () => {
     const param = {
-      token: user2.token,
-      dmId: dm.dmId,
+      token: user.token,
+      dmId: dm1.dmId,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
   });
 
   test('Dm is valid but Creator is not longer in Dm', () => {
     const detail = {
-      token: user.token,
-      dmId: dm.dmId,
+      token: owner.token,
+      dmId: dm1.dmId,
     };
     postRequest('/dm/leave/v1', detail);
 
     const param = {
-      token: user.token,
-      dmId: dm.dmId
+      token: owner.token,
+      dmId: dm1.dmId
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
   });
 
   test('Invalid token', () => {
     const param = {
-      token: user.token + 'lol',
-      dmId: dm.dmId,
+      token: owner.token + 'lol',
+      dmId: dm1.dmId,
     };
     expect(deleteRequest('/dm/remove/v1', param)).toStrictEqual(ERROR);
   });
 
   test('Valid input', () => {
     const param = {
-      token: user.token,
-      dmId: dm.dmId,
+      token: owner.token,
+      dmId: dm1.dmId,
     };
     deleteRequest('/dm/remove/v1', param).toStrictEqual({});
   });
