@@ -2,17 +2,17 @@ import { getData, setData } from './dataStore';
 import validator from 'validator';
 
 /**
-* Returns information about a user
-* @param {string} token
-* @param {number} uId
-* ...
-* @returns {{
-*   uId: number,
-*   email: string,
-*   nameFirst: string,
-*   nameLast: string,
-*   handleStr: string,
-* }} user
+  * Returns information about a user
+  *
+  * @param {string} token
+  * @param {number} uId
+  * @returns {{
+  *   uId: number,
+  *   email: string,
+  *   nameFirst: string,
+  *   nameLast: string,
+  *   handleStr: string,
+  * }} user
 */
 
 export const userProfileV1 = (token: string, uId: number) => {
@@ -50,13 +50,13 @@ export const userProfileV1 = (token: string, uId: number) => {
 };
 
 /**
-* Changes the first and last name of user
-* @param {string} token
-* @param {string} nameFirst
-* @param {string} nameLast
-* ...
-* @returns {}
-  */
+  * Changes the first and last name of user
+  *
+  * @param {string} token
+  * @param {string} nameFirst
+  * @param {string} nameLast
+  * @returns {}
+*/
 export const userProfileSetName = (token: string, nameFirst: string, nameLast: string) => {
   const data = getData();
 
@@ -81,9 +81,9 @@ export const userProfileSetName = (token: string, nameFirst: string, nameLast: s
 };
 
 /**
-* Checks if user is valid
-* @param {number} authUserId
-* @returns {boolean}
+  * Checks if user is valid
+  * @param {number} authUserId
+  * @returns {boolean}
 */
 const isValidUser = (userId: number): boolean => {
   const data = getData();
@@ -96,10 +96,10 @@ const isValidUser = (userId: number): boolean => {
 };
 
 /** Function that returns user Id from token
- *
- * @param {string} token
- * @returns {number}
- */
+  *
+  * @param {string} token
+  * @returns {number}
+*/
 const extractUId = (token: string) => {
   const data = getData();
   let userId;
@@ -149,8 +149,8 @@ const isValidToken = (token: string): boolean => {
 
 /**
   * Finds the authUserId given a token.
+  *
   * @param {string} token
-  * ...
   * @returns {string} authUserId
 */
 const findUID = (token: string) => {
@@ -164,17 +164,12 @@ const findUID = (token: string) => {
 };
 
 /**
-<<<<<<< HEAD
- * Updates authorised user's handle
- * @param {string} token
- * @param {string} handleStr
- * @returns {}
- *
- * Will return error if:
- *  - Length of handleStr is not between 3-20 characters
- *  - Non-alphanumeric characters are contained in handleStr
- *  - handleStr is already taken as handle for another user
- *  - token is invalid
+  * Updates authorised user's handle
+  *
+  * @param {string} token
+  * @param {string} handleStr
+  * @returns {}
+  *
  */
 export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
   const data = getData();
@@ -207,15 +202,12 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 };
 
 /**
-* Updates authorised user's email address
-* @param {string} token
-* @param {string} email
-* @returns {}
-*
-* Will return error if:
-*  - email entered is not valid, defined by validator
-*  - email is already taken by another user
-*  - token is invalid
+  * Updates authorised user's email address
+  *
+  * @param {string} token
+  * @param {string} email
+  * @returns {}
+  *
 */
 export const userProfileSetEmailV1 = (token: string, email: string) => {
   const data = getData();
@@ -242,10 +234,45 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 };
 
 /**
- * Checks if entered string is alphanumeric
- * @param {string} str
- * @returns {boolean}
+  * Checks if entered string is alphanumeric
+  * @param {string} str
+  * @returns {boolean}
  */
 const isAlphanumeric = (str: string): boolean => {
   return /^[a-zA-Z0-9]+$/.test(str);
+};
+
+/**
+  * List all the users in the data.
+  *
+  * @param {string} token
+  * @returns {{
+  *   uId: number,
+  *   email: string,
+  *   nameFirst: string,
+  *   nameLast: string,
+  *   handleStr: string,
+  * }} user
+*/
+export const usersAllV1 = (token: string) => {
+  const data = getData();
+  if (!isValidToken(token)) {
+    return { error: 'invalid token' };
+  }
+
+  const list = [];
+  for (const user of data.users) {
+    const detail = {
+      uId: user.uId,
+      email: user.email,
+      nameFirst: user.nameFirst,
+      nameLast: user.nameLast,
+      handleStr: user.handleStr
+    };
+    list.push(detail);
+  }
+
+  return {
+    users: list,
+  };
 };

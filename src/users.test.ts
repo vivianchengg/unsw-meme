@@ -56,16 +56,25 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 let user: any;
+let user3: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
-  const person = {
+  let person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
   user = postRequest('/auth/register/v2', person);
+
+  person = {
+    email: 'abc@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'abby',
+    nameLast: 'boo',
+  };
+  user3 = postRequest('/auth/register/v2', person);
 });
 
 describe('userProfileSetHandleV1 tests', () => {
@@ -252,6 +261,37 @@ describe('HTTP - /user/profile/setname/v1', () => {
         nameLast: 'my',
         handleStr: 'jakerenzella',
       }
+    });
+  });
+});
+
+describe('HTTP - /users/all/v1', () => {
+  test('Invalid Token', () => {
+    const param = {
+      token: user.token + 'lol',
+    };
+    expect(getRequest('/users/all/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('Valid Token', () => {
+    const param = {
+      token: user3.token,
+    };
+    expect(getRequest('/users/all/v1', param)).toStrictEqual({
+      users: [
+        {
+          uId: user.authUserId,
+          email: 'jr@unsw.edu.au',
+          nameFirst: 'Jake',
+          nameLast: 'Renzella',
+          handleStr: 'jakerenzella'
+        }, {
+          uId: user3.authUserId,
+          email: 'abc@unsw.edu.au',
+          nameFirst: 'abby',
+          nameLast: 'boo',
+          handleStr: 'abbyboo'
+        }]
     });
   });
 });
