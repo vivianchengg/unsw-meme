@@ -46,17 +46,20 @@ const isOwner = (authId: number, messageId: number): boolean => {
   const dm = data.dms.find(d => d.messages.find(m => m.messageId === messageId));
   const user = data.users.find(u => u.uId === authId);
 
-  // owner permission: channel and dm owner
-  if (channel.ownerMembers.includes(authId)) {
-    return true;
-  } else if (dm.owner === authId) {
+  if (channel !== undefined) {
+    if (channel.ownerMembers.includes(authId)) {
+      return true;
+    }
+
+    if (channel.allMembers.includes(authId) && user.pId === 1) {
+      return true;
+    }
+  }
+
+  if (dm !== undefined && dm.owner === authId) {
     return true;
   }
 
-  // owner permission: channel member + global owner
-  if (channel.allMembers.includes(authId) && user.pId === 1) {
-    return true;
-  }
   return false;
 };
 
@@ -197,4 +200,47 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
 
   setData(data);
   return {};
+};
+
+/**
+  * Authorised member of dmId sending a message
+  *
+  * @param {string} token
+  * @param {number} dmId
+  * @param {string} message
+  * @returns {{ messageId: number }}
+*/
+export const messageSendDmV1 = (token: string, dmId: number, message: string) => {
+  const data = getData();
+
+  if (message.length < 1 || message.length > 1000) {
+    return { error: 'invalid message length' };
+  }
+
+  const authUserId = findUID(token);
+  if (authUserId === null) {
+    return { error: 'token is invalid' };
+  }
+
+  const dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    return { error: 'invalid dmId' };
+  }
+
+  if (!dm.allMembers.includes(authUserId)) {
+    return { error: 'user is not a member of dm' };
+  }
+
+  const id = createId();
+  const msg = {
+    messageId: id,
+    uId: authUserId,
+    message: message,
+    timeSent: Math.floor((new Date()).getTime() / 1000),
+  };
+
+  dm.messages.unshift(msg);
+  setData(data);
+
+  return { messageId: id };
 };

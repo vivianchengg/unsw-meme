@@ -335,7 +335,7 @@ describe('authLogout Test', () => {
     const token1 = postRequest('/auth/register/v2', user1Data).token;
 
     const logoutData = {
-      token: token1 + '1'
+      token: token1 + 'yay'
     };
     expect(postRequest('/auth/logout/v1', logoutData)).toStrictEqual(ERROR);
   });

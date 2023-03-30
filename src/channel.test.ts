@@ -40,9 +40,9 @@ const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
-let user : any;
+let user: any;
 let invitedUser: any;
-let channel : any;
+let channel: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
@@ -75,7 +75,7 @@ beforeEach(() => {
 describe('channelDetailsV1 Test', () => {
   test('Invalid token', () => {
     const detailRequest = {
-      token: user.token + '1',
+      token: user.token + 'yay',
       channelId: channel.channelId
     };
 
@@ -85,7 +85,7 @@ describe('channelDetailsV1 Test', () => {
   test('Invalid channelId', () => {
     const detailRequest = {
       token: user.token,
-      channelId: channel.channelId + 1
+      channelId: channel.channelId + 189
     };
 
     expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
@@ -148,7 +148,7 @@ describe('channelJoinV1 function testing', () => {
 
     const param = {
       token: user.token,
-      channelId: channel2.channelId + 1
+      channelId: channel2.channelId + 189
     };
     expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
   });
@@ -203,7 +203,7 @@ describe('channelJoinV1 function testing', () => {
     const channel2 = postRequest('/channels/create/v2', channel2Data);
 
     const param = {
-      token: user.token + '1',
+      token: user.token + 'yay',
       channelId: channel2.channelId
     };
     expect(postRequest('/channel/join/v2', param)).toStrictEqual(ERROR);
@@ -237,7 +237,7 @@ describe('channelInviteV1 test', () => {
   test('channelId does not refer to a valid channel', () => {
     const inviteData = {
       token: user.token,
-      channelId: channel.channelId + 1,
+      channelId: channel.channelId + 189,
       uId: invitedUser.authUserId
     };
     expect(postRequest('/channel/invite/v2', inviteData)).toStrictEqual(ERROR);
@@ -336,7 +336,7 @@ describe('channelMessengesV1 test', () => {
 
   test('token is invalid', () => {
     const param2 = {
-      token: user.token + 1,
+      token: user.token + 'yay',
       channelId: channel.channelId,
       start: 0
     };
@@ -374,7 +374,7 @@ describe('channelLeaveV1 test', () => {
     };
     const channel = postRequest('/channels/create/v2', newChannel);
     const channelData = {
-      token: user.token + '1',
+      token: user.token + 'yay',
       channelId: channel.channelId
     };
     expect(postRequest('/channel/leave/v1', channelData)).toStrictEqual(ERROR);
@@ -529,7 +529,7 @@ describe('channelAddOwnerV1 test', () => {
     // add owner
     const ownerData = {
       token: user.token,
-      channelId: channel.channelId + 1,
+      channelId: channel.channelId + 189,
       uId: invitedUser.authUserId
     };
     expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
@@ -546,7 +546,7 @@ describe('channelAddOwnerV1 test', () => {
 
     // add owner
     const ownerData = {
-      token: user.token + '1',
+      token: user.token + 'yay',
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
@@ -566,7 +566,7 @@ describe('channelAddOwnerV1 test', () => {
     const ownerData = {
       token: user.token,
       channelId: channel.channelId,
-      uId: invitedUser.authUserId + 1,
+      uId: invitedUser.authUserId + 189,
     };
     expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
   });
@@ -746,7 +746,7 @@ describe('channelRemoveOwnerV1 test', () => {
     // remove owner
     ownerData = {
       token: user.token,
-      channelId: channel.channelId + 1,
+      channelId: channel.channelId + 189,
       uId: invitedUser.authUserId
     };
     expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
