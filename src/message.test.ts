@@ -30,90 +30,110 @@ const deleteRequest = (url: string, data: any) => {
 
 let user : any;
 let user2 : any;
+let user3 : any;
 let channel : any;
+// let dm : any;
 let message : any;
-let message2 : any;
+// let dmMsg : any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
-  const param1 = {
+
+  // user is global owner
+  const userData = {
     email: 'arialee@gmail.com',
     password: 'dynamite',
     nameFirst: 'aria',
     nameLast: 'lee'
   };
-  user = postRequest('/auth/register/v2', param1);
+  user = postRequest('/auth/register/v2', userData);
 
-  const param4 = {
+  const user2Data = {
     email: 'arialee1@gmail.com',
     password: 'dynamite',
     nameFirst: 'aria',
     nameLast: 'lee'
   };
-  user2 = postRequest('/auth/register/v2', param4);
+  user2 = postRequest('/auth/register/v2', user2Data);
 
-  const param2 = {
-    token: user.token,
+  const user3Data = {
+    email: 'arialee2@gmail.com',
+    password: 'dynamite',
+    nameFirst: 'aria',
+    nameLast: 'lee'
+  };
+  user3 = postRequest('/auth/register/v2', user3Data);
+
+  // channel
+  const channelData = {
+    token: user2.token,
     name: 'holidays',
     isPublic: false
   };
-  channel = postRequest('/channels/create/v2', param2);
+  channel = postRequest('/channels/create/v2', channelData);
 
-  const param3 = {
-    token: user.token,
-    channeleId: channel.channelId,
+  const messageData = {
+    token: user2.token,
+    channelId: channel.channelId,
     message: 'hello ellen'
   };
-  message = postRequest('/message/send/v1', param3);
+  message = postRequest('/message/send/v1', messageData);
 
-  const param5 = {
-    token: user2.token,
-    channeleId: channel.channelId,
-    message: 'hello'
-  };
-  message2 = postRequest('/message/send/v1', param5);
+  // dm
+  // const dmData = {
+  //   token: user2.token,
+  //   uIds: [user3.authUserId]
+  // };
+  // dm = postRequest('/dm/create/v1', dmData);
+
+  // const dmMsgData = {
+  //   token: user3.token,
+  //   dmId: dm.dmId,
+  //   message: 'hello'
+  // };
+  // dmMsg = postRequest('/message/senddm/v1', dmMsgData);
 });
 
 describe('HTTP tests using Jest for messageRemoveV1', () => {
   test('invalid message id', () => {
-    const msg1Data = {
-      token: user.token,
+    const rmData = {
+      token: user2.token,
       messageId: message.messageId + 199
     };
 
-    expect(deleteRequest('/message/remove/v1', msg1Data)).toStrictEqual(ERROR);
+    expect(deleteRequest('/message/remove/v1', rmData)).toStrictEqual(ERROR);
   });
 
-  test('the message was not sent by the authorised user making this request and the user does not have owner permissions in the channel/DM', () => {
+  test('authUser is not sender and no owner permissions', () => {
+    // user2 is sender
     const msg1Data = {
       token: user2.token,
       messageId: message.messageId
     };
-    expect(deleteRequest('/message/remove/v1', msg1Data)).toStrictEqual(ERROR);
+    expect(deleteRequest('/message/remove/v1', msg1Data)).toStrictEqual({});
 
+    // user is global owner but not member of channel
     const msg2Data = {
       token: user.token,
-      messageId: message2.messageId
+      messageId: message.messageId
     };
-    expect(deleteRequest('/message/remove/v1', msg1Data)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', msg2Data)).toStrictEqual(ERROR);
+
+    const msg3Data = {
+      token: user3.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', msg3Data)).toStrictEqual(ERROR);
   });
 
   test('token is invalid', () => {
     const param1 = {
-      token: user.token + 'hi',
+      token: user2.token + 'hi',
       messageId: message.messageId
     };
 
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
   });
-
-  test('valid input', () => {
-    const param = {
-      token: user.token,
-      messageId: message.messageId
-    };
-
-    expect(deleteRequest('/message/remove/v1', param)).toStrictEqual({});
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {
@@ -169,7 +189,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       nameFirst: 'aria',
       nameLast: 'lee'
     };
-    const user2 = postRequest('/auth/register/v2', param1);
+    user2 = postRequest('/auth/register/v2', param1);
     const param2 = {
       token: user2.token,
       name: 'holidays',

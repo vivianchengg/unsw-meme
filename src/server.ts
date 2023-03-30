@@ -169,7 +169,7 @@ app.post('/message/send/v1', (req: Request, res: Response, next) => {
 
 app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
-  const messageId = parseInt(req.query.messagelId as string);
+  const messageId = parseInt(req.query.messageId as string);
   res.json(messageRemoveV1(token, messageId));
 });
 

@@ -46,6 +46,8 @@ let channel : any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
+
+  // user is global owner
   const userData = {
     email: 'jr@unsw.edu.au',
     password: 'password',
@@ -480,13 +482,28 @@ describe('channelAddOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner by GLOBAL OWNER
+    // global owner not member - no owner permission
     const ownerData = {
       token: user.token,
       channelId: newChannel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+
+    // global owner is now a member - has owner permission
+    const globalData = {
+      token: user1.token,
+      channelId: newChannel.channelId,
+      uId: user.authUserId
+    };
+    postRequest('/channel/invite/v2', globalData);
+
+    const invite2Data = {
+      token: user.token,
+      channelId: newChannel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', invite2Data)).toStrictEqual({});
 
     const detailData = {
       token: user1.token,
@@ -665,13 +682,28 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner by GLOBAL OWNER
+    // global owner not member - no owner permission
     const ownerData = {
       token: user.token,
       channelId: newChannel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
+    expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
+
+    // global owner is now a member - has owner permission
+    const globalData = {
+      token: user1.token,
+      channelId: newChannel.channelId,
+      uId: user.authUserId
+    };
+    postRequest('/channel/invite/v2', globalData);
+
+    const invite2Data = {
+      token: user.token,
+      channelId: newChannel.channelId,
+      uId: invitedUser.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', invite2Data)).toStrictEqual({});
 
     const detailData = {
       token: user1.token,

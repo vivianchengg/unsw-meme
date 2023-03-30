@@ -277,12 +277,18 @@ export const channelLeaveV1 = (token: string, channelId: number) => {
   * @param {Channel} channel
   * @returns {bool}
 */
-const isChannelOwner = (uId: number, channel: Channel) => {
+export const isOwner = (authUser: User, channel: Channel) => {
   for (const ownerId of channel.ownerMembers) {
-    if (uId === ownerId) {
+    if (authUser.uId === ownerId) {
       return true;
     }
   }
+
+  // global owner and channel member
+  if (authUser.pId === 1 && isMember(channel, authUser.uId)) {
+    return true;
+  }
+
   return false;
 };
 
@@ -315,12 +321,11 @@ export const channelAddOwnerV1 = (token: string, channelId: number, uId: number)
     return { error: 'user is not a member of the channel' };
   }
 
-  if (isChannelOwner(uId, channel)) {
+  if (isOwner(user, channel)) {
     return { error: 'user is already owner' };
   }
 
-  // authUser is not global owner or channel owner
-  if (authUser.pId !== 1 && !isChannelOwner(authUser.uId, channel)) {
+  if (!isOwner(authUser, channel)) {
     return { error: 'authUser does not have owner permissions' };
   }
 
@@ -354,7 +359,7 @@ export const channelRemoveOwnerV1 = (token: string, channelId: number, uId: numb
     return { error: 'invalid token' };
   }
 
-  if (!isChannelOwner(uId, channel)) {
+  if (!isOwner(user, channel)) {
     return { error: 'user is not a owner of the channel' };
   }
 
@@ -362,7 +367,7 @@ export const channelRemoveOwnerV1 = (token: string, channelId: number, uId: numb
     return { error: 'user is the only owner' };
   }
 
-  if (authUser.pId !== 1 && !isChannelOwner(authUser.uId, channel)) {
+  if (!isOwner(authUser, channel)) {
     return { error: 'user does not have owner permissions' };
   }
 
