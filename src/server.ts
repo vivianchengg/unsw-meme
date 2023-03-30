@@ -6,7 +6,7 @@ import { echo } from './echo';
 import { channelDetailsV1, channelJoinV1, channelInviteV1, channelMessagesV1, channelLeaveV1, channelAddOwnerV1, channelRemoveOwnerV1 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1 } from './other';
-import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1 } from './users';
+import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
 import { messageSendV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
@@ -160,6 +160,11 @@ app.get('/dm/messages/v1', (req: Request, res: Response) => {
 app.put('/user/profile/setname/v1', (req: Request, res: Response) => {
   const { token, nameFirst, nameLast } = req.body;
   return res.json(userProfileSetName(token, nameFirst, nameLast));
+});
+
+app.get('/users/all/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  return res.json(usersAllV1(token));
 });
 
 // start server
