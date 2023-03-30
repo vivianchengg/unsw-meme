@@ -29,17 +29,91 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 let user : any;
+let user2 : any;
 let channel : any;
+let message : any;
+let message2 : any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
-  const param = {
+  const param1 = {
     email: 'arialee@gmail.com',
     password: 'dynamite',
     nameFirst: 'aria',
     nameLast: 'lee'
   };
-  user = postRequest('/auth/register/v2', param);
+  user = postRequest('/auth/register/v2', param1);
+
+  const param4 = {
+    email: 'arialee1@gmail.com',
+    password: 'dynamite',
+    nameFirst: 'aria',
+    nameLast: 'lee'
+  };
+  user2 = postRequest('/auth/register/v2', param4);
+
+  const param2 = {
+    token: user.token,
+    name: 'holidays',
+    isPublic: false
+  };
+  channel = postRequest('/channels/create/v2', param2);
+
+  const param3 = {
+    token: user.token,
+    channeleId: channel.channelId,
+    message: 'hello ellen'
+  };
+  message = postRequest('/message/send/v1', param3);
+
+  const param5 = {
+    token: user2.token,
+    channeleId: channel.channelId,
+    message: 'hello'
+  };
+  message2 = postRequest('/message/send/v1', param5);
+});
+
+describe('HTTP tests using Jest for messageRemoveV1', () => {
+  test('invalid message id', () => {
+    const msg1Data = {
+      token: user.token,
+      messageId: message.messageId + 199
+    };
+
+    expect(deleteRequest('/message/remove/v1', msg1Data)).toStrictEqual(ERROR);
+  });
+
+  test('the message was not sent by the authorised user making this request and the user does not have owner permissions in the channel/DM', () => {
+    const msg1Data = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', msg1Data)).toStrictEqual(ERROR);
+
+    const msg2Data = {
+      token: user.token,
+      messageId: message2.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', msg1Data)).toStrictEqual({});
+  });
+
+  test('token is invalid', () => {
+    const param1 = {
+      token: user.token + 'hi',
+      messageId: message.messageId
+    };
+
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('valid input', () => {
+    const param = {
+      token: user.token,
+      messageId: message.messageId
+    };
+
+    expect(deleteRequest('/message/remove/v1', param)).toStrictEqual({});
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {

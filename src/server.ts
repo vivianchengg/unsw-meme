@@ -8,7 +8,7 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels'
 import { clearV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
-import { messageSendV1 } from './message';
+import { messageSendV1, messageRemoveV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
 
 // Set up web app
@@ -108,21 +108,6 @@ app.post('/channel/removeowner/v1', (req: Request, res: Response) => {
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
 });
 
-app.post('/message/send/v1', (req: Request, res: Response, next) => {
-  const { token, channelId, message } = req.body;
-  return res.json(messageSendV1(token, channelId, message));
-});
-
-app.put('/user/profile/sethandle/v1', (req: Request, res: Response) => {
-  const { token, handleStr } = req.body;
-  return res.json(userProfileSetHandleV1(token, handleStr));
-});
-
-app.put('/user/profile/setemail/v1', (req: Request, res: Response) => {
-  const { token, email } = req.body;
-  return res.json(userProfileSetEmailV1(token, email));
-});
-
 app.post('/dm/create/v1', (req: Request, res: Response) => {
   const { token, uIds } = req.body;
   return res.json(dmCreateV1(token, uIds));
@@ -162,9 +147,30 @@ app.put('/user/profile/setname/v1', (req: Request, res: Response) => {
   return res.json(userProfileSetName(token, nameFirst, nameLast));
 });
 
+app.put('/user/profile/sethandle/v1', (req: Request, res: Response) => {
+  const { token, handleStr } = req.body;
+  return res.json(userProfileSetHandleV1(token, handleStr));
+});
+
+app.put('/user/profile/setemail/v1', (req: Request, res: Response) => {
+  const { token, email } = req.body;
+  return res.json(userProfileSetEmailV1(token, email));
+});
+
 app.get('/users/all/v1', (req: Request, res: Response, next) => {
   const token = req.query.token as string;
   return res.json(usersAllV1(token));
+});
+
+app.post('/message/send/v1', (req: Request, res: Response, next) => {
+  const { token, channelId, message } = req.body;
+  return res.json(messageSendV1(token, channelId, message));
+});
+
+app.delete('/message/remove/v1', (req: Request, res: Response, next) => {
+  const token = req.query.token as string;
+  const messageId = parseInt(req.query.messagelId as string);
+  res.json(messageRemoveV1(token, messageId));
 });
 
 // start server
