@@ -266,7 +266,6 @@ describe('HTTP - /user/profile/setname/v1', () => {
 });
 
 describe('HTTP - /users/all/v1', () => {
-
   test('Invalid Token', () => {
     const param = {
       token: user.token + 'lol',
