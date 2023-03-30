@@ -249,3 +249,38 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 const isAlphanumeric = (str: string): boolean => {
   return /^[a-zA-Z0-9]+$/.test(str);
 };
+
+/**
+* List all the users in the data.
+* @param {string} token
+* ...
+* @returns {{
+*   uId: number,
+*   email: string,
+*   nameFirst: string,
+*   nameLast: string,
+*   handleStr: string,
+* }} user
+*/
+export const usersAllV1 = (token: string) => {
+  const data = getData();
+  if (isValidToken(token) === false) {
+    return { error: 'invalid token' };
+  }
+
+  const list = [];
+  for (const user of data.users) {
+    const detail = {
+      uId: user.uId,
+      email: user.email,
+      nameFirst: user.nameFirst,
+      nameLast: user.nameLast,
+      handleStr: user.handleStr
+    };
+    list.push(detail);
+  }
+
+  return {
+    users: list,
+  };
+};

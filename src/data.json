@@ -1,1 +1,1 @@
-{"users":[],"channels":[],"dms":[]}
+{"users":[{"uId":10,"nameFirst":"Jake","nameLast":"Renzella","email":"jr@unsw.edu.au","handleStr":"jakerenzella","password":"password","pId":1,"token":["391"]},{"uId":20,"nameFirst":"abby","nameLast":"boo","email":"abc@unsw.edu.au","handleStr":"abbyboo","password":"password","pId":2,"token":["570"]}],"channels":[],"dms":[]}
