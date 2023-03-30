@@ -16,6 +16,18 @@ const postRequest = (url: string, data: any) => {
   return body;
 };
 
+const putRequest = (url: string, data: any) => {
+  const res = request(
+    'PUT',
+    SERVER_URL + url,
+    {
+      json: data,
+    }
+  );
+  const body = JSON.parse(res.getBody() as string);
+  return body;
+};
+
 const deleteRequest = (url: string, data: any) => {
   const res = request(
     'DELETE',
@@ -232,5 +244,77 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       message: 'no thanks'
     };
     expect(postRequest('/message/send/v1', param2).messageId).toStrictEqual(expect.any(Number));
+  });
+});
+
+describe('MessageEditV1 test', () => {
+  test('length of message is over 1000 characters', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'Echidnas family tree varies by author. The oldest genealogy relating to Echidna, Hesiods Theogony (c. 8th – 7th century BC), is unclear on several points. According to Hesiod, Echidna was born to a "she" who was probably meant by Hesiod to be the sea goddess Ceto, making Echidnas likely father the sea god Phorcys; however the "she" might instead refer to the Oceanid Callirhoe, which would make Medusas offspring Chrysaor the father of Echidna. The mythographer Pherecydes of Athens (5th century BC) has Echidna as the daughter of Phorcys, without naming a mother. Other authors give Echidna other parents. According to the geographer Pausanias (2nd century AD), Epimenides (7th or 6th century BC) had Echidna as the daughter of the Oceanid Styx (goddess of the river Styx) and one Peiras (otherwise unknown to Pausanias), while according to the mythographer Apollodorus (1st or 2nd century AD), Echidna was the daughter of Tartarus and Gaia. In one account, from the Orphic tradition, Echidna was the daughter of Phanes (the Orphic father of all gods).'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+  });
+
+  test('invalid msg id', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId + 1,
+      message: 'hello ellen, what are you doing?'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+  });
+
+  test('user not sender and no owner permission', () => {
+    // user2 is sender and owner
+    const edit1Data = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    expect(putRequest('/message/edit/v1', edit1Data)).toStrictEqual({});
+
+    // user is global owner but not member
+    const edit2Data = {
+      token: user.token,
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    expect(putRequest('/message/edit/v1', edit2Data)).toStrictEqual(ERROR);
+
+    const edit3Data = {
+      token: user3.token,
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    expect(putRequest('/message/edit/v1', edit3Data)).toStrictEqual(ERROR);
+  });
+
+  test('token is invalid', () => {
+    const param3 = {
+      token: user2.token + 'yay',
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+  });
+
+  test('string is empty', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
+  });
+
+  test('valid input', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
   });
 });

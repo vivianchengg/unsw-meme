@@ -156,3 +156,45 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
 
   return {};
 };
+
+/** Function that when given a message, updates it text with a new text
+  * if the new message is an empty string, the message is deleted
+  *
+  * @param {string} - Token of individual's session
+  * @param {number} channelId - Channel Id of channel that user is asking to access details of
+  * @param {string} - message
+  * @returns {}
+  *
+*/
+export const messageEditV1 = (token: string, messageId: number, message: string) => {
+  const data = getData();
+  const authId = findUID(token);
+
+  if (authId === null) {
+    return { error: 'token is invalid' };
+  }
+
+  if (message.length === 0) {
+    messageRemoveV1(token, messageId);
+    return {};
+  }
+
+  if (message.length > 1000) {
+    return { error: 'length of message is over 1000' };
+  }
+
+  const validMsg = msgValid(authId, messageId);
+  if (validMsg === null) {
+    return { error: 'invalid message id' };
+  }
+
+  if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
+    return { error: 'user not sender and no owner permission' };
+  }
+
+  const msg = validMsg.messages.find(c => c.messageId === messageId);
+  msg.message = message;
+
+  setData(data);
+  return {};
+};
