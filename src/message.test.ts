@@ -1,12 +1,13 @@
 import request from 'sync-request';
 import { port, url } from './config.json';
+
+const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-const SERVERurl = `${url}:${port}`;
 
 const postRequest = (url: string, data: any) => {
   const res = request(
     'POST',
-    SERVERurl + url,
+    SERVER_URL + url,
     {
       json: data,
     }
@@ -18,7 +19,7 @@ const postRequest = (url: string, data: any) => {
 const deleteRequest = (url: string, data: any) => {
   const res = request(
     'DELETE',
-    SERVERurl + url,
+    SERVER_URL + url,
     {
       qs: data,
     }
@@ -56,6 +57,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
+
   test('length of message is less than 1 characters', () => {
     const param1 = {
       token: user.token,
@@ -70,6 +72,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
+
   test('length of message is over 1000 characters', () => {
     const param1 = {
       token: user.token,
@@ -84,6 +87,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
+
   test('channelId is valid and the authorised user is not a member of the channel', () => {
     const param1 = {
       email: 'arialee@gmail.com',
@@ -105,6 +109,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     };
     expect(postRequest('/message/send/v1', param3)).toStrictEqual(ERROR);
   });
+
   test('token is invalid', () => {
     const param1 = {
       token: user.token,
@@ -119,6 +124,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
+
   test('valid input and output', () => {
     const param1 = {
       token: user.token,
@@ -131,6 +137,6 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       channelId: channel.channelId,
       message: 'no thanks'
     };
-    expect(postRequest('/message/send/v1', param2)).toStrictEqual(expect.any(Number));
+    expect(postRequest('/message/send/v1', param2).messageId).toStrictEqual(expect.any(Number));
   });
 });
