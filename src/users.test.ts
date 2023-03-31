@@ -56,7 +56,6 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 let user: any;
-let user3: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
