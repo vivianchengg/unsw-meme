@@ -92,7 +92,7 @@ const createId = () => {
   * @param {string} - Token of individual's session
   * @param {number} channelId - Channel Id of channel that user is asking to access details of
   * @param {string} - message
-  * @returns {}
+  * @returns {{ messageId: number }}
   *
 */
 export const messageSendV1 = (token: string, channelId: number, message: string) => {

@@ -175,13 +175,8 @@ export const dmListV1 = (token: string) => {
 };
 
 /**
-  * Given a DM with ID dmId that the authorised user is a member of,
-  * returns up to 50 messages between index "start" and "start + 50".
-  * Message with index 0 (i.e. the first element in the returned array of messages) is the most recent message in the channel.
-  * This function returns a new index "end".
-  * If there are more messages to return after this function call, "end" equals "start + 50".
-  * If this function has returned the least recent messages in the DM,
-  * "end" equals -1 to indicate that there are no more messages to load after this return.
+  * Returns up to 50 messages in a DM.
+  *
   * @param {number} dmId
   * @param {number} channelId
   * @param {number} start
