@@ -1,5 +1,5 @@
 import { getData, setData } from './dataStore';
-import { findUID } from './channels';
+import { isValidToken } from './users';
 
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
@@ -96,7 +96,7 @@ const createId = () => {
 */
 export const messageSendV1 = (token: string, channelId: number, message: string) => {
   const data = getData();
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'token is invalid' };
   }
@@ -138,7 +138,7 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
 */
 export const messageRemoveV1 = (token: string, messageId: number) => {
   const data = getData();
-  const authId = findUID(token);
+  const authId = isValidToken(token);
 
   if (authId === null) {
     return { error: 'token is invalid' };
@@ -171,7 +171,7 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
 */
 export const messageEditV1 = (token: string, messageId: number, message: string) => {
   const data = getData();
-  const authId = findUID(token);
+  const authId = isValidToken(token);
 
   if (authId === null) {
     return { error: 'token is invalid' };
@@ -217,7 +217,7 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
     return { error: 'invalid message length' };
   }
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'token is invalid' };
   }

@@ -23,7 +23,7 @@ export const isValidToken = (token: string) => {
   * @param {number} authUserId
   * @returns {boolean}
 */
-const isValidUser = (userId: number): boolean => {
+export const isValidUser = (userId: number): boolean => {
   const data = getData();
   
   for (const user of data.users) {

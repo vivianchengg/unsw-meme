@@ -1,5 +1,6 @@
 import { Message, getData, setData } from './dataStore';
-import { isValidUser, isMember } from './channel';
+import { isMember } from './channel';
+import { isValidUser } from './users';
 
 /**
   * Finds the authUserId given a token.

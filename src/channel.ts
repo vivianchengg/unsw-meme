@@ -1,5 +1,5 @@
 import { Channel, User, getData, setData } from './dataStore';
-import { userProfileV1, isValidToken } from './users';
+import { userProfileV1, isValidToken, isValidUser } from './users';
 
 /** check if user is channel member
   *
@@ -35,22 +35,6 @@ export const isOwner = (authUser: User, channel: Channel) => {
     return true;
   }
 
-  return false;
-};
-
-/** Function that checks if user id is valid
- *
- *
- * @param {number} userId
- * @returns {boolean}
- */
-export const isValidUser = (userId: number): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.uId === userId) {
-      return true;
-    }
-  }
   return false;
 };
 

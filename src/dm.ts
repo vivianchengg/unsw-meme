@@ -1,7 +1,8 @@
 import { userProfileV1 } from './users';
 import { Message, setData, getData } from './dataStore';
-import { isValidUser, validTokenUser } from './channel';
+import { validTokenUser } from './channel';
 import { findUID } from './channels';
+import { isValidUser } from './users';
 
 /**
   * check whether email entered belong to a user
