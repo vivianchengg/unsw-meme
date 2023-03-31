@@ -89,24 +89,6 @@ const getNewId = (): number => {
 };
 
 /**
-  * check if token exist
-  *
-  * @param {string}
-  * @returns {bool}
-*/
-const checkToken = (token: string) => {
-  const data = getData();
-  for (const user of data.users) {
-    for (const userToken of user.token) {
-      if (token === userToken) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
-/**
   * get new token
   *
   * @param {}
@@ -115,11 +97,27 @@ const checkToken = (token: string) => {
 const getNewToken = () => {
   let tokenNum = Math.floor(Math.random() * 1000);
   let tokenString = tokenNum.toString();
-  while (checkToken(tokenString)) {
+  while (isValidToken(tokenString)) {
     tokenNum = Math.floor(Math.random() * 1000);
     tokenString = tokenNum.toString();
   }
   return tokenString;
+};
+
+/**
+  * Check if token is valid
+  *
+  * @param {string} token
+  * @returns {}
+*/
+export const isValidToken = (token: string): boolean => {
+  const data = getData();
+  for (const user of data.users) {
+   if (user.token.includes(token)) {
+    return true;
+   }
+  }
+  return false;
 };
 
 /**
@@ -221,24 +219,6 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     authUserId: id,
     token: token,
   };
-};
-
-/**
-  * Check if token is valid
-  *
-  * @param {string} token
-  * @returns {}
-*/
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    for (const userToken of user.token) {
-      if (userToken === token) {
-        return true;
-      }
-    }
-  }
-  return false;
 };
 
 /**

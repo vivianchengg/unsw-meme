@@ -7,7 +7,7 @@ import validator from 'validator';
   * @param {string} token
   * @returns {string} authUserId
 */
-const findUID = (token: string) => {
+const isValidToken = (token: string) => {
   const data = getData();
 
   for (const user of data.users) {
@@ -75,7 +75,7 @@ const isAlphanumeric = (str: string): boolean => {
 export const userProfileV1 = (token: string, uId: number) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'invalid token' };
   }
@@ -113,7 +113,7 @@ export const userProfileV1 = (token: string, uId: number) => {
 export const userProfileSetName = (token: string, nameFirst: string, nameLast: string) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'invalid token' };
   }
@@ -144,7 +144,7 @@ export const userProfileSetName = (token: string, nameFirst: string, nameLast: s
 export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
   const data = getData();
 
-  const userId = findUID(token);
+  const userId = isValidToken(token);
   if (userId === null) {
     return { error: 'invalid token' };
   }
@@ -182,7 +182,7 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 export const userProfileSetEmailV1 = (token: string, email: string) => {
   const data = getData();
 
-  const userId = findUID(token);
+  const userId = isValidToken(token);
   if (userId === null) {
     return { error: 'invalid token' };
   }
@@ -218,7 +218,7 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 export const usersAllV1 = (token: string) => {
   const data = getData();
 
-  if (findUID(token) === null) {
+  if (isValidToken(token) === null) {
     return { error: 'invalid token' };
   }
 

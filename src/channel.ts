@@ -49,6 +49,46 @@ export const isValidChannel = (channelId: number): boolean => {
   return false;
 };
 
+/**
+  * get user and check whether token is valid
+  *
+  * @param {string} token
+  * @returns {User}
+*/
+export const validTokenUser = (token: string): User => {
+  const data = getData();
+  for (const user of data.users) {
+    for (const userToken of user.token) {
+      if (userToken === token) {
+        return user;
+      }
+    }
+  }
+  return null;
+};
+
+/**
+  * check if the user is channel owner
+  *
+  * @param {number} uId
+  * @param {Channel} channel
+  * @returns {bool}
+*/
+export const isOwner = (authUser: User, channel: Channel) => {
+  for (const ownerId of channel.ownerMembers) {
+    if (authUser.uId === ownerId) {
+      return true;
+    }
+  }
+
+  // global owner and channel member
+  if (authUser.pId === 1 && isMember(channel, authUser.uId)) {
+    return true;
+  }
+
+  return false;
+};
+
 /** Function that lists details of members in the channel given that:
 *
 * @param {string} - Token of individual's session
@@ -220,24 +260,6 @@ export const channelMessagesV1 = (token: string, channelId: number, start: numbe
 };
 
 /**
-  * get user and check whether token is valid
-  *
-  * @param {string} token
-  * @returns {User}
-*/
-export const validTokenUser = (token: string): User => {
-  const data = getData();
-  for (const user of data.users) {
-    for (const userToken of user.token) {
-      if (userToken === token) {
-        return user;
-      }
-    }
-  }
-  return null;
-};
-
-/**
   * Given a channel with ID channelId that the authorised user is a member of,
   * remove them as a member of the channel.
   * Their messages should remain in the channel.
@@ -268,28 +290,6 @@ export const channelLeaveV1 = (token: string, channelId: number) => {
 
   setData(data);
   return {};
-};
-
-/**
-  * check if the user is channel owner
-  *
-  * @param {number} uId
-  * @param {Channel} channel
-  * @returns {bool}
-*/
-export const isOwner = (authUser: User, channel: Channel) => {
-  for (const ownerId of channel.ownerMembers) {
-    if (authUser.uId === ownerId) {
-      return true;
-    }
-  }
-
-  // global owner and channel member
-  if (authUser.pId === 1 && isMember(channel, authUser.uId)) {
-    return true;
-  }
-
-  return false;
 };
 
 /**
