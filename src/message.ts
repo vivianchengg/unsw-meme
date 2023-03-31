@@ -1,11 +1,12 @@
 import { getData, setData } from './dataStore';
-import { findUID } from './channels';
+import { isValidToken } from './users';
 
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
   * @param {number} - authId of authorised user
   * @param {number} - messageId of message that authorised user is trying to remove
-  * @returns {boolean}
+  * @returns {Dm} - dm
+  * @returns {Channel} - channel
 */
 const msgValid = (authId: number, messageId: number) => {
   const data = getData();
@@ -25,7 +26,7 @@ const msgValid = (authId: number, messageId: number) => {
 * @param {number} - messageId of message that authorised user is trying to remove
 * @returns {boolean}
 */
-const isSender = (authId: number, messageId: number) => {
+const isSender = (authId: number, messageId: number): boolean => {
   const store = msgValid(authId, messageId);
   const message = store.messages.find(s => s.messageId === messageId);
   if (message.uId === authId) {
@@ -38,7 +39,7 @@ const isSender = (authId: number, messageId: number) => {
  *
  * @param {number} authId
  * @param {number} messageId
- * @returns {number}
+ * @returns {boolean}
  */
 const isOwner = (authId: number, messageId: number): boolean => {
   const data = getData();
@@ -91,12 +92,12 @@ const createId = () => {
   * @param {string} - Token of individual's session
   * @param {number} channelId - Channel Id of channel that user is asking to access details of
   * @param {string} - message
-  * @returns {}
+  * @returns {{ messageId: number }}
   *
 */
 export const messageSendV1 = (token: string, channelId: number, message: string) => {
   const data = getData();
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'token is invalid' };
   }
@@ -138,7 +139,7 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
 */
 export const messageRemoveV1 = (token: string, messageId: number) => {
   const data = getData();
-  const authId = findUID(token);
+  const authId = isValidToken(token);
 
   if (authId === null) {
     return { error: 'token is invalid' };
@@ -171,7 +172,7 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
 */
 export const messageEditV1 = (token: string, messageId: number, message: string) => {
   const data = getData();
-  const authId = findUID(token);
+  const authId = isValidToken(token);
 
   if (authId === null) {
     return { error: 'token is invalid' };
@@ -217,7 +218,7 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
     return { error: 'invalid message length' };
   }
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'token is invalid' };
   }

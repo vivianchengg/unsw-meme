@@ -1,21 +1,6 @@
 import { Message, getData, setData } from './dataStore';
-import { isValidUser, isMember } from './channel';
-
-/**
-  * Finds the authUserId given a token.
-  *
-  * @param {string} token
-  * @returns {string} authUserId
-*/
-export const findUID = (token: string) => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
-    }
-  }
-  return null;
-};
+import { isMember } from './channel';
+import { isValidToken, isValidUser } from './users';
 
 /**
   * Checks if name is valid
@@ -31,21 +16,6 @@ export const isValidName = (name: string): boolean => {
 };
 
 /**
-  * Checks if the token is valid
-  * @param {string} token
-  * @returns {boolean}
-*/
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return true;
-    }
-  }
-  return false;
-};
-
-/**
   * Creates a channel for authUserId.
   *
   * @param {string} token
@@ -56,7 +26,7 @@ export const isValidToken = (token: string): boolean => {
 export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'invalid token' };
   }
@@ -105,12 +75,10 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
 */
 export const channelsListV1 = (token: string) => {
   const data = getData();
-  let authUserId;
 
-  if (!isValidToken(token)) {
-    return { error: 'invalid token' };
-  } else {
-    authUserId = findUID(token);
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    return { error: 'invalid authUserId' };
   }
 
   if (!isValidUser(authUserId)) {
@@ -149,7 +117,7 @@ export const channelsListV1 = (token: string) => {
  */
 export const channelsListAllV1 = (token: string) => {
   const data = getData();
-  const userId = findUID(token);
+  const userId = isValidToken(token);
 
   if (userId === null) {
     return { error: 'Invalid token' };

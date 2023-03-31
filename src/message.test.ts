@@ -197,7 +197,28 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
-      message: 'Australia, officially the Commonwealth of Australia, is a sovereign country comprising the mainland of the Australian continent, the island of Tasmania, and numerous smaller islands. With an area of 7,617,930 square kilometres (2,941,300 sq mi), Australia is the largest country by area in Oceania and the worlds sixth-largest country. Australia is the oldest, flattest, and driest inhabited continent, with the least fertile soils. It is a megadiverse country, and its size gives it a wide variety of landscapes and climates, with deserts in the centre, tropical rainforests in the north-east, and mountain ranges in the south-east. The ancestors of Aboriginal Australians began arriving from south-east Asia approximately 65,000 years ago, during the last ice age. Arriving by sea, they settled the continent and had formed approximately 250 distinct language groups by the time of European settlement, maintaining some of the longest known continuing artistic and religious traditions in the world.'
+      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
+      'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
+      '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
+      'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
+      'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
+      'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
+      'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
+      'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
+      'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
+      'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
+      'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
+      '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
+      'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
+      '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
+      'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
+      'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
+      'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
+      '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
+      'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
+      'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
+      '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
+      'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
@@ -260,7 +281,28 @@ describe('MessageEditV1 test', () => {
     const param3 = {
       token: user2.token,
       messageId: message.messageId,
-      message: 'Echidnas family tree varies by author. The oldest genealogy relating to Echidna, Hesiods Theogony (c. 8th – 7th century BC), is unclear on several points. According to Hesiod, Echidna was born to a "she" who was probably meant by Hesiod to be the sea goddess Ceto, making Echidnas likely father the sea god Phorcys; however the "she" might instead refer to the Oceanid Callirhoe, which would make Medusas offspring Chrysaor the father of Echidna. The mythographer Pherecydes of Athens (5th century BC) has Echidna as the daughter of Phorcys, without naming a mother. Other authors give Echidna other parents. According to the geographer Pausanias (2nd century AD), Epimenides (7th or 6th century BC) had Echidna as the daughter of the Oceanid Styx (goddess of the river Styx) and one Peiras (otherwise unknown to Pausanias), while according to the mythographer Apollodorus (1st or 2nd century AD), Echidna was the daughter of Tartarus and Gaia. In one account, from the Orphic tradition, Echidna was the daughter of Phanes (the Orphic father of all gods).'
+      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
+      'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
+      '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
+      'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
+      'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
+      'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
+      'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
+      'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
+      'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
+      'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
+      'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
+      '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
+      'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
+      '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
+      'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
+      'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
+      'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
+      '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
+      'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
+      'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
+      '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
+      'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
   });

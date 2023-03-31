@@ -430,7 +430,6 @@ describe('channelLeaveV1 test', () => {
 
 describe('channelAddOwnerV1 test', () => {
   test('Valid add owner - channel owner', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -438,7 +437,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     const ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -466,7 +464,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     const user1 = postRequest('/auth/register/v2', user1Data);
 
-    // new channel
     const newChannelData = {
       token: user1.token,
       name: 'COMP2511',
@@ -474,7 +471,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     const newChannel = postRequest('/channels/create/v2', newChannelData);
 
-    // invite new user to channel - member
     const inviteData = {
       token: user1.token,
       channelId: newChannel.channelId,
@@ -482,7 +478,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // global owner not member - no owner permission
     const ownerData = {
       token: user.token,
       channelId: newChannel.channelId,
@@ -490,7 +485,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
 
-    // global owner is now a member - has owner permission
     const globalData = {
       token: user1.token,
       channelId: newChannel.channelId,
@@ -536,7 +530,6 @@ describe('channelAddOwnerV1 test', () => {
   });
 
   test('Invalid token', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -544,7 +537,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     const ownerData = {
       token: user.token + 'yay',
       channelId: channel.channelId,
@@ -554,7 +546,6 @@ describe('channelAddOwnerV1 test', () => {
   });
 
   test('Invalid uId', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -562,7 +553,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     const ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -572,7 +562,6 @@ describe('channelAddOwnerV1 test', () => {
   });
 
   test('uId is not member', () => {
-    // add owner
     const ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -582,7 +571,6 @@ describe('channelAddOwnerV1 test', () => {
   });
 
   test('uId already owner', () => {
-    // add owner
     const ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -592,7 +580,6 @@ describe('channelAddOwnerV1 test', () => {
   });
 
   test('authId no owner permission', () => {
-    // new user, act as fake owner
     const newUserData = {
       email: 'vc@unsw.edu.au',
       password: 'password',
@@ -601,7 +588,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     const newUser = postRequest('/auth/register/v2', newUserData);
 
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -609,7 +595,6 @@ describe('channelAddOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     const ownerData = {
       token: newUser.token,
       channelId: channel.channelId,
@@ -621,7 +606,6 @@ describe('channelAddOwnerV1 test', () => {
 
 describe('channelRemoveOwnerV1 test', () => {
   test('Valid remove owner - channel owner', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -629,7 +613,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     const ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -647,7 +630,6 @@ describe('channelRemoveOwnerV1 test', () => {
       })
     ]));
 
-    // remove owner
     postRequest('/channel/removeowner/v1', ownerData);
     cDetail = getRequest('/channel/details/v2', detailData);
     expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
@@ -666,7 +648,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     const user1 = postRequest('/auth/register/v2', user1Data);
 
-    // new channel
     const newChannelData = {
       token: user1.token,
       name: 'COMP2511',
@@ -674,7 +655,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     const newChannel = postRequest('/channels/create/v2', newChannelData);
 
-    // invite new user to channel - member
     const inviteData = {
       token: user1.token,
       channelId: newChannel.channelId,
@@ -682,7 +662,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // global owner not member - no owner permission
     const ownerData = {
       token: user.token,
       channelId: newChannel.channelId,
@@ -690,7 +669,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual(ERROR);
 
-    // global owner is now a member - has owner permission
     const globalData = {
       token: user1.token,
       channelId: newChannel.channelId,
@@ -716,7 +694,6 @@ describe('channelRemoveOwnerV1 test', () => {
       })
     ]));
 
-    // remove owner
     postRequest('/channel/removeowner/v1', ownerData);
     cDetail = getRequest('/channel/details/v2', detailData);
     expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
@@ -727,7 +704,6 @@ describe('channelRemoveOwnerV1 test', () => {
   });
 
   test('Invalid channel', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -735,7 +711,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     let ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -743,7 +718,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
 
-    // remove owner
     ownerData = {
       token: user.token,
       channelId: channel.channelId + 189,
@@ -753,7 +727,6 @@ describe('channelRemoveOwnerV1 test', () => {
   });
 
   test('Invalid token', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -761,7 +734,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     let ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -769,7 +741,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
 
-    // remove owner
     ownerData = {
       token: user.token + 'yay',
       channelId: channel.channelId,
@@ -779,7 +750,6 @@ describe('channelRemoveOwnerV1 test', () => {
   });
 
   test('Invalid uId', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -787,7 +757,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     let ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -795,7 +764,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     expect(postRequest('/channel/addowner/v1', ownerData)).toStrictEqual({});
 
-    // remove owner
     ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -805,7 +773,6 @@ describe('channelRemoveOwnerV1 test', () => {
   });
 
   test('uId is not owner', () => {
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -822,7 +789,6 @@ describe('channelRemoveOwnerV1 test', () => {
   });
 
   test('uId is the only owner', () => {
-    // remove owner
     const ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -832,7 +798,6 @@ describe('channelRemoveOwnerV1 test', () => {
   });
 
   test('authId not owner permission', () => {
-    // new user, act as fake owner
     const newUserData = {
       email: 'vc@unsw.edu.au',
       password: 'password',
@@ -841,7 +806,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     const newUser = postRequest('/auth/register/v2', newUserData);
 
-    // invite new user to channel - member
     const inviteData = {
       token: user.token,
       channelId: channel.channelId,
@@ -849,7 +813,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/invite/v2', inviteData);
 
-    // add owner
     let ownerData = {
       token: user.token,
       channelId: channel.channelId,
@@ -857,7 +820,6 @@ describe('channelRemoveOwnerV1 test', () => {
     };
     postRequest('/channel/addowner/v1', ownerData);
 
-    // remove owner
     ownerData = {
       token: newUser.token,
       channelId: channel.channelId,
