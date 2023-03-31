@@ -1,8 +1,6 @@
-import { userProfileV1 } from './users';
 import { Message, setData, getData } from './dataStore';
 import { validTokenUser } from './channel';
-import { findUID } from './channels';
-import { isValidUser } from './users';
+import { userProfileV1, isValidToken, isValidUser } from './users';
 
 /**
   * check whether email entered belong to a user
@@ -90,7 +88,7 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
     return { error: 'dmId does not refer to valid DM' };
   }
 
-  const userId = findUID(token);
+  const userId = isValidToken(token);
   if (userId === null) {
     return { error: 'Invalid token' };
   }
@@ -118,7 +116,7 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
 export const dmRemoveV1 = (token: string, dmId: number) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'token is invalid' };
   }
@@ -154,7 +152,7 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
 export const dmListV1 = (token: string) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'invalid token' };
   }
@@ -206,7 +204,7 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
     return { error: 'start is greater than the total number of messages in the channel' };
   }
 
-  const authUser = findUID(token);
+  const authUser = isValidToken(token);
   if (authUser === null) {
     return { error: 'token is invalid' };
   }
@@ -247,7 +245,7 @@ export const dmDetailsV1 = (token: string, dmId: number) => {
     return { error: 'invalid dmId' };
   }
 
-  const userId = findUID(token);
+  const userId = isValidToken(token);
   if (userId === null) {
     return { error: 'Invalid token' };
   }

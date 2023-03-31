@@ -5,6 +5,9 @@ import { isValidToken } from './users';
   *
   * @param {number} - authId of authorised user
   * @param {number} - messageId of message that authorised user is trying to remove
+  * @returns {dm: {
+  *   
+  * }}
   * @returns {boolean}
 */
 const msgValid = (authId: number, messageId: number) => {
