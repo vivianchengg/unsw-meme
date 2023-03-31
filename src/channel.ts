@@ -122,8 +122,8 @@ export const channelDetailsV1 = (token: string, channelId: number) => {
   };
 };
 
-/** Invite user to channel
-  *
+/**
+  * Adds a user to a channel
   *
   * @param {string} token
   * @param {number} channelId
@@ -160,8 +160,7 @@ export const channelInviteV1 = (token: string, channelId: number, uId: number) =
 };
 
 /**
-  * Given a channelId of a channel that the authorised user can join,
-  * adds them to that channel.
+  * Given a channelId and token, add the user to the channel.
   *
   * @param {string} token
   * @param {number} channelId
@@ -196,7 +195,7 @@ export const channelJoinV1 = (token: string, channelId: number) => {
 };
 
 /**
-  * return up to 50 messages in channel
+  * Returns up to 50 messages from a channel.
   *
   * @param {string} token
   * @param {number} channelId
@@ -243,7 +242,7 @@ export const channelMessagesV1 = (token: string, channelId: number, start: numbe
 };
 
 /**
-  * Given a channelId and token, remove a member from the channel.
+  * Given a channelId and token, remove a user from the channel.
   *
   * @param {string} token
   * @param {number} channelId
@@ -256,24 +255,24 @@ export const channelLeaveV1 = (token: string, channelId: number) => {
     return { error: 'Invalid channel' };
   }
 
-  const user = validTokenUser(token);
-  if (user === null) {
+  const userId = isValidToken(token);
+  if (userId === null) {
     return { error: 'invalid token' };
   }
 
-  if (!isMember(channel, user.uId)) {
+  if (!isMember(channel, userId)) {
     return { error: 'authorised user is not a member of the channel' };
   }
 
-  channel.allMembers = channel.allMembers.filter(id => id !== user.uId);
-  channel.ownerMembers = channel.ownerMembers.filter(id => id !== user.uId);
+  channel.allMembers = channel.allMembers.filter(id => id !== userId);
+  channel.ownerMembers = channel.ownerMembers.filter(id => id !== userId);
 
   setData(data);
   return {};
 };
 
 /**
-  * Make user with user id uId an owner of the channel.
+  * Given a userId, make this user the owner of the channel.
   *
   * @param {string} token
   * @param {number} channelId
@@ -315,7 +314,7 @@ export const channelAddOwnerV1 = (token: string, channelId: number, uId: number)
 };
 
 /**
-  * Remove user with user id uId as an owner of the channel.
+  * Given a userid, remove user from owner of channel.
   *
   * @param {string} token
   * @param {number} channelId
