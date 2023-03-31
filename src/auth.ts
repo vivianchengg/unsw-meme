@@ -150,27 +150,22 @@ export const authLoginV1 = (email: string, password: string) => {
 export const authRegisterV1 = (email: string, password: string, nameFirst: string, nameLast: string) => {
   const data = getData();
 
-  // error: email entered is invalid
   if (!validator.isEmail(email)) {
     return { error: 'invalid email' };
   }
 
-  // error: email already being used by another user
   if (isEmailFromUser(email)) {
     return { error: 'email already taken' };
   }
 
-  // error: length of password is less than 6 characters
   if (password.length < 6) {
     return { error: 'password < 6 characters' };
   }
 
-  // error: firstname length not 1-50
   if (nameFirst.length < 1 || nameFirst.length > 50) {
     return { error: 'incorrect firstname length' };
   }
 
-  // error: lastname length not 1-50
   if (nameLast.length < 1 || nameLast.length > 50) {
     return { error: 'incorrect lastname length' };
   }
@@ -178,7 +173,6 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const handle = newHandle(nameFirst, nameLast);
   const id = getNewId();
 
-  // set permission id: global owner = first sign up = 1, global member = 2
   let pId = 1;
   if (data.users.length !== 0) {
     pId = 2;
