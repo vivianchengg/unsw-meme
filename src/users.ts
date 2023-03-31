@@ -2,82 +2,19 @@ import { getData, setData } from './dataStore';
 import validator from 'validator';
 
 /**
-  * Returns information about a user
+  * Finds the authUserId given a token, if invalid token, return null.
   *
   * @param {string} token
-  * @param {number} uId
-  * @returns {{
-  *   uId: number,
-  *   email: string,
-  *   nameFirst: string,
-  *   nameLast: string,
-  *   handleStr: string,
-  * }} user
+  * @returns {string} authUserId
 */
-
-export const userProfileV1 = (token: string, uId: number) => {
+const findUID = (token: string) => {
   const data = getData();
-
-  if (isValidToken(token) === false) {
-    return { error: 'invalid token' };
-  }
-
-  const authUserId = findUID(token);
-
-  if (!isValidUser(authUserId)) {
-    return { error: 'invalid authUserId' };
-  }
-  if (!isValidUser(uId)) {
-    return { error: 'invalid uId' };
-  }
-
-  let person;
   for (const user of data.users) {
-    if (user.uId === uId) {
-      person = {
-        uId: user.uId,
-        email: user.email,
-        nameFirst: user.nameFirst,
-        nameLast: user.nameLast,
-        handleStr: user.handleStr,
-      };
+    if (user.token.includes(token)) {
+      return user.uId;
     }
   }
-
-  return {
-    user: person
-  };
-};
-
-/**
-  * Changes the first and last name of user
-  *
-  * @param {string} token
-  * @param {string} nameFirst
-  * @param {string} nameLast
-  * @returns {}
-*/
-export const userProfileSetName = (token: string, nameFirst: string, nameLast: string) => {
-  const data = getData();
-
-  if (!invalidName(nameLast)) {
-    return { error: 'name length +51 or less than 1' };
-  }
-  if (!invalidName(nameFirst)) {
-    return { error: 'name length +51 or less than 1' };
-  }
-  
-  const authUserId = findUID(token);
-  if (authUserId === null) {
-    return { error: 'invalid token' };
-  }
-
-  const user = data.users.find(d => d.uId === authUserId);
-  user.nameFirst = nameFirst;
-  user.nameLast = nameLast;
-
-  setData(data);
-  return {};
+  return null;
 };
 
 /**
@@ -112,35 +49,86 @@ const invalidName = (name: string) => {
 };
 
 /**
-  * Checks if the token is valid
-  * @param {string} token
-  * ...
+  * Checks if entered string is alphanumeric
+  * @param {string} str
   * @returns {boolean}
-*/
-const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return true;
-    }
-  }
-  return false;
+ */
+const isAlphanumeric = (str: string): boolean => {
+  return /^[a-zA-Z0-9]+$/.test(str);
 };
 
 /**
-  * Finds the authUserId given a token.
+  * Returns user information given a token and uId.
   *
   * @param {string} token
-  * @returns {string} authUserId
+  * @param {number} uId
+  * @returns {{
+  *   uId: number,
+  *   email: string,
+  *   nameFirst: string,
+  *   nameLast: string,
+  *   handleStr: string,
+  * }} user
 */
-const findUID = (token: string) => {
+export const userProfileV1 = (token: string, uId: number) => {
   const data = getData();
+
+  const authUserId = findUID(token);
+  if (authUserId === null) {
+    return { error: 'invalid token' };
+  }
+
+  if (!isValidUser(uId)) {
+    return { error: 'invalid uId' };
+  }
+
+  let person;
   for (const user of data.users) {
-    if (user.token.includes(token)) {
-      return user.uId;
+    if (user.uId === uId) {
+      person = {
+        uId: user.uId,
+        email: user.email,
+        nameFirst: user.nameFirst,
+        nameLast: user.nameLast,
+        handleStr: user.handleStr,
+      };
     }
   }
-  return null;
+
+  return {
+    user: person
+  };
+};
+
+/**
+  * Changes the first and last name of user
+  *
+  * @param {string} token
+  * @param {string} nameFirst
+  * @param {string} nameLast
+  * @returns {}
+*/
+export const userProfileSetName = (token: string, nameFirst: string, nameLast: string) => {
+  const data = getData();
+
+  const authUserId = findUID(token);
+  if (authUserId === null) {
+    return { error: 'invalid token' };
+  }
+
+  if (!invalidName(nameLast)) {
+    return { error: 'name length +51 or less than 1' };
+  }
+  if (!invalidName(nameFirst)) {
+    return { error: 'name length +51 or less than 1' };
+  }
+
+  const user = data.users.find(d => d.uId === authUserId);
+  user.nameFirst = nameFirst;
+  user.nameLast = nameLast;
+
+  setData(data);
+  return {};
 };
 
 /**
@@ -154,8 +142,9 @@ const findUID = (token: string) => {
 export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
   const data = getData();
 
-  if (!isValidToken(token)) {
-    return { error: 'Invalid token' };
+  const userId = findUID(token);
+  if (userId === null) {
+    return { error: 'invalid token' };
   }
 
   const minimumLength = 3;
@@ -172,7 +161,6 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
     return { error: 'Handle contains non-alphanumeric characters' };
   }
 
-  const userId = findUID(token);
   const user = data.users.find(u => u.uId === userId);
 
   user.handleStr = handleStr;
@@ -192,8 +180,9 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 export const userProfileSetEmailV1 = (token: string, email: string) => {
   const data = getData();
 
-  if (!isValidToken(token)) {
-    return { error: 'Invalid token' };
+  const userId = findUID(token);
+  if (userId === null) {
+    return { error: 'invalid token' };
   }
 
   if (!validator.isEmail(email)) {
@@ -204,22 +193,12 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
     return { error: 'Email already taken by another user' };
   }
 
-  const userId = findUID(token);
   const user = data.users.find(u => u.uId === userId);
 
   user.email = email;
   setData(data);
 
   return {};
-};
-
-/**
-  * Checks if entered string is alphanumeric
-  * @param {string} str
-  * @returns {boolean}
- */
-const isAlphanumeric = (str: string): boolean => {
-  return /^[a-zA-Z0-9]+$/.test(str);
 };
 
 /**
@@ -236,7 +215,8 @@ const isAlphanumeric = (str: string): boolean => {
 */
 export const usersAllV1 = (token: string) => {
   const data = getData();
-  if (!isValidToken(token)) {
+
+  if (findUID(token) === null) {
     return { error: 'invalid token' };
   }
 
