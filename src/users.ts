@@ -9,6 +9,7 @@ import validator from 'validator';
 */
 const findUID = (token: string) => {
   const data = getData();
+
   for (const user of data.users) {
     if (user.token.includes(token)) {
       return user.uId;
@@ -24,6 +25,7 @@ const findUID = (token: string) => {
 */
 const isValidUser = (userId: number): boolean => {
   const data = getData();
+  
   for (const user of data.users) {
     if (user.uId === userId) {
       return true;
