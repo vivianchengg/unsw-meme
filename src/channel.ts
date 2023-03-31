@@ -243,10 +243,7 @@ export const channelMessagesV1 = (token: string, channelId: number, start: numbe
 };
 
 /**
-  * Given a channel with ID channelId that the authorised user is a member of,
-  * remove them as a member of the channel.
-  * Their messages should remain in the channel.
-  * If the only channel owner leaves, the channel will remain.
+  * Given a channelId and token, remove a member from the channel.
   *
   * @param {string} token
   * @param {number} channelId
