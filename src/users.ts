@@ -7,7 +7,7 @@ import validator from 'validator';
   * @param {string} token
   * @returns {string} authUserId
 */
-const isValidToken = (token: string) => {
+export const isValidToken = (token: string) => {
   const data = getData();
 
   for (const user of data.users) {

@@ -1,4 +1,5 @@
 import { User, getData, setData } from './dataStore';
+import { isValidToken } from './users';
 import validator from 'validator';
 
 /**
@@ -102,22 +103,6 @@ const getNewToken = () => {
     tokenString = tokenNum.toString();
   }
   return tokenString;
-};
-
-/**
-  * Check if token is valid
-  *
-  * @param {string} token
-  * @returns {}
-*/
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-   if (user.token.includes(token)) {
-    return true;
-   }
-  }
-  return false;
 };
 
 /**

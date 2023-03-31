@@ -1,6 +1,5 @@
 import { Channel, User, getData, setData } from './dataStore';
-import { userProfileV1 } from './users';
-import { findUID } from './channels';
+import { userProfileV1, isValidToken } from './users';
 
 /** check if user is channel member
   *
@@ -14,6 +13,28 @@ export const isMember = (channel: Channel, userId: number): boolean => {
       return true;
     }
   }
+  return false;
+};
+
+/**
+  * check if the user is channel owner
+  *
+  * @param {number} uId
+  * @param {Channel} channel
+  * @returns {bool}
+*/
+export const isOwner = (authUser: User, channel: Channel) => {
+  for (const ownerId of channel.ownerMembers) {
+    if (authUser.uId === ownerId) {
+      return true;
+    }
+  }
+
+  // global owner and channel member
+  if (authUser.pId === 1 && isMember(channel, authUser.uId)) {
+    return true;
+  }
+
   return false;
 };
 
@@ -67,28 +88,6 @@ export const validTokenUser = (token: string): User => {
   return null;
 };
 
-/**
-  * check if the user is channel owner
-  *
-  * @param {number} uId
-  * @param {Channel} channel
-  * @returns {bool}
-*/
-export const isOwner = (authUser: User, channel: Channel) => {
-  for (const ownerId of channel.ownerMembers) {
-    if (authUser.uId === ownerId) {
-      return true;
-    }
-  }
-
-  // global owner and channel member
-  if (authUser.pId === 1 && isMember(channel, authUser.uId)) {
-    return true;
-  }
-
-  return false;
-};
-
 /** Function that lists details of members in the channel given that:
 *
 * @param {string} - Token of individual's session
@@ -105,7 +104,7 @@ export const isOwner = (authUser: User, channel: Channel) => {
 **/
 export const channelDetailsV1 = (token: string, channelId: number) => {
   const data = getData();
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'Invalid token' };
   }
@@ -149,7 +148,7 @@ export const channelDetailsV1 = (token: string, channelId: number) => {
  */
 export const channelInviteV1 = (token: string, channelId: number, uId: number) => {
   const data = getData();
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'token is invalid' };
   }
@@ -187,7 +186,7 @@ export const channelInviteV1 = (token: string, channelId: number, uId: number) =
 export const channelJoinV1 = (token: string, channelId: number) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
 
   if (authUserId === null) {
     return { error: 'token is invalid' };
@@ -222,7 +221,7 @@ export const channelJoinV1 = (token: string, channelId: number) => {
 */
 export const channelMessagesV1 = (token: string, channelId: number, start: number) => {
   const data = getData();
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'authUserId is invalid' };
   }
