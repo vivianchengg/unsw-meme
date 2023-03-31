@@ -25,7 +25,7 @@ export const isValidToken = (token: string) => {
 */
 export const isValidUser = (userId: number): boolean => {
   const data = getData();
-  
+
   for (const user of data.users) {
     if (user.uId === userId) {
       return true;

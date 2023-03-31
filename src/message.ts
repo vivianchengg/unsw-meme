@@ -5,10 +5,8 @@ import { isValidToken } from './users';
   *
   * @param {number} - authId of authorised user
   * @param {number} - messageId of message that authorised user is trying to remove
-  * @returns {dm: {
-  *   
-  * }}
-  * @returns {boolean}
+  * @returns {Dm} - dm
+  * @returns {Channel} - channel
 */
 const msgValid = (authId: number, messageId: number) => {
   const data = getData();
@@ -28,7 +26,7 @@ const msgValid = (authId: number, messageId: number) => {
 * @param {number} - messageId of message that authorised user is trying to remove
 * @returns {boolean}
 */
-const isSender = (authId: number, messageId: number) => {
+const isSender = (authId: number, messageId: number): boolean => {
   const store = msgValid(authId, messageId);
   const message = store.messages.find(s => s.messageId === messageId);
   if (message.uId === authId) {
@@ -41,7 +39,7 @@ const isSender = (authId: number, messageId: number) => {
  *
  * @param {number} authId
  * @param {number} messageId
- * @returns {number}
+ * @returns {boolean}
  */
 const isOwner = (authId: number, messageId: number): boolean => {
   const data = getData();
