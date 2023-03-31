@@ -66,9 +66,9 @@ export const userProfileSetName = (token: string, nameFirst: string, nameLast: s
   if (!invalidName(nameFirst)) {
     return { error: 'name length +51 or less than 1' };
   }
-
-  const authUserId = extractUId(token);
-  if (authUserId === undefined) {
+  
+  const authUserId = findUID(token);
+  if (authUserId === null) {
     return { error: 'invalid token' };
   }
 
@@ -93,26 +93,6 @@ const isValidUser = (userId: number): boolean => {
     }
   }
   return false;
-};
-
-/** Function that returns user Id from token
-  *
-  * @param {string} token
-  * @returns {number}
-*/
-const extractUId = (token: string) => {
-  const data = getData();
-  let userId;
-
-  for (const user of data.users) {
-    for (const tokenData of user.token) {
-      if (tokenData === token) {
-        userId = user.uId;
-      }
-    }
-  }
-
-  return userId;
 };
 
 /**
