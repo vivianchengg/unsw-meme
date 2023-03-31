@@ -6,7 +6,7 @@ import validator from 'validator';
   * check whether email entered belong to a user
   *
   * @param {string} email
-  * @returns {bool}
+  * @returns {boolean}
 */
 const isEmailFromUser = (email: string): boolean => {
   const data = getData();
@@ -25,7 +25,7 @@ const isEmailFromUser = (email: string): boolean => {
   * check if handle is taken
   *
   * @param {string} handle
-  * @returns {bool}
+  * @returns {boolean}
 */
 const isHandleTaken = (handle: string): boolean => {
   const data = getData();
