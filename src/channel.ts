@@ -16,28 +16,6 @@ export const isMember = (channel: Channel, userId: number): boolean => {
   return false;
 };
 
-/**
-  * check if the user is channel owner
-  *
-  * @param {number} uId
-  * @param {Channel} channel
-  * @returns {bool}
-*/
-export const isOwner = (authUser: User, channel: Channel) => {
-  for (const ownerId of channel.ownerMembers) {
-    if (authUser.uId === ownerId) {
-      return true;
-    }
-  }
-
-  // global owner and channel member
-  if (authUser.pId === 1 && isMember(channel, authUser.uId)) {
-    return true;
-  }
-
-  return false;
-};
-
 /** Function that checks if channel id is valid
   *
   *
@@ -310,11 +288,7 @@ export const isOwner = (authUser: User, channel: Channel) => {
 };
 
 /**
-<<<<<<< HEAD
   * Given a userId, make this user the owner of the channel.
-=======
-  * Make user with user id uId an owner of the channel.
->>>>>>> cbfcfd03ad9f2d958e94f500a174ff179bb87f05
   *
   * @param {string} token
   * @param {number} channelId
