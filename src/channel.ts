@@ -274,7 +274,7 @@ export const channelLeaveV1 = (token: string, channelId: number) => {
 /**
   * check if the user has owner permission
   *
-  * @param {number} uId
+  * @param {User} authUser
   * @param {Channel} channel
   * @returns {bool}
 */
@@ -296,7 +296,7 @@ export const hasOwnerPermission = (authUser: User, channel: Channel) => {
 /**
   * check if the user is channel owner
   *
-  * @param {number} uId
+  * @param {User} authUser
   * @param {Channel} channel
   * @returns {bool}
 */
