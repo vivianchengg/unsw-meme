@@ -1,7 +1,6 @@
-import { userProfileV1 } from './users';
 import { Message, setData, getData } from './dataStore';
-import { isValidUser, validTokenUser } from './channel';
-import { findUID } from './channels';
+import { validTokenUser } from './channel';
+import { userProfileV1, isValidToken, isValidUser } from './users';
 
 /**
   * check whether email entered belong to a user
@@ -89,7 +88,7 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
     return { error: 'dmId does not refer to valid DM' };
   }
 
-  const userId = findUID(token);
+  const userId = isValidToken(token);
   if (userId === null) {
     return { error: 'Invalid token' };
   }
@@ -117,7 +116,7 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
 export const dmRemoveV1 = (token: string, dmId: number) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'token is invalid' };
   }
@@ -153,7 +152,7 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
 export const dmListV1 = (token: string) => {
   const data = getData();
 
-  const authUserId = findUID(token);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     return { error: 'invalid token' };
   }
@@ -176,13 +175,8 @@ export const dmListV1 = (token: string) => {
 };
 
 /**
-  * Given a DM with ID dmId that the authorised user is a member of,
-  * returns up to 50 messages between index "start" and "start + 50".
-  * Message with index 0 (i.e. the first element in the returned array of messages) is the most recent message in the channel.
-  * This function returns a new index "end".
-  * If there are more messages to return after this function call, "end" equals "start + 50".
-  * If this function has returned the least recent messages in the DM,
-  * "end" equals -1 to indicate that there are no more messages to load after this return.
+  * Returns up to 50 messages in a DM.
+  *
   * @param {number} dmId
   * @param {number} channelId
   * @param {number} start
@@ -205,7 +199,7 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
     return { error: 'start is greater than the total number of messages in the channel' };
   }
 
-  const authUser = findUID(token);
+  const authUser = isValidToken(token);
   if (authUser === null) {
     return { error: 'token is invalid' };
   }
@@ -246,7 +240,7 @@ export const dmDetailsV1 = (token: string, dmId: number) => {
     return { error: 'invalid dmId' };
   }
 
-  const userId = findUID(token);
+  const userId = isValidToken(token);
   if (userId === null) {
     return { error: 'Invalid token' };
   }
