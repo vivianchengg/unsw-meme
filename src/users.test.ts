@@ -56,25 +56,16 @@ const deleteRequest = (url: string, data: any) => {
 };
 
 let user: any;
-let user3: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', null);
-  let person = {
+  const person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
   user = postRequest('/auth/register/v2', person);
-
-  person = {
-    email: 'abc@unsw.edu.au',
-    password: 'password',
-    nameFirst: 'abby',
-    nameLast: 'boo',
-  };
-  user3 = postRequest('/auth/register/v2', person);
 });
 
 describe('userProfileSetHandleV1 tests', () => {
@@ -274,6 +265,13 @@ describe('HTTP - /users/all/v1', () => {
   });
 
   test('Valid Token', () => {
+    const person = {
+      email: 'abc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'abby',
+      nameLast: 'boo',
+    };
+    const user3 = postRequest('/auth/register/v2', person);
     const param = {
       token: user3.token,
     };

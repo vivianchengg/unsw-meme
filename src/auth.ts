@@ -1,11 +1,12 @@
 import { User, getData, setData } from './dataStore';
+import { isValidToken } from './users';
 import validator from 'validator';
 
 /**
   * check whether email entered belong to a user
   *
   * @param {string} email
-  * @returns {bool}
+  * @returns {boolean}
 */
 const isEmailFromUser = (email: string): boolean => {
   const data = getData();
@@ -24,7 +25,7 @@ const isEmailFromUser = (email: string): boolean => {
   * check if handle is taken
   *
   * @param {string} handle
-  * @returns {bool}
+  * @returns {boolean}
 */
 const isHandleTaken = (handle: string): boolean => {
   const data = getData();
@@ -89,24 +90,6 @@ const getNewId = (): number => {
 };
 
 /**
-  * check if token exist
-  *
-  * @param {string}
-  * @returns {bool}
-*/
-const checkToken = (token: string) => {
-  const data = getData();
-  for (const user of data.users) {
-    for (const userToken of user.token) {
-      if (token === userToken) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
-/**
   * get new token
   *
   * @param {}
@@ -115,7 +98,7 @@ const checkToken = (token: string) => {
 const getNewToken = () => {
   let tokenNum = Math.floor(Math.random() * 1000);
   let tokenString = tokenNum.toString();
-  while (checkToken(tokenString)) {
+  while (isValidToken(tokenString)) {
     tokenNum = Math.floor(Math.random() * 1000);
     tokenString = tokenNum.toString();
   }
@@ -167,27 +150,22 @@ export const authLoginV1 = (email: string, password: string) => {
 export const authRegisterV1 = (email: string, password: string, nameFirst: string, nameLast: string) => {
   const data = getData();
 
-  // error: email entered is invalid
   if (!validator.isEmail(email)) {
     return { error: 'invalid email' };
   }
 
-  // error: email already being used by another user
   if (isEmailFromUser(email)) {
     return { error: 'email already taken' };
   }
 
-  // error: length of password is less than 6 characters
   if (password.length < 6) {
     return { error: 'password < 6 characters' };
   }
 
-  // error: firstname length not 1-50
   if (nameFirst.length < 1 || nameFirst.length > 50) {
     return { error: 'incorrect firstname length' };
   }
 
-  // error: lastname length not 1-50
   if (nameLast.length < 1 || nameLast.length > 50) {
     return { error: 'incorrect lastname length' };
   }
@@ -195,7 +173,6 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const handle = newHandle(nameFirst, nameLast);
   const id = getNewId();
 
-  // set permission id: global owner = first sign up = 1, global member = 2
   let pId = 1;
   if (data.users.length !== 0) {
     pId = 2;
@@ -221,24 +198,6 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     authUserId: id,
     token: token,
   };
-};
-
-/**
-  * Check if token is valid
-  *
-  * @param {string} token
-  * @returns {}
-*/
-export const isValidToken = (token: string): boolean => {
-  const data = getData();
-  for (const user of data.users) {
-    for (const userToken of user.token) {
-      if (userToken === token) {
-        return true;
-      }
-    }
-  }
-  return false;
 };
 
 /**
