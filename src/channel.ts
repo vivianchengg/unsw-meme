@@ -310,7 +310,11 @@ export const isOwner = (authUser: User, channel: Channel) => {
 };
 
 /**
+<<<<<<< HEAD
   * Given a userId, make this user the owner of the channel.
+=======
+  * Make user with user id uId an owner of the channel.
+>>>>>>> cbfcfd03ad9f2d958e94f500a174ff179bb87f05
   *
   * @param {string} token
   * @param {number} channelId
