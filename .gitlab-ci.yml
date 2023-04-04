@@ -7,7 +7,8 @@ before_script:
   - npm install
 
 <<<<<<< HEAD
-tests with coverage:
+<<<<<<< HEAD
+=======
 =======
 linting:
   stage: checks
@@ -15,11 +16,12 @@ linting:
     - npm run lint
 
 tests:
->>>>>>> origin/master
+<<<<<<< HEAD
+=======
   stage: checks
   script:
     - SERVER_LOG=$(mktemp)
-    - npm run ts-node-coverage >& $SERVER_LOG &
+    - npm run start >& $SERVER_LOG &
     - timeout 10s grep -q "⚡️ Server started on port" <(tail -f $SERVER_LOG) || exit 1
     - timeout -s SIGINT 180s npm run test || (cat $SERVER_LOG && exit 1)
     - kill -SIGINT %1
