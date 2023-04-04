@@ -6,18 +6,12 @@ stages:
 before_script:
   - npm install
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
 linting:
   stage: checks
   script:
     - npm run lint
 
 tests:
-<<<<<<< HEAD
-=======
   stage: checks
   script:
     - SERVER_LOG=$(mktemp)
