@@ -298,7 +298,7 @@ describe('channelInviteV1 test', () => {
   });
 });
 
-describe('channelMessengesV1 test', () => {
+describe('channelMessagesV1 test', () => {
   test('channelId does not refer to a valid channel', () => {
     const param2 = {
       token: user.token,
@@ -503,10 +503,40 @@ describe('channelAddOwnerV1 test', () => {
       token: user1.token,
       channelId: newChannel.channelId
     };
-    const cDetail = getRequest('/channel/details/v2', detailData);
+    let cDetail = getRequest('/channel/details/v2', detailData);
     expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
       expect.objectContaining({
         uId: invitedUser.authUserId
+      })
+    ]));
+
+    // global owner add himself
+    const detail2Data = {
+      token: user1.token,
+      channelId: newChannel.channelId
+    };
+    cDetail = getRequest('/channel/details/v2', detail2Data);
+    expect(cDetail.ownerMembers).toEqual(expect.not.arrayContaining([
+      expect.objectContaining({
+        uId: user.authUserId
+      })
+    ]));
+
+    const invite3Data = {
+      token: user.token,
+      channelId: newChannel.channelId,
+      uId: user.authUserId
+    };
+    expect(postRequest('/channel/addowner/v1', invite3Data)).toStrictEqual({});
+
+    const detail1Data = {
+      token: user1.token,
+      channelId: newChannel.channelId
+    };
+    cDetail = getRequest('/channel/details/v2', detail1Data);
+    expect(cDetail.ownerMembers).toEqual(expect.arrayContaining([
+      expect.objectContaining({
+        uId: user.authUserId
       })
     ]));
   });
