@@ -1,47 +1,6 @@
-import request from 'sync-request';
-import config from './config.json';
-
-const port = config.port;
-const url = config.url;
+import { getRequest, postRequest, deleteRequest } from './dataStore';
 
 const ERROR = { error: expect.any(String) };
-const SERVER_URL = `${url}:${port}`;
-
-const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const postRequest = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const deleteRequest = (url: string, data: any) => {
-  const res = request(
-    'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
 
 let user: any;
 let channel: any;
