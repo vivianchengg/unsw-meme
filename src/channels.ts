@@ -51,9 +51,7 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
     isPublic: isPublic,
     ownerMembers: owners,
     allMembers: members,
-    messages: message,
-    start: -1,
-    end: -1,
+    messages: message
   };
 
   data.channels.push(channel);

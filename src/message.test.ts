@@ -1,4 +1,4 @@
-import { putRequest, postRequest, deleteRequest } from './dataStore';
+import { putRequest, postRequest, deleteRequest, getRequest } from './dataStore';
 
 const ERROR = { error: expect.any(String) };
 
@@ -81,6 +81,58 @@ afterAll(() => {
 });
 
 describe('HTTP tests using Jest for messageRemoveV1', () => {
+  test('channel double removing a msg + owner can remove msg', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId,
+    };
+    deleteRequest('/message/remove/v1', param1);
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('channel global owner can remove msg', () => {
+    const invite = {
+      token: user2.token,
+      channelId: channel.channelId,
+      uId: user.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', invite)).toStrictEqual({});
+
+    const param1 = {
+      token: user.token,
+      messageId: message.messageId,
+    };
+
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('channel writer can remove msg', () => {
+    // add user3 to channel
+    const invite = {
+      token: user2.token,
+      channelId: channel.channelId,
+      uId: user3.authUserId,
+    };
+    postRequest('/channel/invite/v2', invite);
+
+    // user3 writes msg
+    const messageData = {
+      token: user3.token,
+      channelId: channel.channelId,
+      message: 'pewpewpew'
+    };
+    const message2 = postRequest('/message/send/v1', messageData);
+
+    const param1 = {
+      token: user3.token,
+      messageId: message2.messageId,
+    };
+
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
   test('invalid message id', () => {
     const rmData = {
       token: user2.token,
@@ -119,6 +171,23 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
 
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('double remove', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('valid test', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
   });
 });
 
@@ -163,7 +232,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
-      message: 'a'.repeat(1001),
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
@@ -222,11 +291,181 @@ describe('HTTP tests using Jest for messageSendV1', () => {
 });
 
 describe('MessageEditV1 test', () => {
+  test('trying to remove a edited empty string msg', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
+
+    const param = {
+      token: user2.token,
+      messageId: message.messageId,
+    };
+    expect(deleteRequest('/message/remove/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('trying to edit a deleted msg', () => {
+    const param = {
+      token: user2.token,
+      messageId: message.messageId,
+    };
+    expect(deleteRequest('/message/remove/v1', param)).toStrictEqual({});
+
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+  });
+
+  test('double edit empty string', () => {
+    const param = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    expect(putRequest('/message/edit/v1', param)).toStrictEqual({});
+    expect(putRequest('/message/edit/v1', param)).toStrictEqual(ERROR);
+
+    const msgData = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+
+    const msg = getRequest('/channel/messages/v2', msgData);
+    expect(msg.messages).toStrictEqual([]);
+    expect(msg.start).toStrictEqual(0);
+    expect(msg.end).toStrictEqual(-1);
+  });
+
+  test('channel owner of msg, edits msg', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    putRequest('/message/edit/v1', param3);
+
+    const param = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+
+    const msg = getRequest('/channel/messages/v2', param);
+    expect(msg.messages[0].messageId).toStrictEqual(message.messageId);
+    expect(msg.messages[0].message).toStrictEqual(param3.message);
+  });
+
+  test('dm writer of msg, edits msg', () => {
+    const param3 = {
+      token: user3.token,
+      messageId: dmMsg2.messageId,
+      message: 'lmfao?'
+    };
+    putRequest('/message/edit/v1', param3);
+
+    const param = {
+      token: user3.token,
+      dmId: dm.dmId,
+      start: 0
+    };
+
+    const msg = getRequest('/dm/messages/v1', param);
+    expect(msg.messages[0].messageId).toStrictEqual(dmMsg2.messageId);
+    expect(msg.messages[0].message).toStrictEqual(param3.message);
+  });
+
+  test('global owner cannot edit dm', () => {
+    // create dm with global user as not owner
+    const dmData = {
+      token: user2.token,
+      uIds: [user.authUserId],
+    };
+    const dm2 = postRequest('/dm/create/v1', dmData);
+
+    // dm owner makes msg
+    const dmMsgData = {
+      token: user2.token,
+      dmId: dm2.dmId,
+      message: 'hey'
+    };
+    const dmMsg3 = postRequest('/message/senddm/v1', dmMsgData);
+
+    // global owner tries to edit
+    const param3 = {
+      token: user.token,
+      messageId: dmMsg3.messageId,
+      message: 'lol'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+  });
+
+  test('global owner can edit channel', () => {
+    const invite = {
+      token: user2.token,
+      channelId: channel.channelId,
+      uId: user.authUserId,
+    };
+    expect(postRequest('/channel/invite/v2', invite)).toStrictEqual({});
+
+    // global owner edits channel
+    const param3 = {
+      token: user.token,
+      messageId: message.messageId,
+      message: 'pew'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
+
+    // check the edit
+    const param = {
+      token: user.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    // check the edit
+    const msg = getRequest('/channel/messages/v2', param);
+    expect(msg.messages[0].messageId).toStrictEqual(message.messageId);
+    expect(msg.messages[0].message).toStrictEqual(param3.message);
+  });
+  test('testRemovalByEditReflected', () => {
+    const detailData = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg = getRequest('/channel/messages/v2', detailData);
+    expect(curMsg.start).toStrictEqual(0);
+    expect(curMsg.end).toStrictEqual(-1);
+    expect(curMsg.messages.length).toStrictEqual(1);
+
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    putRequest('/message/edit/v1', param3);
+
+    const detail1Data = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg1 = getRequest('/channel/messages/v2', detail1Data);
+    expect(curMsg1.start).toStrictEqual(0);
+    expect(curMsg1.end).toStrictEqual(-1);
+    expect(curMsg1.messages.length).toStrictEqual(0);
+  });
+
   test('length of message is over 1000 characters', () => {
     const param3 = {
       token: user2.token,
       messageId: message.messageId,
-      message: 'b'.repeat(1001),
+      message: 'a'.repeat(1001)
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
   });
@@ -315,6 +554,46 @@ describe('MessageEditV1 test', () => {
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
   });
+
+  test('error: remove then edit', () => {
+    const detailData = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg = getRequest('/channel/messages/v2', detailData);
+    expect(curMsg.messages.length).toStrictEqual(1);
+
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+
+    const detail1Data = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg1 = getRequest('/channel/messages/v2', detail1Data);
+    expect(curMsg1.messages.length).toStrictEqual(0);
+
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+
+    const param4 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'hi'
+    };
+
+    expect(putRequest('/message/edit/v1', param4)).toStrictEqual(ERROR);
+  });
 });
 
 describe('HTTP - /message/senddm/v1 tests', () => {
@@ -349,7 +628,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
     const param = {
       token: user3.token,
       dmId: dm.dmId,
-      message: 'c'.repeat(1001),
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/senddm/v1', param)).toStrictEqual(ERROR);
   });
