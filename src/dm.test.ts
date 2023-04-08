@@ -1,44 +1,6 @@
-import request from 'sync-request';
-import { port, url } from './config.json';
+import { getRequest, postRequest, deleteRequest } from './dataStore';
 
-const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-
-const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const postRequest = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const deleteRequest = (url: string, data: any) => {
-  const res = request(
-    'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
 
 let owner: any;
 let user: any;
@@ -126,6 +88,10 @@ describe('dmLeaveV1 Test', () => {
 
     expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
   });
+});
+
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
 });
 
 describe('dmCreateV1 test', () => {
