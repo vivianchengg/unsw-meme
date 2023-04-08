@@ -35,7 +35,7 @@ const isSender = (authId: number, messageId: number): boolean => {
   return false;
 };
 
-/** Function that checks if an authorised user is a member of channel/dm
+/** check if has owner permission
  *
  * @param {number} authId
  * @param {number} messageId
