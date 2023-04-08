@@ -1,44 +1,6 @@
-import request from 'sync-request';
-import { port, url } from './config.json';
+import { putRequest, postRequest, deleteRequest } from './dataStore';
 
-const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-
-const postRequest = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const putRequest = (url: string, data: any) => {
-  const res = request(
-    'PUT',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const deleteRequest = (url: string, data: any) => {
-  const res = request(
-    'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
 
 let user: any;
 let user2: any;
@@ -112,6 +74,10 @@ beforeEach(() => {
     message: 'hello'
   };
   dmMsg2 = postRequest('/message/senddm/v1', dmMsg2Data);
+});
+
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
 });
 
 describe('HTTP tests using Jest for messageRemoveV1', () => {
