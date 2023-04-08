@@ -1,5 +1,7 @@
 import request from 'sync-request';
 import { port, url } from './config.json';
+import { getData } from './dataStore';
+
 
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
@@ -154,6 +156,25 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
 
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
   });
+
+  test('double remove', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  
+  });
+
+  test('valid test', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+  });
+
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {
@@ -197,28 +218,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
-      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
-      'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
-      '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
-      'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
-      'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
-      'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
-      'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
-      'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
-      'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
-      'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
-      'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
-      '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
-      'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
-      '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
-      'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
-      'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
-      'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
-      '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
-      'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
-      'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
-      '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
-      'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
@@ -281,28 +281,7 @@ describe('MessageEditV1 test', () => {
     const param3 = {
       token: user2.token,
       messageId: message.messageId,
-      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
-      'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
-      '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
-      'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
-      'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
-      'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
-      'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
-      'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
-      'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
-      'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
-      'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
-      '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
-      'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
-      '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
-      'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
-      'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
-      'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
-      '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
-      'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
-      'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
-      '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
-      'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
+      message: 'a'.repeat(1001)
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
   });
@@ -382,8 +361,8 @@ describe('MessageEditV1 test', () => {
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
   });
-
-  test('valid input', () => {
+  
+   test('valid input', () => {
     const param3 = {
       token: user2.token,
       messageId: message.messageId,
@@ -425,28 +404,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
     const param = {
       token: user3.token,
       dmId: dm.dmId,
-      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
-        'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
-        '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
-        'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
-        'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
-        'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
-        'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
-        'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
-        'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
-        'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
-        'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
-        '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
-        'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
-        '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
-        'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
-        'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
-        'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
-        '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
-        'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
-        'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
-        '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
-        'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/senddm/v1', param)).toStrictEqual(ERROR);
   });
