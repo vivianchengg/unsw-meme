@@ -184,11 +184,6 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
     return { error: 'token is invalid' };
   }
 
-  if (message.length === 0) {
-    messageRemoveV1(token, messageId);
-    return {};
-  }
-
   if (message.length > 1000) {
     return { error: 'length of message is over 1000' };
   }
@@ -201,6 +196,11 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
     return { error: 'user not sender and no owner permission' };
   }
+
+  if (message.length === 0) {
+    return messageRemoveV1(token, messageId);
+  }
+
   for (const channel of data.channels) {
     for (const msg of channel.messages) {
       if (msg.messageId === messageId) {

@@ -76,9 +76,7 @@ export type Channel = {
   isPublic: boolean,
   allMembers: number[],
   ownerMembers: number[],
-  messages: Message[],
-  start: number,
-  end: number,
+  messages: Message[]
 };
 
 export type Dm = {
@@ -86,9 +84,7 @@ export type Dm = {
   name: string,
   allMembers: number[],
   owner: number,
-  messages: Message[],
-  start: number,
-  end: number,
+  messages: Message[]
 };
 
 export type Data = {

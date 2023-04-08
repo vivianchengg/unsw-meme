@@ -1,4 +1,4 @@
-import { putRequest, postRequest, deleteRequest } from './dataStore';
+import { putRequest, postRequest, deleteRequest, getRequest } from './dataStore';
 
 const ERROR = { error: expect.any(String) };
 
@@ -331,6 +331,46 @@ describe('MessageEditV1 test', () => {
       message: 'hello ellen, what are you doing?'
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
+  });
+
+  test('error: remove then edit', () => {
+    const detailData = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg = getRequest('/channel/messages/v2', detailData);
+    expect(curMsg.messages.length).toStrictEqual(1);
+
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+
+    const detail1Data = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg1 = getRequest('/channel/messages/v2', detail1Data);
+    expect(curMsg1.messages.length).toStrictEqual(0);
+
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+
+    const param4 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'hi'
+    };
+
+    expect(putRequest('/message/edit/v1', param4)).toStrictEqual(ERROR);
   });
 });
 

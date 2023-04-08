@@ -56,9 +56,7 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
     name: dmName,
     allMembers: dmMember,
     owner: dmOwner,
-    messages: message,
-    start: -1,
-    end: -1,
+    messages: message
   };
   data.dms.push(newDm);
   setData(data);
