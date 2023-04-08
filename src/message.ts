@@ -155,9 +155,15 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
     return { error: 'user not sender and no owner permission' };
   }
 
-  validMsg.messages = validMsg.messages.filter(m => m.messageId !== messageId);
-  setData(data);
+  for (const channel of data.channels) {
+    channel.messages = channel.messages.filter(m => m.messageId !== messageId);
+  }
 
+  for (const dm of data.dms) {
+    dm.messages = dm.messages.filter(m => m.messageId !== messageId);
+  }
+
+  setData(data);
   return {};
 };
 
@@ -195,9 +201,21 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
     return { error: 'user not sender and no owner permission' };
   }
+  for (const channel of data.channels) {
+    for (const msg of channel.messages) {
+      if (msg.messageId === messageId) {
+        msg.message = message;
+      }
+    }
+  }
 
-  const msg = validMsg.messages.find(c => c.messageId === messageId);
-  msg.message = message;
+  for (const dm of data.dms) {
+    for (const msg of dm.messages) {
+      if (msg.messageId === messageId) {
+        msg.message = message;
+      }
+    }
+  }
 
   setData(data);
   return {};

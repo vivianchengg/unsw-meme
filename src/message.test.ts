@@ -120,6 +120,23 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
 
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
   });
+
+  test('double remove', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('valid test', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+  });
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {
@@ -163,7 +180,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
-      message: 'a'.repeat(1001),
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
@@ -226,7 +243,7 @@ describe('MessageEditV1 test', () => {
     const param3 = {
       token: user2.token,
       messageId: message.messageId,
-      message: 'b'.repeat(1001),
+      message: 'a'.repeat(1001)
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
   });
@@ -349,7 +366,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
     const param = {
       token: user3.token,
       dmId: dm.dmId,
-      message: 'c'.repeat(1001),
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/senddm/v1', param)).toStrictEqual(ERROR);
   });
