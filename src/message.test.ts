@@ -1,7 +1,5 @@
 import request from 'sync-request';
 import { port, url } from './config.json';
-import { getData } from './dataStore';
-
 
 const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
@@ -164,7 +162,6 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
-  
   });
 
   test('valid test', () => {
@@ -174,7 +171,6 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
   });
-
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {
@@ -361,8 +357,8 @@ describe('MessageEditV1 test', () => {
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
   });
-  
-   test('valid input', () => {
+
+  test('valid input', () => {
     const param3 = {
       token: user2.token,
       messageId: message.messageId,
