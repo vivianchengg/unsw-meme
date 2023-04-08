@@ -6,6 +6,10 @@ beforeEach(() => {
   deleteRequest('/clear/v1', null);
 });
 
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
+});
+
 describe('Test clearV1 function', () => {
   test('test clearV1 - user and channel', () => {
     // new user

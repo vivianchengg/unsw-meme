@@ -90,6 +90,10 @@ describe('dmLeaveV1 Test', () => {
   });
 });
 
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
+});
+
 describe('dmCreateV1 test', () => {
   test('invalid uId exists', () => {
     const user1Data = {

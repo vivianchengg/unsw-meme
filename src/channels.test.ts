@@ -24,6 +24,10 @@ beforeEach(() => {
   channel = postRequest('/channels/create/v2', channelData);
 });
 
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
+});
+
 describe('HTTP - channelsListV2 Tests', () => {
   test('Testing valid input', () => {
     const param = {

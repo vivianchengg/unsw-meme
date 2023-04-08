@@ -6,6 +6,10 @@ beforeEach(() => {
   deleteRequest('/clear/v1', null);
 });
 
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
+});
+
 describe('authLoginV1 Test', () => {
   test('email entered does not belong to a user', () => {
     const user1Data = {

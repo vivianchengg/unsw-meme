@@ -76,6 +76,10 @@ beforeEach(() => {
   dmMsg2 = postRequest('/message/senddm/v1', dmMsg2Data);
 });
 
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
+});
+
 describe('HTTP tests using Jest for messageRemoveV1', () => {
   test('invalid message id', () => {
     const rmData = {

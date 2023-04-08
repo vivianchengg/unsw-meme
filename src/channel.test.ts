@@ -34,6 +34,10 @@ beforeEach(() => {
   invitedUser = postRequest('/auth/register/v2', param1);
 });
 
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
+});
+
 describe('channelDetailsV1 Test', () => {
   test('Invalid token', () => {
     const detailRequest = {
