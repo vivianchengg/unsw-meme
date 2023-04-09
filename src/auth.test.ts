@@ -1,4 +1,4 @@
-import { getRequest, postRequest, deleteRequest } from './dataStore';
+import { getRequest, postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
