@@ -1,44 +1,6 @@
-import request from 'sync-request';
-import { port, url } from './config.json';
+import { getRequest, postRequest, deleteRequest } from './dataStore';
 
-const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-
-const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const postRequest = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const deleteRequest = (url: string, data: any) => {
-  const res = request(
-    'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
 
 let user: any;
 let invitedUser: any;
@@ -70,6 +32,10 @@ beforeEach(() => {
     nameLast: 'lee'
   };
   invitedUser = postRequest('/auth/register/v2', param1);
+});
+
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
 });
 
 describe('channelDetailsV1 Test', () => {
@@ -319,7 +285,7 @@ describe('channelMessagesV1 test', () => {
 
   test('authorised user is not channel member', () => {
     const user1Data = {
-      email: 'jr@unsw.edu.au',
+      email: 'jr1@unsw.edu.au',
       password: 'password',
       nameFirst: 'Jake',
       nameLast: 'Renzella'

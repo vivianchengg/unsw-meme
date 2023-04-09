@@ -1,44 +1,6 @@
-import request from 'sync-request';
-import { port, url } from './config.json';
+import { putRequest, postRequest, deleteRequest, getRequest } from './dataStore';
 
-const SERVER_URL = `${url}:${port}`;
 const ERROR = { error: expect.any(String) };
-
-const postRequest = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const putRequest = (url: string, data: any) => {
-  const res = request(
-    'PUT',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const deleteRequest = (url: string, data: any) => {
-  const res = request(
-    'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
 
 let user: any;
 let user2: any;
@@ -114,7 +76,63 @@ beforeEach(() => {
   dmMsg2 = postRequest('/message/senddm/v1', dmMsg2Data);
 });
 
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
+});
+
 describe('HTTP tests using Jest for messageRemoveV1', () => {
+  test('channel double removing a msg + owner can remove msg', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId,
+    };
+    deleteRequest('/message/remove/v1', param1);
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('channel global owner can remove msg', () => {
+    const invite = {
+      token: user2.token,
+      channelId: channel.channelId,
+      uId: user.authUserId
+    };
+    expect(postRequest('/channel/invite/v2', invite)).toStrictEqual({});
+
+    const param1 = {
+      token: user.token,
+      messageId: message.messageId,
+    };
+
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('channel writer can remove msg', () => {
+    // add user3 to channel
+    const invite = {
+      token: user2.token,
+      channelId: channel.channelId,
+      uId: user3.authUserId,
+    };
+    postRequest('/channel/invite/v2', invite);
+
+    // user3 writes msg
+    const messageData = {
+      token: user3.token,
+      channelId: channel.channelId,
+      message: 'pewpewpew'
+    };
+    const message2 = postRequest('/message/send/v1', messageData);
+
+    const param1 = {
+      token: user3.token,
+      messageId: message2.messageId,
+    };
+
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
   test('invalid message id', () => {
     const rmData = {
       token: user2.token,
@@ -153,6 +171,23 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
 
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('double remove', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+  });
+
+  test('valid test', () => {
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
   });
 });
 
@@ -197,28 +232,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
-      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
-      'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
-      '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
-      'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
-      'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
-      'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
-      'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
-      'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
-      'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
-      'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
-      'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
-      '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
-      'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
-      '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
-      'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
-      'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
-      'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
-      '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
-      'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
-      'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
-      '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
-      'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/send/v1', param2)).toStrictEqual(ERROR);
   });
@@ -277,32 +291,181 @@ describe('HTTP tests using Jest for messageSendV1', () => {
 });
 
 describe('MessageEditV1 test', () => {
+  test('trying to remove a edited empty string msg', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
+
+    const param = {
+      token: user2.token,
+      messageId: message.messageId,
+    };
+    expect(deleteRequest('/message/remove/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('trying to edit a deleted msg', () => {
+    const param = {
+      token: user2.token,
+      messageId: message.messageId,
+    };
+    expect(deleteRequest('/message/remove/v1', param)).toStrictEqual({});
+
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+  });
+
+  test('double edit empty string', () => {
+    const param = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    expect(putRequest('/message/edit/v1', param)).toStrictEqual({});
+    expect(putRequest('/message/edit/v1', param)).toStrictEqual(ERROR);
+
+    const msgData = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+
+    const msg = getRequest('/channel/messages/v2', msgData);
+    expect(msg.messages).toStrictEqual([]);
+    expect(msg.start).toStrictEqual(0);
+    expect(msg.end).toStrictEqual(-1);
+  });
+
+  test('channel owner of msg, edits msg', () => {
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    putRequest('/message/edit/v1', param3);
+
+    const param = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+
+    const msg = getRequest('/channel/messages/v2', param);
+    expect(msg.messages[0].messageId).toStrictEqual(message.messageId);
+    expect(msg.messages[0].message).toStrictEqual(param3.message);
+  });
+
+  test('dm writer of msg, edits msg', () => {
+    const param3 = {
+      token: user3.token,
+      messageId: dmMsg2.messageId,
+      message: 'lmfao?'
+    };
+    putRequest('/message/edit/v1', param3);
+
+    const param = {
+      token: user3.token,
+      dmId: dm.dmId,
+      start: 0
+    };
+
+    const msg = getRequest('/dm/messages/v1', param);
+    expect(msg.messages[0].messageId).toStrictEqual(dmMsg2.messageId);
+    expect(msg.messages[0].message).toStrictEqual(param3.message);
+  });
+
+  test('global owner cannot edit dm', () => {
+    // create dm with global user as not owner
+    const dmData = {
+      token: user2.token,
+      uIds: [user.authUserId],
+    };
+    const dm2 = postRequest('/dm/create/v1', dmData);
+
+    // dm owner makes msg
+    const dmMsgData = {
+      token: user2.token,
+      dmId: dm2.dmId,
+      message: 'hey'
+    };
+    const dmMsg3 = postRequest('/message/senddm/v1', dmMsgData);
+
+    // global owner tries to edit
+    const param3 = {
+      token: user.token,
+      messageId: dmMsg3.messageId,
+      message: 'lol'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+  });
+
+  test('global owner can edit channel', () => {
+    const invite = {
+      token: user2.token,
+      channelId: channel.channelId,
+      uId: user.authUserId,
+    };
+    expect(postRequest('/channel/invite/v2', invite)).toStrictEqual({});
+
+    // global owner edits channel
+    const param3 = {
+      token: user.token,
+      messageId: message.messageId,
+      message: 'pew'
+    };
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
+
+    // check the edit
+    const param = {
+      token: user.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    // check the edit
+    const msg = getRequest('/channel/messages/v2', param);
+    expect(msg.messages[0].messageId).toStrictEqual(message.messageId);
+    expect(msg.messages[0].message).toStrictEqual(param3.message);
+  });
+  test('testRemovalByEditReflected', () => {
+    const detailData = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg = getRequest('/channel/messages/v2', detailData);
+    expect(curMsg.start).toStrictEqual(0);
+    expect(curMsg.end).toStrictEqual(-1);
+    expect(curMsg.messages.length).toStrictEqual(1);
+
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+    putRequest('/message/edit/v1', param3);
+
+    const detail1Data = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg1 = getRequest('/channel/messages/v2', detail1Data);
+    expect(curMsg1.start).toStrictEqual(0);
+    expect(curMsg1.end).toStrictEqual(-1);
+    expect(curMsg1.messages.length).toStrictEqual(0);
+  });
+
   test('length of message is over 1000 characters', () => {
     const param3 = {
       token: user2.token,
       messageId: message.messageId,
-      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
-      'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
-      '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
-      'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
-      'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
-      'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
-      'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
-      'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
-      'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
-      'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
-      'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
-      '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
-      'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
-      '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
-      'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
-      'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
-      'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
-      '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
-      'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
-      'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
-      '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
-      'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
+      message: 'a'.repeat(1001)
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
   });
@@ -391,6 +554,46 @@ describe('MessageEditV1 test', () => {
     };
     expect(putRequest('/message/edit/v1', param3)).toStrictEqual({});
   });
+
+  test('error: remove then edit', () => {
+    const detailData = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg = getRequest('/channel/messages/v2', detailData);
+    expect(curMsg.messages.length).toStrictEqual(1);
+
+    const param1 = {
+      token: user2.token,
+      messageId: message.messageId
+    };
+    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
+
+    const detail1Data = {
+      token: user2.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+    const curMsg1 = getRequest('/channel/messages/v2', detail1Data);
+    expect(curMsg1.messages.length).toStrictEqual(0);
+
+    const param3 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: ''
+    };
+
+    expect(putRequest('/message/edit/v1', param3)).toStrictEqual(ERROR);
+
+    const param4 = {
+      token: user2.token,
+      messageId: message.messageId,
+      message: 'hi'
+    };
+
+    expect(putRequest('/message/edit/v1', param4)).toStrictEqual(ERROR);
+  });
 });
 
 describe('HTTP - /message/senddm/v1 tests', () => {
@@ -425,28 +628,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
     const param = {
       token: user3.token,
       dmId: dm.dmId,
-      message: '6i2U8kTkjBdhtiKhPynaKofTpA4jJAgyis5091' +
-        'nvGcB21kEeOudzfGBm6CDccD7R4YuTkQbypRJC1MHfCMR' +
-        '4E21HcDmF2t9JEBzT6Wy7z3JpcHS3tUv8I8E359aoB6L8f' +
-        'FTmaFJZ0YC7nBQgvTTuZ4bZyluHT1a6jVzza0Q1mGOSwE2' +
-        'O89ppiZ0uDSl1gKtohrKk0McGC0mBRDx4SjvkWQOqQCiqa' +
-        'JX5gBqtBnXE6fxwkMZFF7ongHUrwRN51yJbhgk3f32vNZi' +
-        'O4tAOuwMysYFXJdlmGlqxPscumvyYbCdVS0Qszx8ewu8XK' +
-        'dspLFMTbQ51RnSA3QafbzBPLCtLBv2fk3IeduEOH0KXWdh' +
-        'dtzvQ8NdYUlFfBfAsMQHUyyqx1K9jKeSzuY7I2MWa29Ok1' +
-        'ZzTpTT84tANfjORVVr1LRhebORzZQHDKlj2gWP4NXYjLcZ' +
-        'TFwTTxGMedeXzCbAmpNhV9CJJrJ0y1KvDT1Tb7pB7wyHY2' +
-        '6DMnsmQLiPpd2JEBKV8g1kIt3rWGhuvoUL4fDevHSgpqmy' +
-        'kYPROBe5FzP0qPQyra142cA1gqaFXjAkMn5MPvL1ifqFSe' +
-        '8funhQJ3uITZMSf2U27eFhr6VeYHXuw9xrJkF21ywzd6hG' +
-        'MDrhfc6dTTT8i66ZUFbsQZNxF0FyATXewvxpt9SeA0IBt6' +
-        'esohmIFg3Lyn81m1DcNAiZwnIfXiko3OjMCOuZFcjY2J5E' +
-        'fjE746IYcmfj0deX7fBMoKgKElYMV8bNcy2oOKpFy9COj8' +
-        '9yGkdLwgjyEhkZzWfo5XaVLZEXdz1YinNmwiIeBoY2Ky9P' +
-        'rcHt0Y8JNckxw9LXZChCDG3cT4vh5pIqFUEDl6C3kfCyO8' +
-        'paRQy2ir5T3rfJGz4U4NjSgojBZKelc5saVAIKWrN2sVtT' +
-        '1QmeSycD9VMdExX34nEMvqviQBoPZsDmBRXI0RH00feYZz' +
-        'AasQ7khPuDtK1Hzzq3oEA7vhrxYfVzVKsvzxIaWA2Py3',
+      message: 'a'.repeat(1001)
     };
     expect(postRequest('/message/senddm/v1', param)).toStrictEqual(ERROR);
   });
