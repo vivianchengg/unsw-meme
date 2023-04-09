@@ -240,9 +240,9 @@ describe('channelInviteV1 test', () => {
   test('authorised user is not channel member', () => {
     const user1Data = {
       email: 'jr1@unsw.edu.au',
-      password: 'password',
-      nameFirst: 'Jake',
-      nameLast: 'Renzella'
+      password: 'PASSWORD',
+      nameFirst: 'Jak',
+      nameLast: 'Renzell'
     };
     const user1 = postRequest('/auth/register/v2', user1Data);
 
@@ -286,9 +286,9 @@ describe('channelMessagesV1 test', () => {
   test('authorised user is not channel member', () => {
     const user1Data = {
       email: 'jr1@unsw.edu.au',
-      password: 'password',
-      nameFirst: 'Jake',
-      nameLast: 'Renzella'
+      password: 'PASSWORD',
+      nameFirst: 'Jak',
+      nameLast: 'Renzell'
     };
     const user1 = postRequest('/auth/register/v2', user1Data);
 
@@ -309,7 +309,7 @@ describe('channelMessagesV1 test', () => {
     expect(getRequest('/channel/messages/v2', param2)).toStrictEqual(ERROR);
   });
 
-  test('valid input', () => {
+  test('valid input given (start + 50) >= messageLen', () => {
     const param2 = {
       token: user.token,
       channelId: channel.channelId,
@@ -320,6 +320,28 @@ describe('channelMessagesV1 test', () => {
     expect(result.messages).toStrictEqual([]);
     expect(result.start).toStrictEqual(0);
     expect(result.end).toStrictEqual(-1);
+  });
+
+  test('valid input given (start + 50) < messageLen', () => {
+    const messageParam = {
+      token: user.token,
+      channelId: channel.channelId,
+      message: 'This is good'
+    };
+
+    for (let i = 0; i < 100; i++) {
+      postRequest('/message/send/v1', messageParam);
+    }
+
+    const param2 = {
+      token: user.token,
+      channelId: channel.channelId,
+      start: 0
+    };
+
+    const result = getRequest('/channel/messages/v2', param2);
+    expect(result.start).toStrictEqual(0);
+    expect(result.end).toStrictEqual(50);
   });
 });
 
