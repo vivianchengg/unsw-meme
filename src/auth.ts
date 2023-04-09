@@ -1,4 +1,4 @@
-import { User, getData, setData } from './dataStore';
+import { getData, setData } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
 
