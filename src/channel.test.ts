@@ -285,7 +285,7 @@ describe('channelMessagesV1 test', () => {
 
   test('authorised user is not channel member', () => {
     const user1Data = {
-      email: 'jr@unsw.edu.au',
+      email: 'jr1@unsw.edu.au',
       password: 'password',
       nameFirst: 'Jake',
       nameLast: 'Renzella'

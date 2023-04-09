@@ -52,6 +52,22 @@ export const deleteRequest = (url: string, data: any) => {
   return body;
 };
 
+// request helper to be used for it3
+
+// export const requestHelper = (method: HttpVerb, path: string, token: object, data: object) => {
+//   let qs = {};
+//   let json = {};
+//   const header = token;
+//   if (['GET', 'DELETE'].includes(method)) {
+//     qs = data;
+//   } else {
+//     // PUT/POST
+//     json = data;
+//   }
+//   const res = request(method, SERVER_URL + path, { header, qs, json, timeout: 20000 });
+//   return JSON.parse(res.getBody('utf-8'));
+// }
+
 export type User = {
   uId: number,
   nameFirst: string,
@@ -76,9 +92,7 @@ export type Channel = {
   isPublic: boolean,
   allMembers: number[],
   ownerMembers: number[],
-  messages: Message[],
-  start: number,
-  end: number,
+  messages: Message[]
 };
 
 export type Dm = {
@@ -86,9 +100,7 @@ export type Dm = {
   name: string,
   allMembers: number[],
   owner: number,
-  messages: Message[],
-  start: number,
-  end: number,
+  messages: Message[]
 };
 
 export type Data = {
