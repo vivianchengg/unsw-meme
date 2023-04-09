@@ -35,7 +35,7 @@ const isSender = (authId: number, messageId: number): boolean => {
   return false;
 };
 
-/** Function that checks if an authorised user is a member of channel/dm
+/** check if has owner permission
  *
  * @param {number} authId
  * @param {number} messageId
@@ -155,9 +155,15 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
     return { error: 'user not sender and no owner permission' };
   }
 
-  validMsg.messages = validMsg.messages.filter(m => m.messageId !== messageId);
-  setData(data);
+  for (const channel of data.channels) {
+    channel.messages = channel.messages.filter(m => m.messageId !== messageId);
+  }
 
+  for (const dm of data.dms) {
+    dm.messages = dm.messages.filter(m => m.messageId !== messageId);
+  }
+
+  setData(data);
   return {};
 };
 
@@ -178,11 +184,6 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
     return { error: 'token is invalid' };
   }
 
-  if (message.length === 0) {
-    messageRemoveV1(token, messageId);
-    return {};
-  }
-
   if (message.length > 1000) {
     return { error: 'length of message is over 1000' };
   }
@@ -196,8 +197,25 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
     return { error: 'user not sender and no owner permission' };
   }
 
-  const msg = validMsg.messages.find(c => c.messageId === messageId);
-  msg.message = message;
+  if (message.length === 0) {
+    return messageRemoveV1(token, messageId);
+  }
+
+  for (const channel of data.channels) {
+    for (const msg of channel.messages) {
+      if (msg.messageId === messageId) {
+        msg.message = message;
+      }
+    }
+  }
+
+  for (const dm of data.dms) {
+    for (const msg of dm.messages) {
+      if (msg.messageId === messageId) {
+        msg.message = message;
+      }
+    }
+  }
 
   setData(data);
   return {};

@@ -1,59 +1,6 @@
-import request from 'sync-request';
-import config from './config.json';
-
-const port = config.port;
-const url = config.url;
+import { getRequest, postRequest, putRequest, deleteRequest } from './dataStore';
 
 const ERROR = { error: expect.any(String) };
-const SERVER_URL = `${url}:${port}`;
-
-const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const postRequest = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const putRequest = (url: string, data: any) => {
-  const res = request(
-    'PUT',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-const deleteRequest = (url: string, data: any) => {
-  const res = request(
-    'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
 
 let user: any;
 
@@ -66,6 +13,10 @@ beforeEach(() => {
     nameLast: 'Renzella'
   };
   user = postRequest('/auth/register/v2', person);
+});
+
+afterAll(() => {
+  deleteRequest('/clear/v1', null);
 });
 
 describe('userProfileSetHandleV1 tests', () => {
@@ -204,10 +155,10 @@ describe('HTTP - /user/profile/setname/v1', () => {
     expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
   });
 
-  test('50 length first name', () => {
+  test('50+ length first name', () => {
     const param = {
       token: user.token,
-      nameFirst: 'vVxXHvdFIFaYGy6YiWUXN8ub6QM47q9xR6mZ7JtA8jdutYtuZIlol',
+      nameFirst: 'a'.repeat(51),
       nameLast: 'my',
     };
     expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
@@ -222,11 +173,11 @@ describe('HTTP - /user/profile/setname/v1', () => {
     expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
   });
 
-  test('50 length lastname name', () => {
+  test('50+ length lastname name', () => {
     const param = {
       token: user.token,
       nameFirst: 'yum',
-      nameLast: 'vVxXHvdFIFaYGy6YiWUXN8ub6QM47q9xR6mZ7JtA8jdutYtuZIlol',
+      nameLast: 'a'.repeat(51),
     };
     expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
   });
