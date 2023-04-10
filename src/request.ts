@@ -3,52 +3,48 @@ import { port, url } from './config.json';
 
 const SERVER_URL = `${url}:${port}`;
 
-export const getRequest = (url: string, token: any, data: any) => {
+export const getRequest = (url: string, data: any) => {
   const res = request(
     'GET',
     SERVER_URL + url,
     {
       qs: data,
-      headers: token,
     }
   );
   const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
-export const postRequest = (url: string, token: any, data: any) => {
+export const postRequest = (url: string, data: any) => {
   const res = request(
     'POST',
     SERVER_URL + url,
     {
       json: data,
-      headers: token,
     }
   );
   const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
-export const putRequest = (url: string, token: any, data: any) => {
+export const putRequest = (url: string, data: any) => {
   const res = request(
     'PUT',
     SERVER_URL + url,
     {
       json: data,
-      headers: token,
     }
   );
   const body = JSON.parse(res.getBody() as string);
   return body;
 };
 
-export const deleteRequest = (url: string, token: any, data: any) => {
+export const deleteRequest = (url: string, data: any) => {
   const res = request(
     'DELETE',
     SERVER_URL + url,
     {
       qs: data,
-      headers: token
     }
   );
   const body = JSON.parse(res.getBody() as string);

@@ -13,7 +13,6 @@ beforeEach(() => {
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-
   user = requestHelper('POST', '/auth/register/v3', {}, person);
 
   const channelData = {
@@ -28,7 +27,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  requestHelper('DELETE', '/clear/v1', {}, null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
 describe('HTTP - channelsListV3 Tests', () => {
@@ -39,7 +38,6 @@ describe('HTTP - channelsListV3 Tests', () => {
       nameFirst: 'christine',
       nameLast: 'chu'
     };
-
     const user2 = requestHelper('POST', '/auth/register/v3', {}, person);
 
     const channelData = {
@@ -78,7 +76,6 @@ describe('channelListAllV1 Tests', () => {
       name: 'COMP2511',
       isPublic: true
     };
-
     const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
     expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toStrictEqual({
@@ -128,9 +125,8 @@ describe('channelListAllV1 Tests', () => {
       nameFirst: 'Yuchao',
       nameLast: 'Jiang'
     };
-    // need to change to v3
 
-    const outsideUser = requestHelper('POST', '/auth/register/v2', {}, outsideUserData);
+    const outsideUser = requestHelper('POST', '/auth/register/v3', {}, outsideUserData);
 
     const channel2Data = {
       name: 'COMP2511',

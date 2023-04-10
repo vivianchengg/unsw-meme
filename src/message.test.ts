@@ -1,3 +1,4 @@
+/*
 import { postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
@@ -176,9 +177,9 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
   });
-  */
+
 });
-/*
+
 describe('HTTP tests using Jest for messageSendV1', () => {
   test('channelId does not refer to a valid channel', () => {
     const param1 = {

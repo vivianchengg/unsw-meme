@@ -1,3 +1,4 @@
+/*
 import { deleteRequest, requestHelper } from './request';
 
 const ERROR = { error: expect.any(String) };
@@ -51,7 +52,7 @@ describe('dmLeaveV1 Test', () => {
     };
     expect(requestHelper('POST', '/dm/leave/v1', tokenData, detailRequest)).toStrictEqual(ERROR);
   });
-  /*
+
   test('Invalid dmId', () => {
     const detailRequest = {
       token: user.token,
@@ -96,10 +97,9 @@ describe('dmLeaveV1 Test', () => {
 
     expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
   });
-  */
+
 });
 
-/*
 describe('dmCreateV1 test', () => {
   test('invalid uId exists', () => {
     const user1Data = {

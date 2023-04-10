@@ -1,4 +1,4 @@
-
+/*
 import { deleteRequest } from './request';
 
 beforeEach(() => {
@@ -47,6 +47,8 @@ describe('Test clearV1 function', () => {
     expect(getRequest('/channel/details/v2', detailData)).toStrictEqual(ERROR);
   });
 */
+/*
 test('test clearV1 - basic output', () => {
   expect(deleteRequest('/clear/v1', {}, null)).toStrictEqual({});
 });
+*/

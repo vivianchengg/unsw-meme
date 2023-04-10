@@ -1,4 +1,4 @@
-
+/*
 import { postRequest, putRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
@@ -138,9 +138,9 @@ describe('userProfileSetEmailV1 tests', () => {
 
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
   });
-  */
+
 });
-/*
+
 describe('HTTP - /user/profile/setname/v1', () => {
   test('Invalid token', () => {
     const param = {

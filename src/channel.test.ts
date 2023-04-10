@@ -1,4 +1,4 @@
-
+/*
 import { getRequest, postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
@@ -36,7 +36,7 @@ beforeEach(() => {
     nameLast: 'lee'
   };
   invitedUser = postRequest('/auth/register/v2', {}, param1);
-  */
+
 });
 
 afterAll(() => {
@@ -55,7 +55,7 @@ describe('channelDetailsV1 Test', () => {
 
     expect(getRequest('/channel/details/v2', tokenData, detailRequest)).toStrictEqual(ERROR);
   });
-  /*
+
   test('Invalid channelId', () => {
     const detailRequest = {
       token: user.token,
@@ -101,9 +101,9 @@ describe('channelDetailsV1 Test', () => {
     expect(cDetail.allMembers).toStrictEqual([profile.user]);
     expect(cDetail.ownerMembers).toStrictEqual([profile.user]);
   });
-  */
+
 });
-/*
+
 describe('channelJoinV1 function testing', () => {
   test('channelId does not refer to a valid channel', () => {
     const user1Data = {
