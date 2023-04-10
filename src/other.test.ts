@@ -1,4 +1,5 @@
 import { getRequest, postRequest, deleteRequest, requestHelper } from './request';
+import { getHash } from './dataStore';
 
 const ERROR = { error: expect.any(String) };
 
@@ -30,7 +31,7 @@ describe('Test clearV1 function', () => {
     const channel = postRequest('/channels/create/v2', channelData);
 
     // clear
-    deleteRequest('/clear/v1', null);
+    requestHelper('DELETE', '/clear/v1', {}, {});
 
     // get user profile
     const profileData = {
