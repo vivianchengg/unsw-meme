@@ -88,7 +88,6 @@ describe('dmLeaveV1 Test', () => {
 
     expect(requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toStrictEqual({});
     expect(requestHelper('GET', '/dm/list/v2', tokenData, {})).toStrictEqual({ dms: [] });
-
   });
 
   test('Basic functionality: owner', () => {
@@ -98,7 +97,6 @@ describe('dmLeaveV1 Test', () => {
     tokenData.token = owner.token;
     expect(requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toStrictEqual({});
     expect(requestHelper('GET', '/dm/list/v2', tokenData, {})).toStrictEqual({ dms: [] });
-    
   });
 });
 
@@ -278,8 +276,8 @@ describe('HTTP - /dm/list/v1 tests', () => {
       password: 'password',
       nameFirst: 'chu',
       nameLast: 'chuut'
-  };
-  const user2 = requestHelper('POST', '/auth/register/v3', {}, userData);
+    };
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, userData);
 
     const dm2Data = {
       uIds: [user2.authUserId],
