@@ -1,4 +1,4 @@
-import request from 'sync-request';
+import request, { HttpVerb } from 'sync-request';
 import { port, url } from './config.json';
 
 const SERVER_URL = `${url}:${port}`;
@@ -53,16 +53,18 @@ export const deleteRequest = (url: string, data: any) => {
 
 // request helper to be used for it3
 
-// export const requestHelper = (method: HttpVerb, path: string, token: object, data: object) => {
-//   let qs = {};
-//   let json = {};
-//   const header = token;
-//   if (['GET', 'DELETE'].includes(method)) {
-//     qs = data;
-//   } else {
-//     // PUT/POST
-//     json = data;
-//   }
-//   const res = request(method, SERVER_URL + path, { header, qs, json, timeout: 20000 });
-//   return JSON.parse(res.getBody('utf-8'));
-// }
+export const requestHelper = (method: HttpVerb, path: string, token: object, data: object) => {
+  let qs = {};
+  let json = {};
+  let headers = {};
+  if (['GET', 'DELETE'].includes(method)) {
+    headers = token;
+    qs = data;
+  } else {
+    // PUT/POST
+    headers = token;
+    json = data;
+  }
+  const res = request(method, SERVER_URL + path, { headers, qs, json, timeout: 20000 });
+  return JSON.parse(res.getBody('utf-8'));
+};
