@@ -7,7 +7,7 @@ let channel: any;
 let tokenData: any;
 
 beforeEach(() => {
-  requestHelper('DELETE', '/clear/v1', {}, null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 
   const person = {
     email: 'jr@unsw.edu.au',
@@ -15,6 +15,7 @@ beforeEach(() => {
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
+  // need to change to v3
   user = requestHelper('POST', '/auth/register/v2', {}, person);
 
   const channelData = {
@@ -25,14 +26,14 @@ beforeEach(() => {
   tokenData = {
     token: user.token
   };
-  channel = requestHelper('POST', '/channels/create/v2', tokenData, channelData);
+  channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
 });
 
 afterAll(() => {
   requestHelper('DELETE', '/clear/v1', {}, null);
 });
 
-describe('HTTP - channelsListV2 Tests', () => {
+describe('HTTP - channelsListV3 Tests', () => {
   test('Testing valid input', () => {
     const person = {
       email: 'cc@unsw.edu.au',
@@ -40,6 +41,7 @@ describe('HTTP - channelsListV2 Tests', () => {
       nameFirst: 'christine',
       nameLast: 'chu'
     };
+    // need to change to v3
     const user2 = requestHelper('POST', '/auth/register/v2', {}, person);
 
     const channelData = {
@@ -50,9 +52,9 @@ describe('HTTP - channelsListV2 Tests', () => {
     const token2Data = {
       token: user2.token,
     };
-    requestHelper('POST', '/channels/create/v2', token2Data, channelData);
+    requestHelper('POST', '/channels/create/v3', token2Data, channelData);
 
-    const channelsList = requestHelper('GET', '/channels/list/v2', tokenData, {});
+    const channelsList = requestHelper('GET', '/channels/list/v3', tokenData, {});
     expect(channelsList).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
@@ -63,14 +65,14 @@ describe('HTTP - channelsListV2 Tests', () => {
 
   test('Testing invalid token', () => {
     tokenData.token = user.token + 'yay!';
-    expect(requestHelper('GET', '/channels/list/v2', tokenData, {})).toStrictEqual(ERROR);
+    expect(() => requestHelper('GET', '/channels/list/v3', tokenData, {})).toThrow(Error);
   });
 });
 
 describe('channelListAllV1 Tests', () => {
   test('Invalid token', () => {
     tokenData.token = user.token + 'yay!';
-    expect(requestHelper('GET', '/channels/listall/v2', tokenData, {})).toStrictEqual(ERROR);
+    expect(() => requestHelper('GET', '/channels/listall/v3', tokenData, {})).toThrow(Error);
   });
 
   test('Basic functionality', () => {
@@ -79,9 +81,9 @@ describe('channelListAllV1 Tests', () => {
       isPublic: true
     };
 
-    const channel2 = requestHelper('POST', '/channels/create/v2', tokenData, channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
-    expect(requestHelper('GET', '/channels/listall/v2', tokenData, {})).toStrictEqual({
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
@@ -98,16 +100,16 @@ describe('channelListAllV1 Tests', () => {
       isPublic: true
     };
 
-    const channel2 = requestHelper('POST', '/channels/create/v2', tokenData, channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
     const channelPrivData = {
       name: 'COMP3311',
       isPublic: false
     };
 
-    const channelPriv = requestHelper('POST', '/channels/create/v2', tokenData, channelPrivData);
+    const channelPriv = requestHelper('POST', '/channels/create/v3', tokenData, channelPrivData);
 
-    expect(requestHelper('GET', '/channels/listall/v2', tokenData, {})).toStrictEqual({
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
@@ -128,6 +130,7 @@ describe('channelListAllV1 Tests', () => {
       nameFirst: 'Yuchao',
       nameLast: 'Jiang'
     };
+    // need to change to v3
 
     const outsideUser = requestHelper('POST', '/auth/register/v2', {}, outsideUserData);
 
@@ -136,18 +139,16 @@ describe('channelListAllV1 Tests', () => {
       isPublic: true
     };
 
-    const channel2 = requestHelper('POST', '/channels/create/v2', tokenData, channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
     const channelPrivData = {
       name: 'COMP3311',
       isPublic: false
     };
-
-    const channelPriv = requestHelper('POST', '/channels/create/v2', tokenData, channelPrivData);
+    const channelPriv = requestHelper('POST', '/channels/create/v3', tokenData, channelPrivData);
 
     tokenData.token = outsideUser.token;
-
-    expect(requestHelper('GET', '/channels/listall/v2', tokenData, {})).toStrictEqual({
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
@@ -169,7 +170,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       isPublic: true,
     };
 
-    const channelId = requestHelper('POST', '/channels/create/v2', tokenData, param);
+    const channelId = requestHelper('POST', '/channels/create/v3', tokenData, param);
     expect(channelId).toStrictEqual({ channelId: expect.any(Number) });
   });
 
@@ -180,8 +181,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
     };
     tokenData.token = user.token + 'yay';
 
-    const channelId = requestHelper('POST', '/channels/create/v2', tokenData, param);
-    expect(channelId).toStrictEqual(ERROR);
+    expect(() => requestHelper('POST', '/channels/create/v3', tokenData, param)).toThrow(Error);
   });
 
   test('Testing 20+ name length', () => {
@@ -190,8 +190,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       isPublic: true,
     };
 
-    const channelId = requestHelper('POST', '/channels/create/v2', tokenData, param);
-    expect(channelId).toStrictEqual(ERROR);
+    expect(() => requestHelper('POST', '/channels/create/v3', tokenData, param)).toThrow(Error);
   });
 
   test('Testing 0 name length', () => {
@@ -201,7 +200,6 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       isPublic: true,
     };
 
-    const channelId = requestHelper('POST', '/channels/create/v2', tokenData, param);
-    expect(channelId).toStrictEqual(ERROR);
+    expect(() => requestHelper('POST', '/channels/create/v3', tokenData, param)).toThrow(Error);
   });
 });

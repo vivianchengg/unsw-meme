@@ -1,6 +1,7 @@
 import { Message, getData, setData } from './dataStore';
 import { isMember } from './channel';
 import { isValidToken } from './users';
+import HTTPError from 'http-errors';
 
 /**
   * Checks if name is valid
@@ -26,13 +27,14 @@ export const isValidName = (name: string): boolean => {
 export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
 
+  // token = getHash(token);
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   if (isValidName(name) === false) {
-    return { error: 'invalid name' };
+    throw HTTPError(400, 'Invalid name length error');
   }
 
   const size = data.channels.length + 1;
@@ -70,9 +72,10 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
 export const channelsListV1 = (token: string) => {
   const data = getData();
 
+  // token = getHash(token);
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'invalid authUserId' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   const channelList = [];
@@ -93,24 +96,21 @@ export const channelsListV1 = (token: string) => {
 /** Function lists details of all channels
  *
  * @param {string} token - Token of individual's session
- * @returns {array} channels
- *
- * Here, channels: [{
- *  channelId: number,
- *  name: string
- * }]
- *
- * To return the above:
- * - token must be valid
- *
- * Otherwise, {error: string} is returned
+ * @returns {channels: [{
+ *   channelId: number,
+ *   name: string,
+ *   },
+ * ]}
+ * 
  */
 export const channelsListAllV1 = (token: string) => {
   const data = getData();
+
+  // token = getHash(token);
   const userId = isValidToken(token);
 
   if (userId === null) {
-    return { error: 'Invalid token' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   const channelList = [];

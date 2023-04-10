@@ -56,7 +56,7 @@ app.get('/user/profile/v2', (req: Request, res: Response) => {
   return res.json(userProfileV1(token, uId));
 });
 
-app.post('/channels/create/v2', (req: Request, res: Response) => {
+app.post('/channels/create/v3', (req: Request, res: Response) => {
   const token = req.header('token');
   const { name, isPublic } = req.body;
   return res.json(channelsCreateV1(token, name, isPublic));
@@ -87,12 +87,12 @@ app.get('/channel/messages/v2', (req: Request, res: Response) => {
   return res.json(channelMessagesV1(token, channelId, start));
 });
 
-app.get('/channels/list/v2', (req: Request, res: Response) => {
+app.get('/channels/list/v3', (req: Request, res: Response) => {
   const token = req.header('token');
   return res.json(channelsListV1(token));
 });
 
-app.get('/channels/listall/v2', (req: Request, res: Response) => {
+app.get('/channels/listall/v3', (req: Request, res: Response) => {
   const token = req.header('token');
   return res.json(channelsListAllV1(token));
 });
