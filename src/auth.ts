@@ -1,4 +1,4 @@
-import { User, getData, setData } from './dataStore';
+import { getData, setData } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
 
@@ -10,11 +10,8 @@ import validator from 'validator';
 */
 const isEmailFromUser = (email: string): boolean => {
   const data = getData();
-  let user;
-  if (data.users !== undefined) {
-    user = data.users.find(person => person.email === email);
-  }
 
+  const user = data.users.find(person => person.email === email);
   if (user === undefined) {
     return false;
   }
@@ -77,15 +74,7 @@ const newHandle = (nameFirst: string, nameLast: string): string => {
 */
 const getNewId = (): number => {
   const data = getData();
-  let max = 0;
-  const user = data.users;
-  user.forEach((i: User) => {
-    if (i.uId > max) {
-      max = i.uId;
-    }
-  });
-
-  const id = max + 10;
+  const id = (data.users.length + 1) * 10;
   return id;
 };
 
