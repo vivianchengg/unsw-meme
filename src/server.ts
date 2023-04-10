@@ -40,7 +40,7 @@ app.post('/auth/login/v2', (req: Request, res: Response) => {
   return res.json(authLoginV1(email, password));
 });
 
-app.post('/auth/register/v2', (req: Request, res: Response) => {
+app.post('/auth/register/v3', (req: Request, res: Response) => {
   const { email, password, nameFirst, nameLast } = req.body;
   return res.json(authRegisterV1(email, password, nameFirst, nameLast));
 });
@@ -50,8 +50,8 @@ app.post('/auth/logout/v1', (req: Request, res: Response) => {
   return res.json(authLogoutV1(token));
 });
 
-app.get('/user/profile/v2', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.get('/user/profile/v3', (req: Request, res: Response) => {
+  const token = req.header('token');
   const uId = parseInt(req.query.uId as string);
   return res.json(userProfileV1(token, uId));
 });
@@ -109,35 +109,37 @@ app.post('/channel/removeowner/v1', (req: Request, res: Response) => {
   return res.json(channelRemoveOwnerV1(token, channelId, uId));
 });
 
-app.post('/dm/create/v1', (req: Request, res: Response) => {
-  const { token, uIds } = req.body;
+app.post('/dm/create/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { uIds } = req.body;
   return res.json(dmCreateV1(token, uIds));
 });
 
-app.get('/dm/list/v1', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.get('/dm/list/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
   return res.json(dmListV1(token));
 });
 
-app.delete('/dm/remove/v1', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.delete('/dm/remove/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
   const dmId = parseInt(req.query.dmId as string);
   return res.json(dmRemoveV1(token, dmId));
 });
 
-app.get('/dm/details/v1', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.get('/dm/details/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
   const dmId = parseInt(req.query.dmId as string);
   return res.json(dmDetailsV1(token, dmId));
 });
 
-app.post('/dm/leave/v1', (req: Request, res: Response) => {
-  const { token, dmId } = req.body;
+app.post('/dm/leave/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { dmId } = req.body;
   return res.json(dmLeaveV1(token, dmId));
 });
 
-app.get('/dm/messages/v1', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.get('/dm/messages/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
   const dmId = parseInt(req.query.dmId as string);
   const start = parseInt(req.query.start as string);
   res.json(dmMessagesV1(token, dmId, start));
@@ -179,8 +181,9 @@ app.put('/message/edit/v1', (req: Request, res: Response) => {
   return res.json(messageEditV1(token, messageId, message));
 });
 
-app.post('/message/senddm/v1', (req: Request, res: Response) => {
-  const { token, dmId, message } = req.body;
+app.post('/message/senddm/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { dmId, message } = req.body;
   return res.json(messageSendDmV1(token, dmId, message));
 });
 

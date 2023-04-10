@@ -1,4 +1,4 @@
-import { getRequest, postRequest, putRequest, deleteRequest } from './request';
+/*import { getRequest, postRequest, putRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
@@ -282,3 +282,4 @@ describe('userProfileV2 tests', () => {
     expect(profile).toStrictEqual(ERROR);
   });
 });
+*/

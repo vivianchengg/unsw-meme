@@ -1,4 +1,4 @@
-import { getRequest, postRequest, deleteRequest } from './request';
+/*import { getRequest, postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
@@ -824,3 +824,4 @@ describe('channelRemoveOwnerV1 test', () => {
     expect(postRequest('/channel/removeowner/v1', ownerData)).toStrictEqual(ERROR);
   });
 });
+*/

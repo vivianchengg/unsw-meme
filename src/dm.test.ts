@@ -33,7 +33,11 @@ beforeEach(() => {
     token: user.token,
   };
 
-  dm1 = requestHelper('POST', '/dm/create/v3', tokenData, dm1Data);
+  const tokenOwner = {
+    token: owner.token
+  };
+
+  dm1 = requestHelper('POST', '/dm/create/v2', tokenOwner, dm1Data);
 });
 
 afterAll(() => {
@@ -67,7 +71,7 @@ describe('dmLeaveV1 Test', () => {
       nameLast: 'Jiang'
     };
 
-    const user2 = postRequest('/auth/register/v3', user2Data);
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, user2Data);
 
     const detailRequest = {
       dmId: dm1.dmId
@@ -163,8 +167,8 @@ describe('dmCreateV1 test', () => {
     const dmData = {
       uIds: [user1.authUserId, user2.authUserId]
     };
-    tokenData.token = owner.token + '1';
-    expect(requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toThrow(Error);
+    tokenData.token = owner.token + '3';
+    expect(() => requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toThrow(Error);
   });
 
   test('test valid dm create', () => {
@@ -202,7 +206,7 @@ describe('dmCreateV1 test', () => {
       uIds: [] as number[]
     };
     tokenData.token = owner.token;
-    const dm = postRequest('POST', '/dm/create/v2', tokenData, dmData);
+    const dm = requestHelper('POST', '/dm/create/v2', tokenData, dmData);
 
     const dmRemoveData = {
       dmId: dm.dmId
