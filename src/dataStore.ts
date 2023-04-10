@@ -1,72 +1,5 @@
 import fs from 'fs';
-import request from 'sync-request';
-import { port, url } from './config.json';
-
-const SERVER_URL = `${url}:${port}`;
-
-export const getRequest = (url: string, data: any) => {
-  const res = request(
-    'GET',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-export const postRequest = (url: string, data: any) => {
-  const res = request(
-    'POST',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-export const putRequest = (url: string, data: any) => {
-  const res = request(
-    'PUT',
-    SERVER_URL + url,
-    {
-      json: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-export const deleteRequest = (url: string, data: any) => {
-  const res = request(
-    'DELETE',
-    SERVER_URL + url,
-    {
-      qs: data,
-    }
-  );
-  const body = JSON.parse(res.getBody() as string);
-  return body;
-};
-
-// request helper to be used for it3
-
-// export const requestHelper = (method: HttpVerb, path: string, token: object, data: object) => {
-//   let qs = {};
-//   let json = {};
-//   const header = token;
-//   if (['GET', 'DELETE'].includes(method)) {
-//     qs = data;
-//   } else {
-//     // PUT/POST
-//     json = data;
-//   }
-//   const res = request(method, SERVER_URL + path, { header, qs, json, timeout: 20000 });
-//   return JSON.parse(res.getBody('utf-8'));
-// }
+import crypto from 'crypto';
 
 export type User = {
   uId: number,
@@ -143,4 +76,8 @@ export const getData = (): Data => {
 export const setData = (newData: Data) => {
   const dataString = JSON.stringify(newData);
   fs.writeFileSync('./src/data.json', dataString, { flag: 'w' });
+};
+
+export const getHash = (input: string) => {
+  return crypto.createHash('sha256').update(input).digest('hex');
 };
