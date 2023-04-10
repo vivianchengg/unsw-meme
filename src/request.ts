@@ -62,8 +62,8 @@ export const requestHelper = (method: HttpVerb, path: string, token: object, dat
   let json = {};
   let headers = {};
   if (['GET', 'DELETE'].includes(method)) {
-    qs = data;
     headers = token;
+    qs = data;
   } else {
     // PUT/POST
     headers = token;
