@@ -1,7 +1,5 @@
 import { requestHelper } from './request';
-
-const ERROR = { error: expect.any(String) };
-
+// 2 changes to be made before merging to master
 let user: any;
 let channel: any;
 let tokenData: any;

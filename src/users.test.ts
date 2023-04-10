@@ -1,23 +1,23 @@
-/*
-import { getRequest, postRequest, putRequest, deleteRequest } from './request';
+
+import { postRequest, putRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
 let user: any;
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
   const person = {
     email: 'jr@unsw.edu.au',
     password: 'password',
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  user = postRequest('/auth/register/v2', person);
+  user = postRequest('/auth/register/v2', {}, person);
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 });
 
 describe('userProfileSetHandleV1 tests', () => {
@@ -26,10 +26,13 @@ describe('userProfileSetHandleV1 tests', () => {
       token: user.token + 'buffer',
       handleStr: 'theJAKErenzella'
     };
+    const tokenData = {
+      token: user.token + 'buffer'
+    };
 
-    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+    expect(putRequest('/user/profile/sethandle/v1', tokenData, param)).toStrictEqual(ERROR);
   });
-
+  /*
   test('New handle not between 3-20 characters', () => {
     const param = {
       token: user.token,
@@ -82,7 +85,7 @@ describe('userProfileSetHandleV1 tests', () => {
     expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual({});
   });
 });
-
+/*
 describe('userProfileSetEmailV1 tests', () => {
   test('Invalid token', () => {
     const param = {
@@ -135,8 +138,9 @@ describe('userProfileSetEmailV1 tests', () => {
 
     expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
   });
+  */
 });
-
+/*
 describe('HTTP - /user/profile/setname/v1', () => {
   test('Invalid token', () => {
     const param = {

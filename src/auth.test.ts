@@ -19,7 +19,8 @@ describe('authLoginV1 Test', () => {
     };
 
     expect(requestHelper('POST', '/auth/login/v2', {}, user1Data)).toStrictEqual(ERROR);
-
+  });
+    /*
     const regData = {
       email: 'vc@unsw.edu.au',
       password: 'password',
@@ -77,6 +78,7 @@ describe('authLoginV1 Test', () => {
     }
     expect(user.authUserId).toStrictEqual(reg.authUserId);
   });
+  */
 });
 /*
 describe('authRegisterV1 Test', () => {

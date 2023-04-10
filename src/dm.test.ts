@@ -1,5 +1,4 @@
-/*
-import { getRequest, postRequest, deleteRequest } from './request';
+import { deleteRequest, requestHelper } from './request';
 
 const ERROR = { error: expect.any(String) };
 
@@ -8,7 +7,7 @@ let user: any;
 let dm1: any;
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 
   const ownerData = {
     email: 'vc@unsw.edu.au',
@@ -16,7 +15,7 @@ beforeEach(() => {
     nameFirst: 'Vivian',
     nameLast: 'Cheng'
   };
-  owner = postRequest('/auth/register/v2', ownerData);
+  owner = requestHelper('POST', '/auth/register/v2', {}, ownerData);
 
   const userData = {
     email: 'jr@unsw.edu.au',
@@ -25,26 +24,34 @@ beforeEach(() => {
     nameLast: 'Renzella'
   };
 
-  user = postRequest('/auth/register/v2', userData);
+  user = requestHelper('POST', '/auth/register/v2', {}, userData);
 
   const dm1Data = {
-    token: owner.token,
     uIds: [user.authUserId]
   };
 
-  dm1 = postRequest('/dm/create/v1', dm1Data);
+  const tokenData = {
+    token: owner.token
+  };
+
+  dm1 = requestHelper('POST', '/dm/create/v1', tokenData, dm1Data);
+});
+
+afterAll(() => {
+  requestHelper('DELETE', '/clear/v1', {}, null);
 });
 
 describe('dmLeaveV1 Test', () => {
   test('Invalid token', () => {
     const detailRequest = {
-      token: user.token + 'yay',
       dmId: dm1.dmId
     };
-
-    expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual(ERROR);
+    const tokenData = {
+      token: user.token + 'yay',
+    };
+    expect(requestHelper('POST', '/dm/leave/v1', tokenData, detailRequest)).toStrictEqual(ERROR);
   });
-
+  /*
   test('Invalid dmId', () => {
     const detailRequest = {
       token: user.token,
@@ -89,12 +96,10 @@ describe('dmLeaveV1 Test', () => {
 
     expect(postRequest('/dm/leave/v1', detailRequest)).toStrictEqual({});
   });
+  */
 });
 
-afterAll(() => {
-  deleteRequest('/clear/v1', null);
-});
-
+/*
 describe('dmCreateV1 test', () => {
   test('invalid uId exists', () => {
     const user1Data = {

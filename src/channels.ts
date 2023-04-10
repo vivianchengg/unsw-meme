@@ -101,7 +101,7 @@ export const channelsListV1 = (token: string) => {
  *   name: string,
  *   },
  * ]}
- * 
+ *
  */
 export const channelsListAllV1 = (token: string) => {
   const data = getData();

@@ -1,16 +1,16 @@
-/*
-import { getRequest, postRequest, deleteRequest } from './request';
+
+import { deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 });
-
+/*
 describe('Test clearV1 function', () => {
   test('test clearV1 - user and channel', () => {
     // new user
@@ -48,9 +48,8 @@ describe('Test clearV1 function', () => {
     expect(getRequest('/user/profile/v2', profileData)).toStrictEqual(ERROR);
     expect(getRequest('/channel/details/v2', detailData)).toStrictEqual(ERROR);
   });
-
-  test('test clearV1 - basic output', () => {
-    expect(deleteRequest('/clear/v1', null)).toStrictEqual({});
-  });
-});
 */
+  test('test clearV1 - basic output', () => {
+    expect(deleteRequest('/clear/v1', {}, null)).toStrictEqual({});
+  });
+

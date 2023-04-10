@@ -1,14 +1,14 @@
-/*
+
 import { getRequest, postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
 let user: any;
-let invitedUser: any;
+// let invitedUser: any;
 let channel: any;
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 
   // user is global owner
   const userData = {
@@ -17,38 +17,45 @@ beforeEach(() => {
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  user = postRequest('/auth/register/v2', userData);
+  user = postRequest('/auth/register/v2', {}, userData);
 
   const channelData = {
-    token: user.token,
     name: 'COMP1531',
     isPublic: true
   };
-  channel = postRequest('/channels/create/v2', channelData);
 
+  const tokenData = {
+    token: user.token
+  };
+  channel = postRequest('/channels/create/v3', tokenData, channelData);
+  /*
   const param1 = {
     email: 'arialee@gmail.com',
     password: 'dynamite',
     nameFirst: 'aria',
     nameLast: 'lee'
   };
-  invitedUser = postRequest('/auth/register/v2', param1);
+  invitedUser = postRequest('/auth/register/v2', {}, param1);
+  */
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 });
 
 describe('channelDetailsV1 Test', () => {
   test('Invalid token', () => {
     const detailRequest = {
-      token: user.token + 'yay',
       channelId: channel.channelId
     };
 
-    expect(getRequest('/channel/details/v2', detailRequest)).toStrictEqual(ERROR);
-  });
+    const tokenData = {
+      token: user.token + 'yay'
+    };
 
+    expect(getRequest('/channel/details/v2', tokenData, detailRequest)).toStrictEqual(ERROR);
+  });
+  /*
   test('Invalid channelId', () => {
     const detailRequest = {
       token: user.token,
@@ -94,8 +101,9 @@ describe('channelDetailsV1 Test', () => {
     expect(cDetail.allMembers).toStrictEqual([profile.user]);
     expect(cDetail.ownerMembers).toStrictEqual([profile.user]);
   });
+  */
 });
-
+/*
 describe('channelJoinV1 function testing', () => {
   test('channelId does not refer to a valid channel', () => {
     const user1Data = {
