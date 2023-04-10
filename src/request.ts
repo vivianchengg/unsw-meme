@@ -56,13 +56,15 @@ export const deleteRequest = (url: string, data: any) => {
 // export const requestHelper = (method: HttpVerb, path: string, token: object, data: object) => {
 //   let qs = {};
 //   let json = {};
-//   const header = token;
+//   let headers = {};
 //   if (['GET', 'DELETE'].includes(method)) {
+//     headers = token;
 //     qs = data;
 //   } else {
 //     // PUT/POST
+//     headers = token;
 //     json = data;
 //   }
-//   const res = request(method, SERVER_URL + path, { header, qs, json, timeout: 20000 });
+//   const res = request(method, SERVER_URL + path, { headers, qs, json, timeout: 20000 });
 //   return JSON.parse(res.getBody('utf-8'));
-// }
+// };
