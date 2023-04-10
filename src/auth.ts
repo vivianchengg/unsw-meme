@@ -1,4 +1,4 @@
-import { getData, setData } from './dataStore';
+import { getData, setData, getHash } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
 
@@ -110,14 +110,15 @@ export const authLoginV1 = (email: string, password: string) => {
   }
 
   const user = data.users.find(person => person.email === email);
-  if (user.password !== password) {
+  if (user.password !== getHash(password)) {
     return { error: 'incorrect password' };
   }
 
   const id = user.uId;
 
   const token = getNewToken();
-  user.token.push(token);
+  const hashedToken = getHash(token);
+  user.token.push(hashedToken);
   setData(data);
 
   return {
@@ -168,6 +169,8 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   }
 
   const token = getNewToken();
+  const hashedToken = getHash(token);
+  const hashedPwd = getHash(password);
 
   const newUser = {
     uId: id,
@@ -175,9 +178,9 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     nameLast: nameLast,
     email: email,
     handleStr: handle,
-    password: password,
+    password: hashedPwd,
     pId: pId,
-    token: [token],
+    token: [hashedToken],
   };
 
   data.users.push(newUser);
@@ -197,11 +200,12 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
 */
 export const authLogoutV1 = (token: string) => {
   const data = getData();
-  if (!isValidToken(token)) {
+  const hashedToken = getHash(token);
+  if (!isValidToken(hashedToken)) {
     return { error: 'invalid token' };
   }
   for (const user of data.users) {
-    user.token = user.token.filter(t => t !== token);
+    user.token = user.token.filter(t => t !== hashedToken);
   }
   setData(data);
   return {};
