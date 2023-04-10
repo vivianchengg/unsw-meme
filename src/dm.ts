@@ -124,11 +124,7 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
     return { error: 'invalid dmId' };
   }
 
-  if (dm.owner !== authUserId) {
-    return { error: 'user is not the owner of dm' };
-  }
-
-  if (!dm.allMembers.includes(authUserId)) {
+  if (!dm.allMembers.includes(authUserId) || dm.owner !== authUserId) {
     return { error: 'user is an owner who is no longer in dm' };
   }
 

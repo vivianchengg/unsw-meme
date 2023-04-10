@@ -271,6 +271,20 @@ describe('HTTP - /dm/list/v1 tests', () => {
   });
 
   test('Valid input', () => {
+    const userData = {
+      email: 'cc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'chu',
+      nameLast: 'chuut'
+  };
+  const user2 = postRequest('/auth/register/v2', userData);
+
+    const dm2Data = {
+      token: user.token,
+      uIds: [user2.authUserId],
+    };
+    postRequest('/dm/create/v1', dm2Data);
+
     const param = {
       token: owner.token,
     };
@@ -303,8 +317,8 @@ describe('dmMessagesV1 test', () => {
 
   test('dmId is valid and the authorised user is not a member of the DM', () => {
     const person = {
-      email: 'kennyfarzie@gmail.com',
-      password: 'lonis',
+      email: 'cc@unsw.edu.au',
+      password: 'password',
       nameFirst: 'kenny',
       nameLast: 'farzie'
     };
@@ -325,6 +339,30 @@ describe('dmMessagesV1 test', () => {
       start: 0
     };
     expect(getRequest('/dm/messages/v1', param)).toStrictEqual(ERROR);
+  });
+
+  test('valid input with 50+ messages', () => {
+    const msgData = {
+      token: owner.token,
+      dmId: dm1.dmId,
+      message: 'lol',
+    };
+
+    let count = 0;
+    while (count < 52) {
+      postRequest('/message/senddm/v1', msgData);
+      count++;
+    }
+
+    const param = {
+      token: owner.token,
+      dmId: dm1.dmId,
+      start: 0
+    };
+    const result = getRequest('/dm/messages/v1', param);
+    expect(result.messages).toEqual(expect.arrayContaining([]));
+    expect(result.start).toStrictEqual(0);
+    expect(result.end).toStrictEqual(50);
   });
 
   test('valid input', () => {
