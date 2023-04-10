@@ -27,7 +27,6 @@ export const isValidName = (name: string): boolean => {
 export const channelsCreateV1 = (token: string, name: string, isPublic: boolean) => {
   const data = getData();
 
-  // token = getHash(token);
   const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'Invalid token error');
@@ -72,7 +71,6 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
 export const channelsListV1 = (token: string) => {
   const data = getData();
 
-  // token = getHash(token);
   const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'Invalid token error');
@@ -106,7 +104,6 @@ export const channelsListV1 = (token: string) => {
 export const channelsListAllV1 = (token: string) => {
   const data = getData();
 
-  // token = getHash(token);
   const userId = isValidToken(token);
 
   if (userId === null) {

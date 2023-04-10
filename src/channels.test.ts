@@ -1,5 +1,5 @@
 import { requestHelper } from './request';
-// 2 changes to be made before merging to master
+
 let user: any;
 let channel: any;
 let tokenData: any;
@@ -13,8 +13,8 @@ beforeEach(() => {
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  // need to change to v3
-  user = requestHelper('POST', '/auth/register/v2', {}, person);
+
+  user = requestHelper('POST', '/auth/register/v3', {}, person);
 
   const channelData = {
     name: 'COMP1531',
@@ -39,8 +39,8 @@ describe('HTTP - channelsListV3 Tests', () => {
       nameFirst: 'christine',
       nameLast: 'chu'
     };
-    // need to change to v3
-    const user2 = requestHelper('POST', '/auth/register/v2', {}, person);
+
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, person);
 
     const channelData = {
       name: 'COMP1521',
