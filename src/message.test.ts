@@ -1,15 +1,15 @@
-import { putRequest, postRequest, deleteRequest, getRequest } from './request';
+import { postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
 let user: any;
 let user2: any;
-let user3: any;
+// let user3: any;
 let channel: any;
 let dm: any;
 let message: any;
-let dmMsg: any;
-let dmMsg2: any;
+// let dmMsg: any;
+// let dmMsg2: any;
 
 beforeEach(() => {
   deleteRequest('/clear/v1', {}, null);
@@ -58,7 +58,7 @@ beforeEach(() => {
     dmId: dm.dmId,
     message: 'hello'
   };
-  dmMsg = postRequest('/message/senddm/v1', tokenData, dmMsgData);
+  postRequest('/message/senddm/v1', tokenData, dmMsgData);
 });
 
 afterAll(() => {

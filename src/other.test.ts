@@ -1,8 +1,6 @@
 
 import { deleteRequest } from './request';
 
-const ERROR = { error: expect.any(String) };
-
 beforeEach(() => {
   deleteRequest('/clear/v1', {}, null);
 });
@@ -49,7 +47,6 @@ describe('Test clearV1 function', () => {
     expect(getRequest('/channel/details/v2', detailData)).toStrictEqual(ERROR);
   });
 */
-  test('test clearV1 - basic output', () => {
-    expect(deleteRequest('/clear/v1', {}, null)).toStrictEqual({});
-  });
-
+test('test clearV1 - basic output', () => {
+  expect(deleteRequest('/clear/v1', {}, null)).toStrictEqual({});
+});
