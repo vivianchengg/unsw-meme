@@ -30,6 +30,21 @@ afterAll(() => {
 
 describe('HTTP - channelsListV2 Tests', () => {
   test('Testing valid input', () => {
+    const person = {
+      email: 'cc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'christine',
+      nameLast: 'chu'
+    };
+    const user2 = postRequest('/auth/register/v2', person);
+
+    const channelData = {
+      token: user.token,
+      name: 'COMP1521',
+      isPublic: true,
+    };
+    postRequest('/channels/create/v2', channelData);
+    
     const param = {
       token: user.token,
     };
@@ -49,6 +64,7 @@ describe('HTTP - channelsListV2 Tests', () => {
 
     expect(getRequest('/channels/list/v2', param)).toStrictEqual(ERROR);
   });
+  
 });
 
 describe('channelListAllV1 Tests', () => {

@@ -31,10 +31,6 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
     return { error: 'invalid token' };
   }
 
-  if (isValidUser(authUserId) === false) {
-    return { error: 'invalid auth user id' };
-  }
-
   if (isValidName(name) === false) {
     return { error: 'invalid name' };
   }
@@ -76,10 +72,6 @@ export const channelsListV1 = (token: string) => {
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'invalid authUserId' };
-  }
-
-  if (!isValidUser(authUserId)) {
     return { error: 'invalid authUserId' };
   }
 
