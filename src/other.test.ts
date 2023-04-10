@@ -1,5 +1,4 @@
 import { getRequest, postRequest, deleteRequest, requestHelper } from './request';
-import { getHash } from './dataStore';
 
 const ERROR = { error: expect.any(String) };
 
