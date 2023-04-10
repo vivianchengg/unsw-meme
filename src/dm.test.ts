@@ -87,6 +87,8 @@ describe('dmLeaveV1 Test', () => {
     };
 
     expect(requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toStrictEqual({});
+    expect(requestHelper('GET', '/dm/list/v2', tokenData, {})).toStrictEqual({ dms: [] });
+
   });
 
   test('Basic functionality: owner', () => {
@@ -95,6 +97,8 @@ describe('dmLeaveV1 Test', () => {
     };
     tokenData.token = owner.token;
     expect(requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toStrictEqual({});
+    expect(requestHelper('GET', '/dm/list/v2', tokenData, {})).toStrictEqual({ dms: [] });
+    
   });
 });
 
@@ -258,6 +262,7 @@ describe('dm remove tests', () => {
     };
     tokenData.token = owner.token;
     expect(requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toStrictEqual({});
+    expect(requestHelper('GET', '/dm/list/v2', tokenData, {})).toStrictEqual({ dms: [] });
   });
 });
 
