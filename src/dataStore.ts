@@ -1,4 +1,5 @@
 import fs from 'fs';
+import crypto from 'crypto';
 
 export type User = {
   uId: number,
@@ -75,4 +76,8 @@ export const getData = (): Data => {
 export const setData = (newData: Data) => {
   const dataString = JSON.stringify(newData);
   fs.writeFileSync('./src/data.json', dataString, { flag: 'w' });
+};
+
+export const getHash = (input: string) => {
+  return crypto.createHash('sha256').update(input).digest('hex');
 };
