@@ -39,12 +39,12 @@ describe('HTTP - channelsListV2 Tests', () => {
     const user2 = postRequest('/auth/register/v2', person);
 
     const channelData = {
-      token: user.token,
+      token: user2.token,
       name: 'COMP1521',
       isPublic: true,
     };
     postRequest('/channels/create/v2', channelData);
-    
+
     const param = {
       token: user.token,
     };
@@ -64,7 +64,6 @@ describe('HTTP - channelsListV2 Tests', () => {
 
     expect(getRequest('/channels/list/v2', param)).toStrictEqual(ERROR);
   });
-  
 });
 
 describe('channelListAllV1 Tests', () => {

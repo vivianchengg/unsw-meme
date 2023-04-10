@@ -1,6 +1,6 @@
 import { Message, getData, setData } from './dataStore';
 import { isMember } from './channel';
-import { isValidToken, isValidUser } from './users';
+import { isValidToken } from './users';
 
 /**
   * Checks if name is valid
