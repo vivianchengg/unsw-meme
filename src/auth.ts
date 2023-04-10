@@ -1,6 +1,7 @@
 import { getData, setData, getHash } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
+import HTTPError from 'http-errors';
 
 /**
   * check whether email entered belong to a user
@@ -106,12 +107,12 @@ export const authLoginV1 = (email: string, password: string) => {
 
   // error: email entered does not belong to a user or incorrect password
   if (!isEmailFromUser(email)) {
-    return { error: 'invalid email' };
+    throw HTTPError(400, 'invalid email');
   }
 
   const user = data.users.find(person => person.email === email);
   if (user.password !== getHash(password)) {
-    return { error: 'incorrect password' };
+    throw HTTPError(400, 'incorrect password');
   }
 
   const id = user.uId;
@@ -141,23 +142,23 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const data = getData();
 
   if (!validator.isEmail(email)) {
-    return { error: 'invalid email' };
+    throw HTTPError(400, 'invalid email');
   }
 
   if (isEmailFromUser(email)) {
-    return { error: 'email already taken' };
+    throw HTTPError(400, 'email already taken');
   }
 
   if (password.length < 6) {
-    return { error: 'password < 6 characters' };
+    throw HTTPError(400, 'password < 6 characters');
   }
 
   if (nameFirst.length < 1 || nameFirst.length > 50) {
-    return { error: 'incorrect firstname length' };
+    throw HTTPError(400, 'incorrect firstname length');
   }
 
   if (nameLast.length < 1 || nameLast.length > 50) {
-    return { error: 'incorrect lastname length' };
+    throw HTTPError(400, 'incorrect lastname length');
   }
 
   const handle = newHandle(nameFirst, nameLast);
@@ -202,7 +203,7 @@ export const authLogoutV1 = (token: string) => {
   const data = getData();
   const hashedToken = getHash(token);
   if (!isValidToken(hashedToken)) {
-    return { error: 'invalid token' };
+    throw HTTPError(400, 'invalid token');
   }
   for (const user of data.users) {
     user.token = user.token.filter(t => t !== hashedToken);
