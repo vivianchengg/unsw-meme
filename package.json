@@ -42,7 +42,8 @@
   },
   "nyc": {
     "exclude": [
-      "echo.*"
+      "echo.*",
+      "request.ts"
     ]
   }
 }

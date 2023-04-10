@@ -1,4 +1,4 @@
-import { getRequest, postRequest, deleteRequest } from './dataStore';
+import { getRequest, postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
@@ -68,7 +68,12 @@ describe('authLoginV1 Test', () => {
     };
 
     const reg = postRequest('/auth/register/v2', regData);
-    const user = postRequest('/auth/login/v2', userData);
+    let user = postRequest('/auth/login/v2', userData);
+    expect(user.authUserId).toStrictEqual(reg.authUserId);
+
+    for (let i = 0; i < 500; i++) {
+      user = postRequest('/auth/login/v2', userData);
+    }
     expect(user.authUserId).toStrictEqual(reg.authUserId);
   });
 });
