@@ -1,4 +1,4 @@
-import { getRequest, postRequest, deleteRequest } from './request';
+import { getRequest, postRequest, deleteRequest, requestHelper } from './request';
 
 const ERROR = { error: expect.any(String) };
 
@@ -49,6 +49,6 @@ describe('Test clearV1 function', () => {
   });
 
   test('test clearV1 - basic output', () => {
-    expect(deleteRequest('/clear/v1', null)).toStrictEqual({});
+    expect(requestHelper('DELETE', '/clear/v1', {}, {})).toStrictEqual({});
   });
 });
