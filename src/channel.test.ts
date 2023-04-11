@@ -7,7 +7,7 @@ let invitedUser: any;
 let channel: any;
 
 beforeEach(() => {
-  requestHelper('DELETE', '/clear/v1', null, null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 
   // user is global owner
   const userData = {
@@ -35,7 +35,7 @@ beforeEach(() => {
 });
 
 afterAll(() => {
-  requestHelper('DELETE', '/clear/v1', null, null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
 describe('channelDetailsV3 Tests', () => {
