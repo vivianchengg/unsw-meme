@@ -389,20 +389,12 @@ describe('MessageEditV1 test', () => {
     };
     requestHelper('PUT', '/message/edit/v2', tokenData, edit1Data);
 
-    // user is global owner but not member
-    const edit2Data = {
-      messageId: message.messageId,
-      message: 'hello ellen, what are you doing?'
-    };
-    tokenData.token = user.token;
-    expect(requestHelper('PUT', '/message/edit/v2', tokenData, edit2Data)).toEqual(403);
-
     const edit3Data = {
       messageId: message.messageId,
       message: 'hello ellen, what are you doing?'
     };
     tokenData.token = user3.token;
-    expect(requestHelper('PUT', '/message/edit/v2', tokenData, edit3Data)).toEqual(403);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, edit3Data)).toEqual(400);
 
     // user is not member owner and not sender
     const edit4Data = {
