@@ -169,7 +169,7 @@ describe('dmCreateV1 test', () => {
       uIds: [user1.authUserId, user2.authUserId]
     };
     tokenData.token = owner.token + '3';
-    expect(requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toEqual(400);
+    expect(requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toEqual(403);
   });
 
   test('test valid dm create', () => {
