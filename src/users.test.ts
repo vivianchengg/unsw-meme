@@ -1,7 +1,5 @@
 import { requestHelper } from './request';
 
-const ERROR = { error: expect.any(String) };
-
 let user: any;
 
 beforeEach(() => {
@@ -29,7 +27,7 @@ describe('userProfileSetHandleV1 tests', () => {
       token: user.token + 'buffer'
     };
 
-    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(400);
   });
 
   test('New handle not between 3-20 characters', () => {
@@ -41,7 +39,7 @@ describe('userProfileSetHandleV1 tests', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(400);
   });
 
   test('New handle contains non-alphanumeric characters', () => {
@@ -53,7 +51,7 @@ describe('userProfileSetHandleV1 tests', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(400);
   });
 
   test('New handle already taken', () => {
@@ -84,7 +82,7 @@ describe('userProfileSetHandleV1 tests', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/sethandle/v2', header2Data, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', header2Data, param)).toEqual(400);
   });
 
   test('Basic functionality', () => {
@@ -121,7 +119,7 @@ describe('userProfileSetEmailV1 tests', () => {
       token: user.token + 'buffer'
     };
 
-    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(400);
   });
 
   test('Invalid email', () => {
@@ -133,7 +131,7 @@ describe('userProfileSetEmailV1 tests', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(400);
   });
 
   test('Email already taken', () => {
@@ -164,7 +162,7 @@ describe('userProfileSetEmailV1 tests', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(400);
   });
 
   test('Basic functionality', () => {
@@ -203,7 +201,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
       token: user.token + '1'
     };
 
-    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('0 length first name', () => {
@@ -216,7 +214,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('50+ length first name', () => {
@@ -229,7 +227,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('0 length last name', () => {
@@ -242,7 +240,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('50+ length lastname name', () => {
@@ -255,7 +253,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
       token: user.token
     };
 
-    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toStrictEqual(ERROR);
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('Valid input', () => {
@@ -289,7 +287,7 @@ describe('HTTP - /users/all/v1', () => {
     const param = {
       token: user.token + 'lol',
     };
-    expect(requestHelper('GET', '/users/all/v2', param, {})).toStrictEqual(ERROR);
+    expect(requestHelper('GET', '/users/all/v2', param, {})).toEqual(400);
   });
 
   test('Valid Token', () => {
@@ -357,7 +355,7 @@ describe('userProfileV2 tests', () => {
     };
 
     const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
-    expect(userDetail).toStrictEqual(ERROR);
+    expect(userDetail).toEqual(400);
   });
 
   test('Testing invalid uId', () => {
@@ -370,6 +368,6 @@ describe('userProfileV2 tests', () => {
     };
 
     const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
-    expect(userDetail).toStrictEqual(ERROR);
+    expect(userDetail).toEqual(400);
   });
 });
