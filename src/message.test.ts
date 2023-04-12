@@ -93,7 +93,7 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
     tokenData.token = user.token;
     requestHelper('DELETE', '/message/remove/v2', tokenData, param1);
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toThrow(Error);
+    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toEqual(400);
   });
 
   test('channel writer can remove msg', () => {
@@ -116,14 +116,14 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
       messageId: message2.messageId,
     };
     requestHelper('DELETE', '/message/remove/v2', tokenData, param1);
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toThrow(Error);
+    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toEqual(400);
   });
 
   test('invalid message id', () => {
     const rmData = {
       messageId: message.messageId + 199
     };
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, rmData)).toThrow(Error);
+    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, rmData)).toEqual(400);
   });
 
   test('token is invalid', () => {
@@ -131,7 +131,7 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
       messageId: message.messageId
     };
     tokenData.token = user2.token + 'hi';
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toThrow(Error);
+    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toEqual(403);
   });
 
   test('authUser is not sender and no owner permissions', () => {
@@ -146,7 +146,7 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
     tokenData.token = user3.token;
 
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, msg3Data)).toThrow(Error);
+    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, msg3Data)).toEqual(403);
   });
 
   test('owner(not global owner) removes msg', () => {
@@ -172,7 +172,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       channelId: channel.channelId - 100,
       message: 'Heyyy, how is ur day going'
     };
-    expect(() => requestHelper('POST', '/message/send/v2', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('POST', '/message/send/v2', tokenData, param2)).toEqual(400);
   });
 
   test('length of message is less than 1 characters', () => {
@@ -180,7 +180,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       channelId: channel.channelId,
       message: ''
     };
-    expect(() => requestHelper('POST', '/message/send/v2', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('POST', '/message/send/v2', tokenData, param2)).toEqual(400);
   });
 
   test('length of message is over 1000 characters', () => {
@@ -188,7 +188,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       channelId: channel.channelId,
       message: 'a'.repeat(1001)
     };
-    expect(() => requestHelper('POST', '/message/send/v2', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('POST', '/message/send/v2', tokenData, param2)).toEqual(400);
   });
 
   test('token is invalid', () => {
@@ -197,7 +197,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       message: 'no thanks'
     };
     tokenData.token = user2.token + 'yay';
-    expect(() => requestHelper('POST', '/message/send/v2', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('POST', '/message/send/v2', tokenData, param2)).toEqual(403);
   });
 
   test('valid input and output', () => {
@@ -214,7 +214,7 @@ describe('HTTP tests using Jest for messageSendV1', () => {
       message: 'Heyyy, how is ur day going'
     };
     tokenData.token = user.token;
-    expect(() => requestHelper('POST', '/message/send/v2', tokenData, param3)).toThrow(Error);
+    expect(requestHelper('POST', '/message/send/v2', tokenData, param3)).toEqual(403);
   });
 });
 
@@ -229,7 +229,7 @@ describe('MessageEditV1 test', () => {
     const param = {
       messageId: message.messageId,
     };
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param)).toThrow(Error);
+    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, param)).toEqual(400);
   });
 
   test('trying to edit a deleted msg', () => {
@@ -242,7 +242,7 @@ describe('MessageEditV1 test', () => {
       messageId: message.messageId,
       message: ''
     };
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toEqual(400);
   });
 
   test('double edit empty string', () => {
@@ -251,7 +251,7 @@ describe('MessageEditV1 test', () => {
       message: ''
     };
     requestHelper('PUT', '/message/edit/v2', tokenData, param);
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param)).toEqual(400);
   });
 
   test('channel owner of msg, edits msg', () => {
@@ -316,7 +316,7 @@ describe('MessageEditV1 test', () => {
     };
     tokenData.token = user.token;
 
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toEqual(403);
   });
 
   test('global owner can edit channel', () => {
@@ -361,7 +361,7 @@ describe('MessageEditV1 test', () => {
       messageId: message.messageId,
       message: 'a'.repeat(1001)
     };
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toEqual(400);
   });
 
   test('invalid msg id', () => {
@@ -369,7 +369,7 @@ describe('MessageEditV1 test', () => {
       messageId: message.messageId + 189,
       message: 'hello ellen, what are you doing?'
     };
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toEqual(400);
   });
 
   test('token is invalid', () => {
@@ -378,7 +378,7 @@ describe('MessageEditV1 test', () => {
       message: 'hello ellen, what are you doing?'
     };
     tokenData.token = user2.token + 'yay';
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toEqual(403);
   });
 
   test('user not sender and no owner permission', () => {
@@ -395,21 +395,21 @@ describe('MessageEditV1 test', () => {
       message: 'hello ellen, what are you doing?'
     };
     tokenData.token = user.token;
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, edit2Data)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, edit2Data)).toEqual(403);
 
     const edit3Data = {
       messageId: message.messageId,
       message: 'hello ellen, what are you doing?'
     };
     tokenData.token = user3.token;
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, edit3Data)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, edit3Data)).toEqual(403);
 
     // user is not member owner and not sender
     const edit4Data = {
       messageId: dmMsg.messageId,
       message: 'hello ellen, what are you doing?'
     };
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, edit4Data)).toThrow(Error);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, edit4Data)).toEqual(403);
 
     // user is dm creator(owner)
     const edit5Data = {
@@ -435,7 +435,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       dmId: dm.dmId + 111,
       message: 'i love food wbu?',
     };
-    expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toEqual(400);
   });
 
   test('Invalid token', () => {
@@ -444,7 +444,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       message: 'i love food wbu?',
     };
     tokenData.token = user2.token + 'yay!';
-    expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toEqual(403);
   });
 
   test('0 msg length', () => {
@@ -452,7 +452,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       dmId: dm.dmId,
       message: '',
     };
-    expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toEqual(400);
   });
 
   test('+1000 msg length', () => {
@@ -460,7 +460,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       dmId: dm.dmId,
       message: 'a'.repeat(1001)
     };
-    expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toEqual(400);
   });
 
   test('dmId is valid + user not part of DM', () => {
@@ -469,7 +469,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       message: 'i love food wbu?',
     };
     tokenData.token = user.token;
-    expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toEqual(403);
   });
 
   test('Valid token + uIds (testing if owner is in dm)', () => {
