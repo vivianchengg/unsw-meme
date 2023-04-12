@@ -1,4 +1,4 @@
-import { Channel, User, getData, setData } from './dataStore';
+import { Channel, User, getData, setData, getHash } from './dataStore';
 import { userProfileV1, isValidToken, isValidUser } from './users';
 import HTTPError from 'http-errors';
 
@@ -67,7 +67,8 @@ export const validTokenUser = (token: string): User => {
 **/
 export const channelDetailsV3 = (token: string, channelId: number) => {
   const data = getData();
-  const authUserId = isValidToken(token);
+  const hashedToken = getHash(token);
+  const authUserId = isValidToken(hashedToken);
   if (authUserId === null) {
     throw HTTPError(403, 'Invalid token');
   }
@@ -111,7 +112,8 @@ export const channelDetailsV3 = (token: string, channelId: number) => {
  */
 export const channelInviteV3 = (token: string, channelId: number, uId: number) => {
   const data = getData();
-  const authUserId = isValidToken(token);
+  const hashedToken = getHash(token);
+  const authUserId = isValidToken(hashedToken);
   if (authUserId === null) {
     throw HTTPError(403, 'token is invalid');
   }
@@ -148,8 +150,8 @@ export const channelInviteV3 = (token: string, channelId: number, uId: number) =
 export const channelJoinV3 = (token: string, channelId: number) => {
   const data = getData();
 
-  const authUserId = isValidToken(token);
-
+  const hashedToken = getHash(token);
+  const authUserId = isValidToken(hashedToken);
   if (authUserId === null) {
     throw HTTPError(403, 'token is invalid');
   }
@@ -183,7 +185,8 @@ export const channelJoinV3 = (token: string, channelId: number) => {
 */
 export const channelMessagesV3 = (token: string, channelId: number, start: number) => {
   const data = getData();
-  const authUserId = isValidToken(token);
+  const hashedToken = getHash(token);
+  const authUserId = isValidToken(hashedToken);
   if (authUserId === null) {
     throw HTTPError(403, 'token is invalid');
   }
@@ -234,7 +237,8 @@ export const channelLeaveV2 = (token: string, channelId: number) => {
     throw HTTPError(400, 'Invalid channel');
   }
 
-  const userId = isValidToken(token);
+  const hashedToken = getHash(token);
+  const userId = isValidToken(hashedToken);
   if (userId === null) {
     throw HTTPError(403, 'invalid token');
   }
@@ -309,7 +313,8 @@ export const channelAddOwnerV2 = (token: string, channelId: number, uId: number)
     throw HTTPError(400, 'invalid user');
   }
 
-  const authUser = validTokenUser(token);
+  const hashedToken = getHash(token);
+  const authUser = validTokenUser(hashedToken);
   if (authUser === null) {
     throw HTTPError(403, 'invalid token');
   }
@@ -351,7 +356,8 @@ export const channelRemoveOwnerV2 = (token: string, channelId: number, uId: numb
     throw HTTPError(400, 'invalid user');
   }
 
-  const authUser = validTokenUser(token);
+  const hashedToken = getHash(token);
+  const authUser = validTokenUser(hashedToken);
   if (authUser === null) {
     throw HTTPError(403, 'invalid token');
   }
