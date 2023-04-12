@@ -38,7 +38,7 @@ beforeEach(() => {
   };
   user3 = requestHelper('POST', '/auth/register/v3', {}, user3Data);
 
-  // channel
+  // user2's channel
   const channelData = {
     name: 'holidays',
     isPublic: false
@@ -47,25 +47,25 @@ beforeEach(() => {
     token: user2.token,
   };
   channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
-
+  // user2 owner creates msg
   const messageData = {
     channelId: channel.channelId,
     message: 'hello ellen'
   };
   message = requestHelper('POST', '/message/send/v2', tokenData, messageData);
 
-  // dm
+  // user2 creates dm - user3 member
   const dmData = {
     uIds: [user3.authUserId]
   };
   dm = requestHelper('POST', '/dm/create/v2', tokenData, dmData);
-
+  // user 2 creates dm msg
   const dmMsgData = {
     dmId: dm.dmId,
     message: 'hello'
   };
   dmMsg = requestHelper('POST', '/message/senddm/v2', tokenData, dmMsgData);
-
+  // user 3 creates dm msg
   const dmMsg2Data = {
     dmId: dm.dmId,
     message: 'hello'
@@ -81,15 +81,7 @@ afterAll(() => {
 });
 
 describe('HTTP tests using Jest for messageRemoveV1', () => {
-  test('channel double removing a msg + owner can remove msg', () => {
-    const param1 = {
-      messageId: message.messageId,
-    };
-    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toStrictEqual({});
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toThrow(Error);
-  });
-
-  test('channel global owner can remove msg', () => {
+  test('global owners can remove msg + double removing msg', () => {
     const invite = {
       channelId: channel.channelId,
       uId: user.authUserId
@@ -134,26 +126,6 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, rmData)).toThrow(Error);
   });
 
-  test('authUser is not sender and no owner permissions', () => {
-    // user2 is sender
-    const msg1Data = {
-      messageId: message.messageId
-    };
-    requestHelper('DELETE', '/message/remove/v2', tokenData, msg1Data);
-    // user is global owner but not member of channel
-    const msg2Data = {
-      messageId: message.messageId
-    };
-    tokenData.token = user.token;
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, msg2Data)).toThrow(Error);
-
-    const msg3Data = {
-      messageId: message.messageId
-    };
-    tokenData.token = user3.token;
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, msg3Data)).toThrow(Error);
-  });
-
   test('token is invalid', () => {
     const param1 = {
       messageId: message.messageId
@@ -162,22 +134,6 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toThrow(Error);
   });
 
-  test('double remove', () => {
-    const param1 = {
-      messageId: message.messageId
-    };
-
-    requestHelper('DELETE', '/message/remove/v2', tokenData, param1);
-    expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toThrow(Error);
-  });
-
-  test('valid test', () => {
-    const param1 = {
-      messageId: message.messageId
-    };
-    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toStrictEqual({});
-  });
-
   test('authUser is not sender and no owner permissions', () => {
     const join = {
       channelId: channel.channelId,
@@ -193,47 +149,33 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, msg3Data)).toThrow(Error);
   });
 
-  test('users is one of the owners in the channel', () => {
+  test('owner(not global owner) removes msg', () => {
     // user joins channel
     const join = {
       channelId: channel.channelId,
       uId: user3.authUserId
     };
     requestHelper('POST', '/channel/invite/v3', tokenData, join);
-    // we make them one of the owners
     requestHelper('POST', '/channel/addowner/v2', tokenData, join);
 
     const msg3Data = {
       messageId: message.messageId
     };
     tokenData.token = user3.token;
-
     expect(requestHelper('DELETE', '/message/remove/v2', tokenData, msg3Data)).toStrictEqual({});
   });
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {
   test('channelId does not refer to a valid channel', () => {
-    const param1 = {
-      name: 'holidays',
-      isPublic: true
-    };
-    requestHelper('POST', '/channels/create/v3', tokenData, param1);
     const param2 = {
-      channelId: channel.channelId + 199,
+      channelId: channel.channelId - 100,
       message: 'Heyyy, how is ur day going'
     };
-    tokenData.token = user.token;
     expect(() => requestHelper('POST', '/message/send/v2', tokenData, param2)).toThrow(Error);
   });
 
   test('length of message is less than 1 characters', () => {
-    const param1 = {
-      name: 'holidays',
-      isPublic: false
-    };
-    tokenData.token = user.token;
-    channel = requestHelper('POST', '/channels/create/v3', tokenData, param1);
     const param2 = {
       channelId: channel.channelId,
       message: ''
@@ -242,12 +184,6 @@ describe('HTTP tests using Jest for messageSendV1', () => {
   });
 
   test('length of message is over 1000 characters', () => {
-    const param1 = {
-      name: 'holidays',
-      isPublic: false
-    };
-    tokenData.token = user.token;
-    channel = requestHelper('POST', '/channels/create/v3', tokenData, param1);
     const param2 = {
       channelId: channel.channelId,
       message: 'a'.repeat(1001)
@@ -256,55 +192,23 @@ describe('HTTP tests using Jest for messageSendV1', () => {
   });
 
   test('token is invalid', () => {
-    const param1 = {
-      name: 'holidays',
-      isPublic: false
-    };
-    tokenData.token = user.token;
-
-    channel = requestHelper('POST', '/channels/create/v3', tokenData, param1);
     const param2 = {
       channelId: channel.channelId,
       message: 'no thanks'
     };
-    tokenData.token = user.token + 'yay';
+    tokenData.token = user2.token + 'yay';
     expect(() => requestHelper('POST', '/message/send/v2', tokenData, param2)).toThrow(Error);
   });
 
   test('valid input and output', () => {
-    const param1 = {
-      name: 'holidays',
-      isPublic: false
-    };
-    tokenData.token = user.token;
-
-    channel = requestHelper('POST', '/channels/create/v3', tokenData, param1);
     const param2 = {
-
       channelId: channel.channelId,
       message: 'no thanks'
     };
-
     expect(requestHelper('POST', '/message/send/v2', tokenData, param2).messageId).toStrictEqual(expect.any(Number));
   });
 
-  test('channelId is valid and the authorised user is not a member of the channel', () => {
-    const param1 = {
-      email: 'cc@gmail.com',
-      password: 'dynamite',
-      nameFirst: 'christine',
-      nameLast: 'chu'
-    };
-
-    user2 = requestHelper('POST', '/auth/register/v3', {}, param1);
-    const param2 = {
-      name: 'holidays',
-      isPublic: true
-    };
-    tokenData.token = user2.token;
-
-    channel = requestHelper('POST', '/channels/create/v3', tokenData, param2);
-
+  test('channelId is valid but user is not a member', () => {
     const param3 = {
       channelId: channel.channelId,
       message: 'Heyyy, how is ur day going'
@@ -325,7 +229,6 @@ describe('MessageEditV1 test', () => {
     const param = {
       messageId: message.messageId,
     };
-
     expect(() => requestHelper('DELETE', '/message/remove/v2', tokenData, param)).toThrow(Error);
   });
 
@@ -339,7 +242,6 @@ describe('MessageEditV1 test', () => {
       messageId: message.messageId,
       message: ''
     };
-
     expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
   });
 
@@ -348,19 +250,8 @@ describe('MessageEditV1 test', () => {
       messageId: message.messageId,
       message: ''
     };
-
     requestHelper('PUT', '/message/edit/v2', tokenData, param);
-
-    const msgData = {
-      token: user2.token,
-      channelId: channel.channelId,
-      start: 0
-    };
-
-    const msg = requestHelper('GET', '/channel/messages/v3', tokenData, msgData);
-    expect(msg.messages).toStrictEqual([]);
-    expect(msg.start).toStrictEqual(0);
-    expect(msg.end).toStrictEqual(-1);
+    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param)).toThrow(Error);
   });
 
   test('channel owner of msg, edits msg', () => {
@@ -456,33 +347,13 @@ describe('MessageEditV1 test', () => {
     expect(msg.messages[0].messageId).toStrictEqual(message.messageId);
     expect(msg.messages[0].message).toStrictEqual(param3.message);
   });
-  test('testRemovalByEditReflected', () => {
-    const detailData = {
 
-      channelId: channel.channelId,
-      start: 0
+  test('dm owner can edit msg', () => {
+    const param4 = {
+      messageId: dmMsg2.messageId,
+      message: 'what'
     };
-    const curMsg = requestHelper('GET', '/channel/messages/v3', tokenData, detailData);
-
-    expect(curMsg.start).toStrictEqual(0);
-    expect(curMsg.end).toStrictEqual(-1);
-    expect(curMsg.messages.length).toStrictEqual(1);
-
-    const param3 = {
-      messageId: message.messageId,
-      message: ''
-    };
-    requestHelper('PUT', '/message/edit/v2', tokenData, param3);
-
-    const detail1Data = {
-      channelId: channel.channelId,
-      start: 0
-    };
-
-    const curMsg1 = requestHelper('GET', '/channel/messages/v3', tokenData, detail1Data);
-    expect(curMsg1.start).toStrictEqual(0);
-    expect(curMsg1.end).toStrictEqual(-1);
-    expect(curMsg1.messages.length).toStrictEqual(0);
+    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param4)).toStrictEqual({});
   });
 
   test('length of message is over 1000 characters', () => {
@@ -498,6 +369,15 @@ describe('MessageEditV1 test', () => {
       messageId: message.messageId + 189,
       message: 'hello ellen, what are you doing?'
     };
+    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
+  });
+
+  test('token is invalid', () => {
+    const param3 = {
+      messageId: message.messageId,
+      message: 'hello ellen, what are you doing?'
+    };
+    tokenData.token = user2.token + 'yay';
     expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
   });
 
@@ -547,72 +427,6 @@ describe('MessageEditV1 test', () => {
     tokenData.token = user3.token;
     expect(requestHelper('PUT', '/message/edit/v2', tokenData, edit6Data)).toStrictEqual({});
   });
-
-  test('token is invalid', () => {
-    const param3 = {
-      messageId: message.messageId,
-      message: 'hello ellen, what are you doing?'
-    };
-    tokenData.token = user2.token + 'yay';
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
-  });
-
-  test('string is empty', () => {
-    const param3 = {
-      messageId: message.messageId,
-      message: ''
-    };
-    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toStrictEqual({});
-  });
-
-  test('valid input', () => {
-    const param3 = {
-      messageId: message.messageId,
-      message: 'hello ellen, what are you doing?'
-    };
-    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toStrictEqual({});
-
-    const param4 = {
-      messageId: dmMsg2.messageId,
-      message: 'what'
-    };
-    expect(requestHelper('PUT', '/message/edit/v2', tokenData, param4)).toStrictEqual({});
-  });
-
-  test('error: remove then edit', () => {
-    const detailData = {
-      channelId: channel.channelId,
-      start: 0
-    };
-    const curMsg = requestHelper('GET', '/channel/messages/v3', tokenData, detailData);
-    expect(curMsg.messages.length).toStrictEqual(1);
-
-    const param1 = {
-      messageId: message.messageId
-    };
-    expect(requestHelper('DELETE', '/message/remove/v2', tokenData, param1)).toStrictEqual({});
-
-    const detail1Data = {
-      channelId: channel.channelId,
-      start: 0
-    };
-    const curMsg1 = requestHelper('GET', '/channel/messages/v3', tokenData, detail1Data);
-    expect(curMsg1.messages.length).toStrictEqual(0);
-
-    const param3 = {
-      messageId: message.messageId,
-      message: ''
-    };
-
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param3)).toThrow(Error);
-
-    const param4 = {
-      messageId: message.messageId,
-      message: 'hi'
-    };
-
-    expect(() => requestHelper('PUT', '/message/edit/v2', tokenData, param4)).toThrow(Error);
-  });
 });
 
 describe('HTTP - /message/senddm/v1 tests', () => {
@@ -621,7 +435,6 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       dmId: dm.dmId + 111,
       message: 'i love food wbu?',
     };
-    tokenData.token = user3.token;
     expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
   });
 
@@ -630,7 +443,7 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       dmId: dm.dmId,
       message: 'i love food wbu?',
     };
-    tokenData.token = user3.token + 'yay!';
+    tokenData.token = user2.token + 'yay!';
     expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
   });
 
@@ -639,7 +452,6 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       dmId: dm.dmId,
       message: '',
     };
-    tokenData.token = user3.token;
     expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
   });
 
@@ -648,7 +460,6 @@ describe('HTTP - /message/senddm/v1 tests', () => {
       dmId: dm.dmId,
       message: 'a'.repeat(1001)
     };
-    tokenData.token = user3.token;
     expect(() => requestHelper('POST', '/message/senddm/v2', tokenData, param)).toThrow(Error);
   });
 
