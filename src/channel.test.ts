@@ -1,6 +1,4 @@
-import { getRequest, postRequest, requestHelper } from './request';
-
-const ERROR = { error: expect.any(String) };
+import { requestHelper } from './request';
 
 let user: any;
 let invitedUser: any;
@@ -16,14 +14,17 @@ beforeEach(() => {
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  user = postRequest('/auth/register/v2', userData);
+  user = requestHelper('POST', '/auth/register/v3', {}, userData);
+
+  const tokenData = {
+    token: user.token
+  };
 
   const channelData = {
-    token: user.token,
     name: 'COMP1531',
     isPublic: true
   };
-  channel = postRequest('/channels/create/v2', channelData);
+  channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
 
   const param1 = {
     email: 'arialee@gmail.com',
@@ -31,7 +32,7 @@ beforeEach(() => {
     nameFirst: 'aria',
     nameLast: 'lee'
   };
-  invitedUser = postRequest('/auth/register/v2', param1);
+  invitedUser = requestHelper('POST', '/auth/register/v3', {}, param1);
 });
 
 afterAll(() => {
@@ -69,7 +70,7 @@ describe('channelDetailsV3 Tests', () => {
       nameLast: 'Jiang'
     };
 
-    const outsideUser = postRequest('/auth/register/v2', outsideUserData);
+    const outsideUser = requestHelper('POST', '/auth/register/v2', {}, outsideUserData);
 
     const tokenData = {
       token: outsideUser.token
@@ -82,15 +83,15 @@ describe('channelDetailsV3 Tests', () => {
   });
 
   test('Basic functionality', () => {
-    const profileData = {
-      token: user.token,
-      uId: user.authUserId
-    };
-    const profile = getRequest('/user/profile/v2', profileData);
-
     const tokenData = {
       token: user.token
     };
+
+    const profileData = {
+      uId: user.authUserId
+    };
+    const profile = requestHelper('GET', '/user/profile/v3', tokenData, profileData);
+
     const detailRequest = {
       channelId: channel.channelId
     };
@@ -110,14 +111,16 @@ describe('channelJoinV3 function testing', () => {
       nameFirst: 'Jake',
       nameLast: 'Renzella'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
+    const token1Data = {
+      token: user1.token
+    };
     const channel2Data = {
-      token: user1.token,
       name: 'COMP1511',
       isPublic: true
     };
-    const channel2 = postRequest('/channels/create/v2', channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', token1Data, channel2Data);
 
     const tokenData = {
       token: user.token
@@ -146,23 +149,26 @@ describe('channelJoinV3 function testing', () => {
       nameFirst: 'Jake',
       nameLast: 'Renzella'
     };
-    const user2 = postRequest('/auth/register/v2', user2Data);
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, user2Data);
 
     // private channel
+    const tokenData = {
+      token: user.token
+    };
+
     const channel2Data = {
-      token: user.token,
       name: 'COMP1511',
       isPublic: false
     };
-    const privChannel = postRequest('/channels/create/v2', channel2Data);
+    const privChannel = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
-    const tokenData = {
+    const token1Data = {
       token: user2.token
     };
     const param3 = {
       channelId: privChannel.channelId
     };
-    expect(() => requestHelper('POST', '/channel/join/v3', tokenData, param3)).toThrow(Error);
+    expect(() => requestHelper('POST', '/channel/join/v3', token1Data, param3)).toThrow(Error);
   });
 
   test('token is invalid', () => {
@@ -172,14 +178,16 @@ describe('channelJoinV3 function testing', () => {
       nameFirst: 'Jake',
       nameLast: 'Renzella'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
+    const token1Data = {
+      token: user1.token
+    };
     const channel2Data = {
-      token: user1.token,
       name: 'COMP1511',
       isPublic: true
     };
-    const channel2 = postRequest('/channels/create/v2', channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', token1Data, channel2Data);
 
     const tokenData = {
       token: user.token + 'yay'
@@ -197,14 +205,16 @@ describe('channelJoinV3 function testing', () => {
       nameFirst: 'Jake',
       nameLast: 'Renzella'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
+    const token1Data = {
+      token: user1.token
+    };
     const channel2Data = {
-      token: user1.token,
       name: 'COMP1511',
       isPublic: true
     };
-    const channel2 = postRequest('/channels/create/v2', channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', token1Data, channel2Data);
 
     const tokenData = {
       token: user.token
@@ -269,7 +279,7 @@ describe('channelInviteV3 tests', () => {
       nameFirst: 'Jak',
       nameLast: 'Renzell'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
     const tokenData = {
       token: user1.token
@@ -323,7 +333,7 @@ describe('channelMessagesV3 test', () => {
       nameFirst: 'Jak',
       nameLast: 'Renzell'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
     const tokenData = {
       token: user1.token
@@ -362,6 +372,10 @@ describe('channelMessagesV3 test', () => {
   });
 
   test('valid input given (start + 50) < messageLen', () => {
+    const tokenData = {
+      token: user.token
+    };
+
     const messageParam = {
       token: user.token,
       channelId: channel.channelId,
@@ -369,12 +383,9 @@ describe('channelMessagesV3 test', () => {
     };
 
     for (let i = 0; i < 100; i++) {
-      postRequest('/message/send/v1', messageParam);
+      requestHelper('POST', '/message/send/v2', tokenData, messageParam);
     }
 
-    const tokenData = {
-      token: user.token
-    };
     const param2 = {
       channelId: channel.channelId,
       start: 0
@@ -398,19 +409,22 @@ describe('channelLeaveV2 tests', () => {
   });
 
   test('Invalid token', () => {
+    const tokenData = {
+      token: user.token
+    };
     const newChannel = {
-      token: user.token,
       name: 'COMP1531',
       isPublic: true
     };
-    const channel = postRequest('/channels/create/v2', newChannel);
-    const tokenData = {
+    const channel = requestHelper('POST', '/channels/create/v3', tokenData, newChannel);
+
+    const token1Data = {
       token: user.token + 'yay'
     };
     const channelData = {
       channelId: channel.channelId
     };
-    expect(() => requestHelper('POST', '/channel/leave/v2', tokenData, channelData)).toThrow(Error);
+    expect(() => requestHelper('POST', '/channel/leave/v2', token1Data, channelData)).toThrow(Error);
   });
 
   test('not member', () => {
@@ -420,35 +434,36 @@ describe('channelLeaveV2 tests', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
+    const tokenData = {
+      token: user.token
+    };
     const newChannel = {
-      token: user.token,
       name: 'COMP1531',
       isPublic: true
     };
-    const channel = postRequest('/channels/create/v2', newChannel);
+    const channel = requestHelper('POST', '/channels/create/v3', tokenData, newChannel);
 
-    const tokenData = {
+    const token1Data = {
       token: user1.token
     };
     const channelData = {
       channelId: channel.channelId,
     };
-    expect(requestHelper('POST', '/channel/leave/v2', tokenData, channelData)).toStrictEqual(ERROR);
+    expect(() => requestHelper('POST', '/channel/leave/v2', token1Data, channelData)).toThrow(Error);
   });
 
   test('valid channel leave', () => {
-    const newChannel = {
-      token: user.token,
-      name: 'COMP1531',
-      isPublic: true
-    };
-    const channel = postRequest('/channels/create/v2', newChannel);
-
     const tokenData = {
       token: user.token
     };
+    const newChannel = {
+      name: 'COMP1531',
+      isPublic: true
+    };
+    const channel = requestHelper('POST', '/channels/create/v3', tokenData, newChannel);
+
     const detail = {
       channelId: channel.channelId
     };
@@ -498,18 +513,18 @@ describe('channelAddOwnerV2 tests', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
+    const token1Data = {
+      token: user1.token
+    };
     const newChannelData = {
       token: user1.token,
       name: 'COMP2511',
       isPublic: true
     };
-    const newChannel = postRequest('/channels/create/v2', newChannelData);
+    const newChannel = requestHelper('POST', '/channels/create/v3', token1Data, newChannelData);
 
-    const token1Data = {
-      token: user1.token
-    };
     const inviteData = {
       channelId: newChannel.channelId,
       uId: invitedUser.authUserId
@@ -660,7 +675,7 @@ describe('channelAddOwnerV2 tests', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const newUser = postRequest('/auth/register/v2', newUserData);
+    const newUser = requestHelper('POST', '/auth/register/v3', {}, newUserData);
 
     const tokenData = {
       token: user.token
@@ -724,18 +739,18 @@ describe('channelRemoveOwnerV2 tests', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
+    const token1Data = {
+      token: user1.token
+    };
     const newChannelData = {
       token: user1.token,
       name: 'COMP2511',
       isPublic: true
     };
-    const newChannel = postRequest('/channels/create/v2', newChannelData);
+    const newChannel = requestHelper('POST', '/channels/create/v3', token1Data, newChannelData);
 
-    const token1Data = {
-      token: user1.token
-    };
     const inviteData = {
       channelId: newChannel.channelId,
       uId: invitedUser.authUserId
@@ -889,7 +904,7 @@ describe('channelRemoveOwnerV2 tests', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const newUser = postRequest('/auth/register/v2', newUserData);
+    const newUser = requestHelper('POST', '/auth/register/v3', {}, newUserData);
 
     const tokenData = {
       token: user.token
