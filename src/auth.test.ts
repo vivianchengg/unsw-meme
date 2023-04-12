@@ -1,7 +1,5 @@
 import { requestHelper } from './request';
 
-const ERROR = { error: expect.any(String) };
-
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
 });
@@ -17,7 +15,7 @@ describe('authLoginV1 Test', () => {
       password: 'password'
     };
 
-    expect(requestHelper('POST', '/auth/login/v3', {}, user1Data)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/login/v3', {}, user1Data)).toThrow(Error);
 
     const regData = {
       email: 'vc@unsw.edu.au',
@@ -33,7 +31,7 @@ describe('authLoginV1 Test', () => {
       password: 'password'
     };
 
-    expect(requestHelper('POST', '/auth/login/v3', {}, user2Data)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/login/v3', {}, user2Data)).toThrow(Error);
   });
 
   test('password is not correct', () => {
@@ -51,7 +49,7 @@ describe('authLoginV1 Test', () => {
       password: 'pwd'
     };
 
-    expect(requestHelper('POST', '/auth/login/v3', {}, userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/login/v3', {}, userData)).toThrow(Error);
   });
 
   test('test login', () => {
@@ -87,7 +85,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toThrow(Error);
   });
 
   test('email already taken', () => {
@@ -99,7 +97,7 @@ describe('authRegisterV1 Test', () => {
     };
 
     requestHelper('POST', '/auth/register/v3', {}, userData);
-    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toThrow(Error);
   });
 
   test('invalid password length', () => {
@@ -110,7 +108,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toThrow(Error);
   });
 
   test('invalid firstname length', () => {
@@ -121,7 +119,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toThrow(Error);
   });
 
   test('invalid lastname length', () => {
@@ -132,7 +130,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: ''
     };
 
-    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toThrow(Error);
   });
 
   test('check handle: basic', () => {
@@ -332,7 +330,7 @@ describe('authLogout Test', () => {
     const logoutData = {
       token: token1 + 'yay'
     };
-    expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toThrow(Error);
   });
 
   test('test valid logout', () => {
