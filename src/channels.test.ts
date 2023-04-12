@@ -61,14 +61,14 @@ describe('HTTP - channelsListV3 Tests', () => {
 
   test('Testing invalid token', () => {
     tokenData.token = user.token + 'yay!';
-    expect(() => requestHelper('GET', '/channels/list/v3', tokenData, {})).toEqual(403);
+    expect(requestHelper('GET', '/channels/list/v3', tokenData, {})).toEqual(403);
   });
 });
 
 describe('channelListAllV1 Tests', () => {
   test('Invalid token', () => {
     tokenData.token = user.token + 'yay!';
-    expect(() => requestHelper('GET', '/channels/listall/v3', tokenData, {})).toEqual(403);
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toEqual(403);
   });
 
   test('Basic functionality', () => {
@@ -175,7 +175,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
     };
     tokenData.token = user.token + 'yay';
 
-    expect(() => requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(403);
+    expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(403);
   });
 
   test('Testing 20+ name length', () => {
@@ -184,7 +184,7 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       isPublic: true,
     };
 
-    expect(() => requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
   });
 
   test('Testing 0 name length', () => {
@@ -194,6 +194,6 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       isPublic: true,
     };
 
-    expect(() => requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
   });
 });
