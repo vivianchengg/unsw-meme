@@ -51,8 +51,7 @@ describe('dmLeaveV1 Test', () => {
     };
 
     tokenData.token = user.token + 'yay';
-
-    expect(() => requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toThrow(Error);
+    expect(() => requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toEqual(403);
   });
 
   test('Invalid dmId', () => {
@@ -60,7 +59,7 @@ describe('dmLeaveV1 Test', () => {
       dmId: dm1.dmId + 1
     };
 
-    expect(() => requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toThrow(Error);
+    expect(() => requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toEqual(400);
   });
 
   test('authUser not member of dm', () => {
@@ -78,7 +77,7 @@ describe('dmLeaveV1 Test', () => {
     };
 
     tokenData.token = user2.token;
-    expect(() => requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toThrow(Error);
+    expect(() => requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toEqual(403);
   });
 
   test('Basic functionality: member', () => {
@@ -122,7 +121,7 @@ describe('dmCreateV1 test', () => {
       uIds: [user1.authUserId, user2.authUserId, user2.authUserId + 1]
     };
     tokenData.token = owner.token;
-    expect(() => requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toThrow(Error);
+    expect(() => requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toEqual(400);
   });
 
   test('duplicate uId exists', () => {
@@ -146,7 +145,7 @@ describe('dmCreateV1 test', () => {
       uIds: [user1.authUserId, user2.authUserId, user2.authUserId]
     };
     tokenData.token = owner.token;
-    expect(() => requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toThrow(Error);
+    expect(() => requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toEqual(400);
   });
 
   test('invalid token', () => {
@@ -170,7 +169,7 @@ describe('dmCreateV1 test', () => {
       uIds: [user1.authUserId, user2.authUserId]
     };
     tokenData.token = owner.token + '3';
-    expect(() => requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toThrow(Error);
+    expect(() => requestHelper('POST', '/dm/create/v2', tokenData, dmData)).toEqual(400);
   });
 
   test('test valid dm create', () => {
@@ -218,19 +217,19 @@ describe('dmCreateV1 test', () => {
 });
 
 describe('dm remove tests', () => {
-  test('Dm does not refer to valid dm', () => {
+  test('invalid dmId', () => {
     const param = {
       dmId: dm1.dmId + 1,
     };
     tokenData.token = owner.token;
-    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toThrow(Error);
+    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toEqual(400);
   });
 
   test('Dm is valid but User is not CREATOR', () => {
     const param = {
       dmId: dm1.dmId,
     };
-    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toThrow(Error);
+    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toEqual(403);
   });
 
   test('Dm is valid but Creator is not longer in Dm', () => {
@@ -243,7 +242,7 @@ describe('dm remove tests', () => {
     const param = {
       dmId: dm1.dmId
     };
-    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toThrow(Error);
+    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toEqual(403);
   });
 
   test('Invalid token', () => {
@@ -251,7 +250,7 @@ describe('dm remove tests', () => {
       dmId: dm1.dmId,
     };
     tokenData.token = owner.token + 'lol';
-    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toThrow(Error);
+    expect(() => requestHelper('DELETE', '/dm/remove/v2', tokenData, param)).toEqual(403);
   });
 
   test('Valid input', () => {
@@ -267,7 +266,7 @@ describe('dm remove tests', () => {
 describe('HTTP - /dm/list/v1 tests', () => {
   test('Invalid token', () => {
     tokenData.token = owner.token + 'lol';
-    expect(() => requestHelper('GET', '/dm/list/v2', tokenData, {})).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/list/v2', tokenData, {})).toEqual(403);
   });
 
   test('Valid input', () => {
@@ -300,7 +299,7 @@ describe('dmMessagesV1 test', () => {
       start: 0
     };
     tokenData.token = owner.token;
-    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param)).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param)).toThrow(400);
   });
 
   test('start is greater than the total number of messages in the channel', () => {
@@ -309,7 +308,7 @@ describe('dmMessagesV1 test', () => {
       start: 20
     };
     tokenData.token = owner.token;
-    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param)).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param)).toEqual(400);
   });
 
   test('dmId is valid and the authorised user is not a member of the DM', () => {
@@ -326,7 +325,7 @@ describe('dmMessagesV1 test', () => {
       start: 0
     };
     tokenData.token = nonMember.token;
-    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param2)).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param2)).toEqual(403);
   });
 
   test('token is invalid', () => {
@@ -335,7 +334,7 @@ describe('dmMessagesV1 test', () => {
       start: 0
     };
     tokenData.token = owner.token + 'yay';
-    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param)).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/messages/v2', tokenData, param)).toEqual(403);
   });
 
   test('valid input with 50+ messages', () => {
@@ -380,7 +379,7 @@ describe('dmDetailsV1 Test', () => {
       dmId: dm1.dmId
     };
     tokenData.token = owner.token + 'yay';
-    expect(() => requestHelper('GET', '/dm/details/v2', tokenData, detailRequest)).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/details/v2', tokenData, detailRequest)).toEqual(403);
   });
 
   test('Invalid dmId', () => {
@@ -388,7 +387,7 @@ describe('dmDetailsV1 Test', () => {
       dmId: dm1.dmId + 1
     };
     tokenData.token = owner.token;
-    expect(() => requestHelper('GET', '/dm/details/v2', tokenData, detailRequest)).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/details/v2', tokenData, detailRequest)).toEqual(400);
   });
 
   test('Valid dmId but user not member of DM', () => {
@@ -405,7 +404,7 @@ describe('dmDetailsV1 Test', () => {
       dmId: dm1.dmId
     };
     tokenData.token = user2.token;
-    expect(() => requestHelper('GET', '/dm/details/v2', tokenData, detailRequest)).toThrow(Error);
+    expect(() => requestHelper('GET', '/dm/details/v2', tokenData, detailRequest)).toEqual(403);
   });
 
   test('Basic functionality', () => {

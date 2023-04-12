@@ -237,7 +237,7 @@ export const dmDetailsV1 = (token: string, dmId: number) => {
 
   const userId = isValidToken(token);
   if (userId === null) {
-    throw HTTPError(400, 'Invalid token error');
+    throw HTTPError(403, 'Invalid token error');
   }
 
   if (!dm.allMembers.includes(userId)) {
