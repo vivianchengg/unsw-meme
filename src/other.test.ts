@@ -1,6 +1,4 @@
-import { getRequest, postRequest, requestHelper } from './request';
-
-const ERROR = { error: expect.any(String) };
+import { requestHelper } from './request';
 
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
@@ -19,8 +17,7 @@ describe('Test clearV1 function', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const user = postRequest('/auth/register/v2', userData);
-    // const user = requestHelper('POST', '/auth/register/v3', {}, userData);
+    const user = requestHelper('POST', '/auth/register/v3', {}, userData);
 
     // new channel
     const tokenData = {
@@ -37,9 +34,6 @@ describe('Test clearV1 function', () => {
     requestHelper('DELETE', '/clear/v1', {}, {});
 
     // get user profile
-    const tokenData = {
-      token: user.token
-    };
     const profileData = {
       uId: user.authUserId,
     };
