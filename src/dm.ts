@@ -125,8 +125,12 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
     throw HTTPError(400, 'Invalid dmId error');
   }
 
-  if (!dm.allMembers.includes(authUserId) || dm.owner !== authUserId) {
-    throw HTTPError(403, 'user may be an owner who is no longer in dm');
+  if (!dm.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'user is not a member of DM');
+  }
+
+  if (dm.owner !== authUserId) {
+    throw HTTPError(403, 'user is not an owner');
   }
 
   data.dms = data.dms.filter(d => d.dmId !== dmId);
