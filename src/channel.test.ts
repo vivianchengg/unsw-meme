@@ -48,7 +48,7 @@ describe('channelDetailsV3 Tests', () => {
       channelId: channel.channelId
     };
 
-    expect(() => requestHelper('GET', '/channel/details/v3', tokenData, detailRequest)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/details/v3', tokenData, detailRequest)).toStrictEqual(403);
   });
 
   test('Invalid channelId', () => {
@@ -59,7 +59,7 @@ describe('channelDetailsV3 Tests', () => {
       channelId: channel.channelId + 189
     };
 
-    expect(() => requestHelper('GET', '/channel/details/v3', tokenData, detailRequest)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/details/v3', tokenData, detailRequest)).toStrictEqual(400);
   });
 
   test('Valid channelId and token but user is not in course', () => {
@@ -79,7 +79,7 @@ describe('channelDetailsV3 Tests', () => {
       channelId: channel.channelId
     };
 
-    expect(() => requestHelper('GET', '/channel/details/v3', tokenData, detailRequest)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/details/v3', tokenData, detailRequest)).toStrictEqual(403);
   });
 
   test('Basic functionality', () => {
@@ -128,7 +128,7 @@ describe('channelJoinV3 function testing', () => {
     const param = {
       channelId: channel2.channelId + 189
     };
-    expect(() => requestHelper('POST', '/channel/join/v3', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/join/v3', tokenData, param)).toStrictEqual(400);
   });
 
   test('the authorised user is already a member of the channel', () => {
@@ -138,7 +138,7 @@ describe('channelJoinV3 function testing', () => {
     const param = {
       channelId: channel.channelId
     };
-    expect(() => requestHelper('POST', '/channel/join/v3', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/join/v3', tokenData, param)).toStrictEqual(400);
   });
 
   test('private channel: authUser not global owner', () => {
@@ -168,7 +168,7 @@ describe('channelJoinV3 function testing', () => {
     const param3 = {
       channelId: privChannel.channelId
     };
-    expect(() => requestHelper('POST', '/channel/join/v3', token1Data, param3)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/join/v3', token1Data, param3)).toStrictEqual(403);
   });
 
   test('token is invalid', () => {
@@ -195,7 +195,7 @@ describe('channelJoinV3 function testing', () => {
     const param = {
       channelId: channel2.channelId
     };
-    expect(() => requestHelper('POST', '/channel/join/v3', tokenData, param)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/join/v3', tokenData, param)).toStrictEqual(403);
   });
 
   test('test sucessful channelJoinV2', () => {
@@ -235,7 +235,7 @@ describe('channelInviteV3 tests', () => {
       channelId: channel.channelId + 189,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toStrictEqual(400);
   });
 
   test('uId does not refer to a valid user', () => {
@@ -246,7 +246,7 @@ describe('channelInviteV3 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId + 189
     };
-    expect(() => requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toStrictEqual(400);
   });
 
   test('invalid token', () => {
@@ -257,7 +257,7 @@ describe('channelInviteV3 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toStrictEqual(403);
   });
 
   test('uId refers to a user who is already a member of the channel', () => {
@@ -269,7 +269,7 @@ describe('channelInviteV3 tests', () => {
       uId: invitedUser.authUserId
     };
     requestHelper('POST', '/channel/invite/v3', tokenData, inviteData);
-    expect(() => requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toStrictEqual(400);
   });
 
   test('authorised user is not channel member', () => {
@@ -288,7 +288,7 @@ describe('channelInviteV3 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/invite/v3', tokenData, inviteData)).toStrictEqual(403);
   });
 
   test('test valid invite', () => {
@@ -312,7 +312,7 @@ describe('channelMessagesV3 test', () => {
       channelId: channel.channelId + 189,
       start: 0
     };
-    expect(() => requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toStrictEqual(400);
   });
 
   test('start is greater than the total number of messages', () => {
@@ -323,7 +323,7 @@ describe('channelMessagesV3 test', () => {
       channelId: channel.channelId,
       start: 1
     };
-    expect(() => requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toStrictEqual(400);
   });
 
   test('authorised user is not channel member', () => {
@@ -342,7 +342,7 @@ describe('channelMessagesV3 test', () => {
       channelId: channel.channelId,
       start: 0
     };
-    expect(() => requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toStrictEqual(403);
   });
 
   test('token is invalid', () => {
@@ -353,7 +353,7 @@ describe('channelMessagesV3 test', () => {
       channelId: channel.channelId,
       start: 0
     };
-    expect(() => requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, param2)).toStrictEqual(403);
   });
 
   test('valid input given (start + 50) >= messageLen', () => {
@@ -405,7 +405,7 @@ describe('channelLeaveV2 tests', () => {
     const channelData = {
       channelId: 0,
     };
-    expect(() => requestHelper('POST', '/channel/leave/v2', tokenData, channelData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/leave/v2', tokenData, channelData)).toStrictEqual(400);
   });
 
   test('Invalid token', () => {
@@ -424,7 +424,7 @@ describe('channelLeaveV2 tests', () => {
     const channelData = {
       channelId: channel.channelId
     };
-    expect(() => requestHelper('POST', '/channel/leave/v2', token1Data, channelData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/leave/v2', token1Data, channelData)).toStrictEqual(403);
   });
 
   test('not member', () => {
@@ -451,7 +451,7 @@ describe('channelLeaveV2 tests', () => {
     const channelData = {
       channelId: channel.channelId,
     };
-    expect(() => requestHelper('POST', '/channel/leave/v2', token1Data, channelData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/leave/v2', token1Data, channelData)).toStrictEqual(403);
   });
 
   test('valid channel leave', () => {
@@ -475,7 +475,7 @@ describe('channelLeaveV2 tests', () => {
     };
     const result = requestHelper('POST', '/channel/leave/v2', tokenData, channelData);
     expect(result).toStrictEqual({});
-    expect(() => requestHelper('GET', '/channel/details/v3', tokenData, detail)).toThrow(Error);
+    expect(requestHelper('GET', '/channel/details/v3', tokenData, detail)).toStrictEqual(403);
   });
 });
 
@@ -538,7 +538,7 @@ describe('channelAddOwnerV2 tests', () => {
       channelId: newChannel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toStrictEqual(403);
 
     const globalData = {
       channelId: newChannel.channelId,
@@ -606,7 +606,7 @@ describe('channelAddOwnerV2 tests', () => {
       channelId: channel.channelId + 189,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('Invalid token', () => {
@@ -626,7 +626,7 @@ describe('channelAddOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', token1Data, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', token1Data, ownerData)).toStrictEqual(403);
   });
 
   test('Invalid uId', () => {
@@ -643,7 +643,7 @@ describe('channelAddOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId + 189,
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('uId is not member', () => {
@@ -654,7 +654,7 @@ describe('channelAddOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('uId already owner', () => {
@@ -665,7 +665,7 @@ describe('channelAddOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: user.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('authId no owner permission', () => {
@@ -693,7 +693,7 @@ describe('channelAddOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', token1Data, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', token1Data, ownerData)).toStrictEqual(403);
   });
 });
 
@@ -764,7 +764,7 @@ describe('channelRemoveOwnerV2 tests', () => {
       channelId: newChannel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', tokenData, ownerData)).toStrictEqual(403);
 
     const globalData = {
       channelId: newChannel.channelId,
@@ -817,7 +817,7 @@ describe('channelRemoveOwnerV2 tests', () => {
       channelId: channel.channelId + 189,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('Invalid token', () => {
@@ -843,7 +843,7 @@ describe('channelRemoveOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/addowner/v2', token1Data, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/addowner/v2', token1Data, ownerData)).toStrictEqual(403);
   });
 
   test('Invalid uId', () => {
@@ -866,7 +866,7 @@ describe('channelRemoveOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId + 189
     };
-    expect(() => requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('uId is not owner', () => {
@@ -883,7 +883,7 @@ describe('channelRemoveOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('uId is the only owner', () => {
@@ -894,7 +894,7 @@ describe('channelRemoveOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: user.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/removeowner/v2', tokenData, ownerData)).toStrictEqual(400);
   });
 
   test('authId not owner permission', () => {
@@ -928,6 +928,6 @@ describe('channelRemoveOwnerV2 tests', () => {
       channelId: channel.channelId,
       uId: invitedUser.authUserId
     };
-    expect(() => requestHelper('POST', '/channel/removeowner/v2', token1Data, ownerData)).toThrow(Error);
+    expect(requestHelper('POST', '/channel/removeowner/v2', token1Data, ownerData)).toStrictEqual(403);
   });
 });

@@ -43,8 +43,8 @@ describe('Test clearV1 function', () => {
       channelId: channel.channelId,
     };
 
-    expect(() => requestHelper('GET', '/user/profile/v3', tokenData, profileData)).toThrow(Error);
-    expect(() => requestHelper('GET', '/channel/details/v3', tokenData, detailData)).toThrow(Error);
+    expect(requestHelper('GET', '/user/profile/v3', tokenData, profileData)).toStrictEqual(400);
+    expect(requestHelper('GET', '/channel/details/v3', tokenData, detailData)).toStrictEqual(400);
   });
 
   test('test clearV1 - basic output', () => {
