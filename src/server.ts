@@ -143,23 +143,26 @@ app.get('/dm/messages/v1', (req: Request, res: Response) => {
   res.json(dmMessagesV1(token, dmId, start));
 });
 
-app.put('/user/profile/setname/v1', (req: Request, res: Response) => {
-  const { token, nameFirst, nameLast } = req.body;
+app.put('/user/profile/setname/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { nameFirst, nameLast } = req.body;
   return res.json(userProfileSetName(token, nameFirst, nameLast));
 });
 
-app.put('/user/profile/sethandle/v1', (req: Request, res: Response) => {
-  const { token, handleStr } = req.body;
+app.put('/user/profile/sethandle/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { handleStr } = req.body;
   return res.json(userProfileSetHandleV1(token, handleStr));
 });
 
-app.put('/user/profile/setemail/v1', (req: Request, res: Response) => {
-  const { token, email } = req.body;
+app.put('/user/profile/setemail/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { email } = req.body;
   return res.json(userProfileSetEmailV1(token, email));
 });
 
-app.get('/users/all/v1', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.get('/users/all/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
   return res.json(usersAllV1(token));
 });
 

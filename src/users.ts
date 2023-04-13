@@ -1,5 +1,6 @@
-import { getData, setData } from './dataStore';
+import { getData, setData, getHash } from './dataStore';
 import validator from 'validator';
+import HTTPError from 'http-errors';
 
 /**
   * Finds the authUserId given a token, if invalid token, return null.
@@ -9,9 +10,10 @@ import validator from 'validator';
 */
 export const isValidToken = (token: string) => {
   const data = getData();
+  const hashedToken = getHash(token);
 
   for (const user of data.users) {
-    if (user.token.includes(token)) {
+    if (user.token.includes(hashedToken)) {
       return user.uId;
     }
   }
@@ -77,11 +79,11 @@ export const userProfileV1 = (token: string, uId: number) => {
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(400, 'invalid token');
   }
 
   if (!isValidUser(uId)) {
-    return { error: 'invalid uId' };
+    throw HTTPError(400, 'invalid uId');
   }
 
   let person;
@@ -115,14 +117,14 @@ export const userProfileSetName = (token: string, nameFirst: string, nameLast: s
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(400, 'invalid token');
   }
 
   if (!invalidName(nameLast)) {
-    return { error: 'name length +51 or less than 1' };
+    throw HTTPError(400, 'name length +51 or less than 1');
   }
   if (!invalidName(nameFirst)) {
-    return { error: 'name length +51 or less than 1' };
+    throw HTTPError(400, 'name length +51 or less than 1');
   }
 
   const user = data.users.find(d => d.uId === authUserId);
@@ -146,21 +148,21 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 
   const userId = isValidToken(token);
   if (userId === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(400, 'invalid token');
   }
 
   const minimumLength = 3;
   const maximumLength = 20;
   if (handleStr.length > maximumLength || handleStr.length < minimumLength) {
-    return { error: 'Length of handleStr is not between 3-20 characters' };
+    throw HTTPError(400, 'Length of handleStr is not between 3-20 characters');
   }
 
   if (data.users.find(u => u.handleStr === handleStr) !== undefined) {
-    return { error: 'Handle already taken by another user' };
+    throw HTTPError(400, 'Handle already taken by another user');
   }
 
   if (!isAlphanumeric(handleStr)) {
-    return { error: 'Handle contains non-alphanumeric characters' };
+    throw HTTPError(400, 'Handle contains non-alphanumeric characters');
   }
 
   const user = data.users.find(u => u.uId === userId);
@@ -184,15 +186,15 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 
   const userId = isValidToken(token);
   if (userId === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(400, 'invalid token');
   }
 
   if (!validator.isEmail(email)) {
-    return { error: 'Invalid email entered' };
+    throw HTTPError(400, 'Invalid email entered');
   }
 
   if (data.users.find(u => u.email === email) !== undefined) {
-    return { error: 'Email already taken by another user' };
+    throw HTTPError(400, 'Email already taken by another user');
   }
 
   const user = data.users.find(u => u.uId === userId);
@@ -219,7 +221,7 @@ export const usersAllV1 = (token: string) => {
   const data = getData();
 
   if (isValidToken(token) === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(400, 'invalid token');
   }
 
   const list = [];
