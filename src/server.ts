@@ -35,23 +35,23 @@ app.delete('/clear/v1', (req: Request, res: Response) => {
   return res.json(result);
 });
 
-app.post('/auth/login/v2', (req: Request, res: Response) => {
+app.post('/auth/login/v3', (req: Request, res: Response) => {
   const { email, password } = req.body;
   return res.json(authLoginV1(email, password));
 });
 
-app.post('/auth/register/v2', (req: Request, res: Response) => {
+app.post('/auth/register/v3', (req: Request, res: Response) => {
   const { email, password, nameFirst, nameLast } = req.body;
   return res.json(authRegisterV1(email, password, nameFirst, nameLast));
 });
 
-app.post('/auth/logout/v1', (req: Request, res: Response) => {
-  const { token } = req.body;
+app.post('/auth/logout/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
   return res.json(authLogoutV1(token));
 });
 
-app.get('/user/profile/v2', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.get('/user/profile/v3', (req: Request, res: Response) => {
+  const token = req.header('token');
   const uId = parseInt(req.query.uId as string);
   return res.json(userProfileV1(token, uId));
 });
