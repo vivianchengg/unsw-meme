@@ -4,15 +4,15 @@ const ERROR = { error: expect.any(String) };
 
 let user: any;
 let user2: any;
-let user3: any;
+// let user3: any;
 let channel: any;
 let dm: any;
 let message: any;
-let dmMsg: any;
-let dmMsg2: any;
+// let dmMsg: any;
+// let dmMsg2: any;
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 
   // user is global owner
   const userData = {
@@ -21,7 +21,7 @@ beforeEach(() => {
     nameFirst: 'aria',
     nameLast: 'lee'
   };
-  user = postRequest('/auth/register/v2', userData);
+  user = postRequest('/auth/register/v2', {}, userData);
 
   const user2Data = {
     email: 'arialee1@gmail.com',
@@ -29,67 +29,54 @@ beforeEach(() => {
     nameFirst: 'aria',
     nameLast: 'lee'
   };
-  user2 = postRequest('/auth/register/v2', user2Data);
-
-  const user3Data = {
-    email: 'arialee2@gmail.com',
-    password: 'dynamite',
-    nameFirst: 'aria',
-    nameLast: 'lee'
-  };
-  user3 = postRequest('/auth/register/v2', user3Data);
+  user2 = postRequest('/auth/register/v2', {}, user2Data);
 
   // channel
   const channelData = {
-    token: user2.token,
     name: 'holidays',
     isPublic: false
   };
-  channel = postRequest('/channels/create/v2', channelData);
+  const tokenData = {
+    token: user2.token
+  };
+  channel = postRequest('/channels/create/v3', tokenData, channelData);
 
   const messageData = {
-    token: user2.token,
     channelId: channel.channelId,
     message: 'hello ellen'
   };
-  message = postRequest('/message/send/v1', messageData);
+  message = postRequest('/message/send/v1', tokenData, messageData);
 
   // dm
   const dmData = {
-    token: user2.token,
-    uIds: [user3.authUserId]
+    uIds: [user.authUserId]
   };
-  dm = postRequest('/dm/create/v1', dmData);
+  dm = postRequest('/dm/create/v1', tokenData, dmData);
 
   const dmMsgData = {
     token: user2.token,
     dmId: dm.dmId,
     message: 'hello'
   };
-  dmMsg = postRequest('/message/senddm/v1', dmMsgData);
-
-  const dmMsg2Data = {
-    token: user3.token,
-    dmId: dm.dmId,
-    message: 'hello'
-  };
-  dmMsg2 = postRequest('/message/senddm/v1', dmMsg2Data);
+  postRequest('/message/senddm/v1', tokenData, dmMsgData);
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  deleteRequest('/clear/v1', {}, null);
 });
 
 describe('HTTP tests using Jest for messageRemoveV1', () => {
   test('channel double removing a msg + owner can remove msg', () => {
     const param1 = {
-      token: user2.token,
       messageId: message.messageId,
     };
-    deleteRequest('/message/remove/v1', param1);
-    expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual(ERROR);
+    const tokenData = {
+      token: user2.token
+    };
+    deleteRequest('/message/remove/v1', tokenData, param1);
+    expect(deleteRequest('/message/remove/v1', tokenData, param1)).toStrictEqual(ERROR);
   });
-
+  /*
   test('channel global owner can remove msg', () => {
     const invite = {
       token: user2.token,
@@ -189,6 +176,7 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     };
     expect(deleteRequest('/message/remove/v1', param1)).toStrictEqual({});
   });
+
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {

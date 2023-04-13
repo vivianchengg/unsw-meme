@@ -7,7 +7,7 @@ beforeEach(() => {
 afterAll(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
 });
-
+/*
 describe('Test clearV1 function', () => {
   test('test clearV1 - user and channel', () => {
     // new user

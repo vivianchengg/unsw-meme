@@ -1,10 +1,4 @@
-<<<<<<< src/users.test.ts
-/* import { getRequest, postRequest, putRequest, deleteRequest } from './request';
-
-const ERROR = { error: expect.any(String) };
-=======
 import { requestHelper } from './request';
->>>>>>> src/users.test.ts
 
 let user: any;
 
@@ -377,4 +371,3 @@ describe('userProfileV2 tests', () => {
     expect(userDetail).toEqual(400);
   });
 });
-*/

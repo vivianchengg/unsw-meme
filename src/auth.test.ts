@@ -74,6 +74,7 @@ describe('authLoginV1 Test', () => {
     }
     expect(user.authUserId).toStrictEqual(reg.authUserId);
   });
+
 });
 
 describe('authRegisterV1 Test', () => {

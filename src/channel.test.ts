@@ -1,7 +1,7 @@
 import { requestHelper } from './request';
 
 let user: any;
-let invitedUser: any;
+// let invitedUser: any;
 let channel: any;
 
 beforeEach(() => {
@@ -26,6 +26,11 @@ beforeEach(() => {
   };
   channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
 
+  const tokenData = {
+    token: user.token
+  };
+  channel = postRequest('/channels/create/v3', tokenData, channelData);
+  /*
   const param1 = {
     email: 'arialee@gmail.com',
     password: 'dynamite',
@@ -101,6 +106,7 @@ describe('channelDetailsV3 Tests', () => {
     expect(cDetail.allMembers).toStrictEqual([profile.user]);
     expect(cDetail.ownerMembers).toStrictEqual([profile.user]);
   });
+
 });
 
 describe('channelJoinV3 function testing', () => {
