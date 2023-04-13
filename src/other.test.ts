@@ -7,7 +7,7 @@ beforeEach(() => {
 afterAll(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
 });
-/*
+
 describe('Test clearV1 function', () => {
   test('test clearV1 - user and channel', () => {
     // new user
@@ -43,12 +43,11 @@ describe('Test clearV1 function', () => {
       channelId: channel.channelId,
     };
 
-    expect(requestHelper('GET', '/user/profile/v3', tokenData, profileData)).toStrictEqual(400);
-    expect(requestHelper('GET', '/channel/details/v3', tokenData, detailData)).toStrictEqual(400);
+    expect(requestHelper('GET', '/user/profile/v3', tokenData, profileData)).toStrictEqual(403);
+    expect(requestHelper('GET', '/channel/details/v3', tokenData, detailData)).toStrictEqual(403);
   });
 
   test('test clearV1 - basic output', () => {
     expect(requestHelper('DELETE', '/clear/v1', {}, {})).toStrictEqual({});
   });
 });
-*/

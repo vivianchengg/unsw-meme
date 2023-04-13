@@ -1,4 +1,4 @@
-import { Channel, User, getData, setData, getHash } from './dataStore';
+import { Channel, User, getData, setData } from './dataStore';
 import { userProfileV1, isValidToken, isValidUser } from './users';
 import HTTPError from 'http-errors';
 
@@ -33,24 +33,6 @@ export const isValidChannel = (channelId: number): boolean => {
   return false;
 };
 
-/**
-  * get user and check whether token is valid
-  *
-  * @param {string} token
-  * @returns {User}
-*/
-export const validTokenUser = (token: string): User => {
-  const data = getData();
-  for (const user of data.users) {
-    for (const userToken of user.token) {
-      if (userToken === token) {
-        return user;
-      }
-    }
-  }
-  return null;
-};
-
 /** Function that lists details of members in the channel given that:
 *
 * @param {string} - Token of individual's session
@@ -67,8 +49,7 @@ export const validTokenUser = (token: string): User => {
 **/
 export const channelDetailsV3 = (token: string, channelId: number) => {
   const data = getData();
-  const hashedToken = getHash(token);
-  const authUserId = isValidToken(hashedToken);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'Invalid token');
   }
@@ -112,8 +93,7 @@ export const channelDetailsV3 = (token: string, channelId: number) => {
  */
 export const channelInviteV3 = (token: string, channelId: number, uId: number) => {
   const data = getData();
-  const hashedToken = getHash(token);
-  const authUserId = isValidToken(hashedToken);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'token is invalid');
   }
@@ -150,8 +130,7 @@ export const channelInviteV3 = (token: string, channelId: number, uId: number) =
 export const channelJoinV3 = (token: string, channelId: number) => {
   const data = getData();
 
-  const hashedToken = getHash(token);
-  const authUserId = isValidToken(hashedToken);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'token is invalid');
   }
@@ -185,8 +164,7 @@ export const channelJoinV3 = (token: string, channelId: number) => {
 */
 export const channelMessagesV3 = (token: string, channelId: number, start: number) => {
   const data = getData();
-  const hashedToken = getHash(token);
-  const authUserId = isValidToken(hashedToken);
+  const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'token is invalid');
   }
@@ -237,8 +215,7 @@ export const channelLeaveV2 = (token: string, channelId: number) => {
     throw HTTPError(400, 'Invalid channel');
   }
 
-  const hashedToken = getHash(token);
-  const userId = isValidToken(hashedToken);
+  const userId = isValidToken(token);
   if (userId === null) {
     throw HTTPError(403, 'invalid token');
   }
@@ -313,11 +290,12 @@ export const channelAddOwnerV2 = (token: string, channelId: number, uId: number)
     throw HTTPError(400, 'invalid user');
   }
 
-  const hashedToken = getHash(token);
-  const authUser = validTokenUser(hashedToken);
-  if (authUser === null) {
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
+
+  const authUser = data.users.find(u => u.uId === authUserId);
 
   if (!isMember(channel, uId)) {
     throw HTTPError(400, 'user is not a member of the channel');
@@ -356,11 +334,11 @@ export const channelRemoveOwnerV2 = (token: string, channelId: number, uId: numb
     throw HTTPError(400, 'invalid user');
   }
 
-  const hashedToken = getHash(token);
-  const authUser = validTokenUser(hashedToken);
-  if (authUser === null) {
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
+  const authUser = data.users.find(u => u.uId === authUserId);
 
   if (!isOwner(user, channel)) {
     throw HTTPError(400, 'user is not a owner of the channel');

@@ -79,7 +79,7 @@ export const userProfileV1 = (token: string, uId: number) => {
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    throw HTTPError(400, 'invalid token');
+    throw HTTPError(403, 'invalid token');
   }
 
   if (!isValidUser(uId)) {
@@ -117,7 +117,7 @@ export const userProfileSetName = (token: string, nameFirst: string, nameLast: s
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    throw HTTPError(400, 'invalid token');
+    throw HTTPError(403, 'invalid token');
   }
 
   if (!invalidName(nameLast)) {
@@ -148,7 +148,7 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
 
   const userId = isValidToken(token);
   if (userId === null) {
-    throw HTTPError(400, 'invalid token');
+    throw HTTPError(403, 'invalid token');
   }
 
   const minimumLength = 3;
@@ -186,7 +186,7 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
 
   const userId = isValidToken(token);
   if (userId === null) {
-    throw HTTPError(400, 'invalid token');
+    throw HTTPError(403, 'invalid token');
   }
 
   if (!validator.isEmail(email)) {
@@ -221,7 +221,7 @@ export const usersAllV1 = (token: string) => {
   const data = getData();
 
   if (isValidToken(token) === null) {
-    throw HTTPError(400, 'invalid token');
+    throw HTTPError(403, 'invalid token');
   }
 
   const list = [];

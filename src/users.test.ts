@@ -1,11 +1,4 @@
-<<<<<<< src/users.test.ts
-/*
-import { getRequest, postRequest, putRequest, deleteRequest } from './request';
-
-const ERROR = { error: expect.any(String) };
-=======
 import { requestHelper } from './request';
->>>>>>> src/users.test.ts
 
 let user: any;
 
@@ -34,7 +27,7 @@ describe('userProfileSetHandleV1 tests', () => {
       token: user.token + 'buffer'
     };
 
-    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(400);
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(403);
   });
 
   test('New handle not between 3-20 characters', () => {
@@ -126,7 +119,7 @@ describe('userProfileSetEmailV1 tests', () => {
       token: user.token + 'buffer'
     };
 
-    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(400);
+    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(403);
   });
 
   test('Invalid email', () => {
@@ -208,7 +201,7 @@ describe('HTTP - /user/profile/setname/v1', () => {
       token: user.token + '1'
     };
 
-    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(403);
   });
 
   test('0 length first name', () => {
@@ -294,7 +287,7 @@ describe('HTTP - /users/all/v1', () => {
     const param = {
       token: user.token + 'lol',
     };
-    expect(requestHelper('GET', '/users/all/v2', param, {})).toEqual(400);
+    expect(requestHelper('GET', '/users/all/v2', param, {})).toEqual(403);
   });
 
   test('Valid Token', () => {
@@ -362,7 +355,7 @@ describe('userProfileV2 tests', () => {
     };
 
     const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
-    expect(userDetail).toEqual(400);
+    expect(userDetail).toEqual(403);
   });
 
   test('Testing invalid uId', () => {
@@ -378,4 +371,3 @@ describe('userProfileV2 tests', () => {
     expect(userDetail).toEqual(400);
   });
 });
-*/

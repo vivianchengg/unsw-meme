@@ -201,10 +201,11 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
 */
 export const authLogoutV1 = (token: string) => {
   const data = getData();
-  const hashedToken = getHash(token);
-  if (!isValidToken(hashedToken)) {
-    throw HTTPError(400, 'invalid token');
+  if (!isValidToken(token)) {
+    throw HTTPError(403, 'invalid token');
   }
+
+  const hashedToken = getHash(token);
   for (const user of data.users) {
     user.token = user.token.filter(t => t !== hashedToken);
   }

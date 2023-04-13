@@ -74,7 +74,6 @@ describe('authLoginV1 Test', () => {
     }
     expect(user.authUserId).toStrictEqual(reg.authUserId);
   });
-
 });
 
 describe('authRegisterV1 Test', () => {
@@ -331,7 +330,7 @@ describe('authLogout Test', () => {
     const logoutData = {
       token: token1 + 'yay'
     };
-    expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toEqual(400);
+    expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toEqual(403);
   });
 
   test('test valid logout', () => {
@@ -355,4 +354,3 @@ describe('authLogout Test', () => {
     expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toStrictEqual({});
   });
 });
-*/

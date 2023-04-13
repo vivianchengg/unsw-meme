@@ -1,5 +1,4 @@
 import { Message, setData, getData } from './dataStore';
-import { validTokenUser } from './channel';
 import { userProfileV1, isValidToken, isValidUser } from './users';
 import HTTPError from 'http-errors';
 
@@ -24,10 +23,11 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
     count++;
   }
 
-  const owner = validTokenUser(token);
-  if (owner === null) {
+  const ownerId = isValidToken(token);
+  if (ownerId === null) {
     throw HTTPError(403, 'Invalid token error');
   }
+  const owner = data.users.find(u => u.uId === ownerId);
 
   const dmId = data.dms.length + 1;
   const allHandle = [owner.handleStr];

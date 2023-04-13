@@ -97,6 +97,7 @@ describe('dmLeaveV1 Test', () => {
     expect(requestHelper('POST', '/dm/leave/v2', tokenData, detailRequest)).toStrictEqual({});
     expect(requestHelper('GET', '/dm/list/v2', tokenData, {})).toStrictEqual({ dms: [] });
   });
+});
 
 describe('dmCreateV1 test', () => {
   test('invalid uId exists', () => {
@@ -421,4 +422,3 @@ describe('dmDetailsV1 Test', () => {
     expect(result.members).toEqual(expect.arrayContaining([ownerProfile.user]));
   });
 });
-*/
