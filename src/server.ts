@@ -174,19 +174,21 @@ app.get('/users/all/v2', (req: Request, res: Response) => {
   return res.json(usersAllV1(token));
 });
 
-app.post('/message/send/v1', (req: Request, res: Response) => {
-  const { token, channelId, message } = req.body;
+app.post('/message/send/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { channelId, message } = req.body;
   return res.json(messageSendV1(token, channelId, message));
 });
 
-app.delete('/message/remove/v1', (req: Request, res: Response) => {
-  const token = req.query.token as string;
+app.delete('/message/remove/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
   const messageId = parseInt(req.query.messageId as string);
   res.json(messageRemoveV1(token, messageId));
 });
 
-app.put('/message/edit/v1', (req: Request, res: Response) => {
-  const { token, messageId, message } = req.body;
+app.put('/message/edit/v2', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId, message } = req.body;
   return res.json(messageEditV1(token, messageId, message));
 });
 
