@@ -1,5 +1,4 @@
-/*
-import { postRequest, deleteRequest } from './request';
+/* import { putRequest, postRequest, deleteRequest, getRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 

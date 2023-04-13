@@ -1,6 +1,7 @@
 import { Message, setData, getData } from './dataStore';
 import { validTokenUser } from './channel';
 import { userProfileV1, isValidToken, isValidUser } from './users';
+import HTTPError from 'http-errors';
 
 /**
   * check whether email entered belong to a user
@@ -14,18 +15,18 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
   let count = 0;
   for (const userId of uIds) {
     if (!isValidUser(userId)) {
-      return { error: 'invalid uId exists' };
+      throw HTTPError(400, 'Invalid uId error');
     }
 
     if (uIds.indexOf(userId) !== count) {
-      return { error: 'duplicate uId' };
+      throw HTTPError(400, 'Duplicate uId error');
     }
     count++;
   }
 
   const owner = validTokenUser(token);
   if (owner === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   const dmId = data.dms.length + 1;
@@ -83,16 +84,16 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
 
   const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
-    return { error: 'dmId does not refer to valid DM' };
+    throw HTTPError(400, 'Invalid dmId error');
   }
 
   const userId = isValidToken(token);
   if (userId === null) {
-    return { error: 'Invalid token' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   if (!dm.allMembers.includes(userId)) {
-    return { error: 'User is not member of DM' };
+    throw HTTPError(403, 'User is not member of DM');
   }
 
   dm.allMembers = dm.allMembers.filter(d => d !== userId);
@@ -116,16 +117,20 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
-    return { error: 'invalid dmId' };
+    throw HTTPError(400, 'Invalid dmId error');
   }
 
-  if (!dm.allMembers.includes(authUserId) || dm.owner !== authUserId) {
-    return { error: 'user is an owner who is no longer in dm' };
+  if (!dm.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'user is not a member of DM');
+  }
+
+  if (dm.owner !== authUserId) {
+    throw HTTPError(403, 'user is not an owner');
   }
 
   data.dms = data.dms.filter(d => d.dmId !== dmId);
@@ -148,7 +153,7 @@ export const dmListV1 = (token: string) => {
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'invalid token' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   const list = [];
@@ -185,21 +190,21 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
   const data = getData();
   const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
-    return { error: 'dmId does not refer to a valid DM' };
+    throw HTTPError(400, 'Invalid dmId error');
   }
 
   const msgLength = dm.messages.length;
   if (start > msgLength) {
-    return { error: 'start is greater than the total number of messages in the channel' };
+    throw HTTPError(400, 'start is greater than the total number of messages in the channel');
   }
 
   const authUser = isValidToken(token);
   if (authUser === null) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   if (!dm.allMembers.includes(authUser)) {
-    return { error: 'auth user is not a member of DM' };
+    throw HTTPError(403, 'user is not member of DM');
   }
 
   let end;
@@ -231,16 +236,16 @@ export const dmDetailsV1 = (token: string, dmId: number) => {
   const dm = data.dms.find(d => d.dmId === dmId);
 
   if (dm === undefined) {
-    return { error: 'invalid dmId' };
+    throw HTTPError(400, 'Invalid dmId error');
   }
 
   const userId = isValidToken(token);
   if (userId === null) {
-    return { error: 'Invalid token' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   if (!dm.allMembers.includes(userId)) {
-    return { error: 'User is not member of DM' };
+    throw HTTPError(403, 'user is not member of DM');
   }
 
   const dmMembers = [];

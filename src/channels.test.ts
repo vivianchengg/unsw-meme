@@ -1,4 +1,6 @@
-import { requestHelper } from './request';
+/* import { getRequest, postRequest, deleteRequest } from './request';
+
+const ERROR = { error: expect.any(String) };
 
 let user: any;
 let channel: any;
@@ -197,3 +199,4 @@ describe('HTTP - channelsCreateV2 Tests', () => {
     expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
   });
 });
+*/

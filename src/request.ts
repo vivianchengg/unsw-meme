@@ -65,6 +65,12 @@ export const requestHelper = (method: HttpVerb, path: string, token: object, dat
     headers = token;
     json = data;
   }
-  const res = request(method, SERVER_URL + path, { headers, qs, json, timeout: 20000 });
-  return JSON.parse(res.getBody('utf-8'));
+  const res = request(method, SERVER_URL + path, { headers, qs, json });
+
+  if (res.statusCode !== 200) {
+    // Return error code number instead of object in case of error.
+    return res.statusCode;
+  }
+
+  return JSON.parse(res.getBody() as string);
 };
