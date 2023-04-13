@@ -1,14 +1,11 @@
-/*
-import { getRequest, postRequest, deleteRequest } from './request';
-
-const ERROR = { error: expect.any(String) };
+import { requestHelper } from './request';
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
 describe('authLoginV1 Test', () => {
@@ -18,7 +15,7 @@ describe('authLoginV1 Test', () => {
       password: 'password'
     };
 
-    expect(postRequest('/auth/login/v2', user1Data)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/login/v3', {}, user1Data)).toEqual(400);
 
     const regData = {
       email: 'vc@unsw.edu.au',
@@ -27,14 +24,14 @@ describe('authLoginV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    postRequest('/auth/register/v2', regData);
+    requestHelper('POST', '/auth/register/v3', {}, regData);
 
     const user2Data = {
       email: 'vc1@unsw.edu.au',
       password: 'password'
     };
 
-    expect(postRequest('/auth/login/v2', user2Data)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/login/v3', {}, user2Data)).toEqual(400);
   });
 
   test('password is not correct', () => {
@@ -45,14 +42,14 @@ describe('authLoginV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    postRequest('/auth/register/v2', regData);
+    requestHelper('POST', '/auth/register/v3', {}, regData);
 
     const userData = {
       email: 'vc@unsw.edu.au',
       password: 'pwd'
     };
 
-    expect(postRequest('/auth/login/v2', userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/login/v3', {}, userData)).toEqual(400);
   });
 
   test('test login', () => {
@@ -68,15 +65,16 @@ describe('authLoginV1 Test', () => {
       password: 'password'
     };
 
-    const reg = postRequest('/auth/register/v2', regData);
-    let user = postRequest('/auth/login/v2', userData);
+    const reg = requestHelper('POST', '/auth/register/v3', {}, regData);
+    let user = requestHelper('POST', '/auth/login/v3', {}, userData);
     expect(user.authUserId).toStrictEqual(reg.authUserId);
 
     for (let i = 0; i < 500; i++) {
-      user = postRequest('/auth/login/v2', userData);
+      user = requestHelper('POST', '/auth/login/v3', {}, userData);
     }
     expect(user.authUserId).toStrictEqual(reg.authUserId);
   });
+
 });
 
 describe('authRegisterV1 Test', () => {
@@ -88,7 +86,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    expect(postRequest('/auth/register/v2', userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toEqual(400);
   });
 
   test('email already taken', () => {
@@ -99,8 +97,8 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    postRequest('/auth/register/v2', userData);
-    expect(postRequest('/auth/register/v2', userData)).toStrictEqual(ERROR);
+    requestHelper('POST', '/auth/register/v3', {}, userData);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toEqual(400);
   });
 
   test('invalid password length', () => {
@@ -111,7 +109,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    expect(postRequest('/auth/register/v2', userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toEqual(400);
   });
 
   test('invalid firstname length', () => {
@@ -122,7 +120,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    expect(postRequest('/auth/register/v2', userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toEqual(400);
   });
 
   test('invalid lastname length', () => {
@@ -133,7 +131,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: ''
     };
 
-    expect(postRequest('/auth/register/v2', userData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/register/v3', {}, userData)).toEqual(400);
   });
 
   test('check handle: basic', () => {
@@ -144,14 +142,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    const user = postRequest('/auth/register/v2', userData);
+    const user = requestHelper('POST', '/auth/register/v3', {}, userData);
 
     const profileData = {
-      token: user.token,
-      uId: user.authUserId,
+      uId: user.authUserId
     };
 
-    const person = getRequest('/user/profile/v2', profileData);
+    const headerData = {
+      token: user.token
+    };
+
+    const person = requestHelper('GET', '/user/profile/v3', headerData, profileData);
     expect(person.user.handleStr).toStrictEqual('viviancheng');
   });
 
@@ -163,14 +164,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Ch#eng!'
     };
 
-    const user = postRequest('/auth/register/v2', userData);
+    const user = requestHelper('POST', '/auth/register/v3', {}, userData);
 
     const profileData = {
-      token: user.token,
-      uId: user.authUserId,
+      uId: user.authUserId
     };
 
-    const person = getRequest('/user/profile/v2', profileData);
+    const headerData = {
+      token: user.token
+    };
+
+    const person = requestHelper('GET', '/user/profile/v3', headerData, profileData);
     expect(person.user.handleStr).toStrictEqual('viviancheng');
   });
 
@@ -183,14 +187,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    const user1 = postRequest('/auth/register/v2', user1Data);
+    const user1 = requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
     const profile1Data = {
-      token: user1.token,
-      uId: user1.authUserId,
+      uId: user1.authUserId
     };
 
-    const person1 = getRequest('/user/profile/v2', profile1Data);
+    const header1Data = {
+      token: user1.token
+    };
+
+    const person1 = requestHelper('GET', '/user/profile/v3', header1Data, profile1Data);
 
     // user 2
     const user2Data = {
@@ -200,14 +207,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    const user2 = postRequest('/auth/register/v2', user2Data);
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, user2Data);
 
     const profile2Data = {
-      token: user2.token,
-      uId: user2.authUserId,
+      uId: user2.authUserId
     };
 
-    const person2 = getRequest('/user/profile/v2', profile2Data);
+    const header2Data = {
+      token: user2.token
+    };
+
+    const person2 = requestHelper('GET', '/user/profile/v3', header2Data, profile2Data);
 
     // user 3
     const user3Data = {
@@ -217,14 +227,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng'
     };
 
-    const user3 = postRequest('/auth/register/v2', user3Data);
+    const user3 = requestHelper('POST', '/auth/register/v3', {}, user3Data);
 
     const profile3Data = {
-      token: user3.token,
-      uId: user3.authUserId,
+      uId: user3.authUserId
     };
 
-    const person3 = getRequest('/user/profile/v2', profile3Data);
+    const header3Data = {
+      token: user3.token
+    };
+
+    const person3 = requestHelper('GET', '/user/profile/v3', header3Data, profile3Data);
 
     expect(person1.user.handleStr).toStrictEqual('viviancheng');
     expect(person2.user.handleStr).toStrictEqual('viviancheng0');
@@ -239,14 +252,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'Cheng123456'
     };
 
-    const user = postRequest('/auth/register/v2', userData);
+    const user = requestHelper('POST', '/auth/register/v3', {}, userData);
 
     const profileData = {
-      token: user.token,
-      uId: user.authUserId,
+      uId: user.authUserId
     };
 
-    const person = getRequest('/user/profile/v2', profileData);
+    const headerData = {
+      token: user.token
+    };
+
+    const person = requestHelper('GET', '/user/profile/v3', headerData, profileData);
     expect(person.user.handleStr).toStrictEqual('vivian1234cheng12345');
   });
 
@@ -258,7 +274,7 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'def'
     };
 
-    postRequest('/auth/register/v2', user1Data);
+    requestHelper('POST', '/auth/register/v3', {}, user1Data);
 
     const user2Data = {
       email: 'blah1@email.com',
@@ -267,14 +283,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'klmnopqrs'
     };
 
-    const user2 = postRequest('/auth/register/v2', user2Data);
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, user2Data);
 
     const profile2Data = {
-      token: user2.token,
-      uId: user2.authUserId,
+      uId: user2.authUserId
     };
 
-    const person2 = getRequest('/user/profile/v2', profile2Data);
+    const header2Data = {
+      token: user2.token
+    };
+
+    const person2 = requestHelper('GET', '/user/profile/v3', header2Data, profile2Data);
     expect(person2.user.handleStr).toEqual('abcdefghijklmnopqrs');
 
     const user3Data = {
@@ -284,14 +303,17 @@ describe('authRegisterV1 Test', () => {
       nameLast: 'klmnopqrs'
     };
 
-    const user3 = postRequest('/auth/register/v2', user3Data);
+    const user3 = requestHelper('POST', '/auth/register/v3', {}, user3Data);
 
     const profile3Data = {
-      token: user3.token,
-      uId: user3.authUserId,
+      uId: user3.authUserId
     };
 
-    const person3 = getRequest('/user/profile/v2', profile3Data);
+    const header3Data = {
+      token: user3.token
+    };
+
+    const person3 = requestHelper('GET', '/user/profile/v3', header3Data, profile3Data);
     expect(person3.user.handleStr).toEqual('abcdefghijklmnopqrs0');
   });
 });
@@ -304,12 +326,12 @@ describe('authLogout Test', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const token1 = postRequest('/auth/register/v2', user1Data).token;
+    const token1 = requestHelper('POST', '/auth/register/v3', {}, user1Data).token;
 
     const logoutData = {
       token: token1 + 'yay'
     };
-    expect(postRequest('/auth/logout/v1', logoutData)).toStrictEqual(ERROR);
+    expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toEqual(400);
   });
 
   test('test valid logout', () => {
@@ -319,18 +341,18 @@ describe('authLogout Test', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    postRequest('/auth/register/v2', userData);
+    requestHelper('POST', '/auth/register/v3', {}, userData);
 
     const loginData = {
       email: userData.email,
       password: userData.password
     };
-    const token = postRequest('/auth/login/v2', loginData).token;
+    const token = requestHelper('POST', '/auth/login/v3', {}, loginData).token;
 
     const logoutData = {
       token: token
     };
-    expect(postRequest('/auth/logout/v1', logoutData)).toStrictEqual({});
+    expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toStrictEqual({});
   });
 });
 */

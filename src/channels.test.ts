@@ -1,13 +1,13 @@
-/*
-import { getRequest, postRequest, deleteRequest } from './request';
+/* import { getRequest, postRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
 
 let user: any;
 let channel: any;
+let tokenData: any;
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 
   const person = {
     email: 'jr@unsw.edu.au',
@@ -15,26 +15,44 @@ beforeEach(() => {
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  user = postRequest('/auth/register/v2', person);
+  user = requestHelper('POST', '/auth/register/v3', {}, person);
 
   const channelData = {
-    token: user.token,
     name: 'COMP1531',
     isPublic: true,
   };
-  channel = postRequest('/channels/create/v2', channelData);
+
+  tokenData = {
+    token: user.token
+  };
+  channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
-describe('HTTP - channelsListV2 Tests', () => {
+describe('HTTP - channelsListV3 Tests', () => {
   test('Testing valid input', () => {
-    const param = {
-      token: user.token,
+    const person = {
+      email: 'cc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'christine',
+      nameLast: 'chu'
     };
-    const channelsList = getRequest('/channels/list/v2', param);
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, person);
+
+    const channelData = {
+      name: 'COMP1521',
+      isPublic: true,
+    };
+
+    const token2Data = {
+      token: user2.token,
+    };
+    requestHelper('POST', '/channels/create/v3', token2Data, channelData);
+
+    const channelsList = requestHelper('GET', '/channels/list/v3', tokenData, {});
     expect(channelsList).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
@@ -44,35 +62,25 @@ describe('HTTP - channelsListV2 Tests', () => {
   });
 
   test('Testing invalid token', () => {
-    const param = {
-      token: user.token + 'yay!',
-    };
-
-    expect(getRequest('/channels/list/v2', param)).toStrictEqual(ERROR);
+    tokenData.token = user.token + 'yay!';
+    expect(requestHelper('GET', '/channels/list/v3', tokenData, {})).toEqual(403);
   });
 });
 
 describe('channelListAllV1 Tests', () => {
   test('Invalid token', () => {
-    const listRequest = {
-      token: user.token + 'yay'
-    };
-    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual(ERROR);
+    tokenData.token = user.token + 'yay!';
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toEqual(403);
   });
 
   test('Basic functionality', () => {
     const channel2Data = {
-      token: user.token,
       name: 'COMP2511',
       isPublic: true
     };
-    const channel2 = postRequest('/channels/create/v2', channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
-    const listRequest = {
-      token: user.token
-    };
-
-    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
@@ -85,26 +93,20 @@ describe('channelListAllV1 Tests', () => {
 
   test('Includes private with public channels', () => {
     const channel2Data = {
-      token: user.token,
       name: 'COMP2511',
       isPublic: true
     };
 
-    const channel2 = postRequest('/channels/create/v2', channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
     const channelPrivData = {
-      token: user.token,
       name: 'COMP3311',
       isPublic: false
     };
 
-    const channelPriv = postRequest('/channels/create/v2', channelPrivData);
+    const channelPriv = requestHelper('POST', '/channels/create/v3', tokenData, channelPrivData);
 
-    const listRequest = {
-      token: user.token
-    };
-
-    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
@@ -126,29 +128,23 @@ describe('channelListAllV1 Tests', () => {
       nameLast: 'Jiang'
     };
 
-    const outsideUser = postRequest('/auth/register/v2', outsideUserData);
+    const outsideUser = requestHelper('POST', '/auth/register/v3', {}, outsideUserData);
 
     const channel2Data = {
-      token: user.token,
       name: 'COMP2511',
       isPublic: true
     };
 
-    const channel2 = postRequest('/channels/create/v2', channel2Data);
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
 
     const channelPrivData = {
-      token: user.token,
       name: 'COMP3311',
       isPublic: false
     };
+    const channelPriv = requestHelper('POST', '/channels/create/v3', tokenData, channelPrivData);
 
-    const channelPriv = postRequest('/channels/create/v2', channelPrivData);
-
-    const listRequest = {
-      token: outsideUser.token
-    };
-
-    expect(getRequest('/channels/listall/v2', listRequest)).toStrictEqual({
+    tokenData.token = outsideUser.token;
+    expect(requestHelper('GET', '/channels/listall/v3', tokenData, {})).toStrictEqual({
       channels: [{
         channelId: channel.channelId,
         name: 'COMP1531'
@@ -166,32 +162,31 @@ describe('channelListAllV1 Tests', () => {
 describe('HTTP - channelsCreateV2 Tests', () => {
   test('Testing valid token + name', () => {
     const param = {
-      token: user.token,
       name: 'pewpewpew!',
       isPublic: true,
     };
-    const channelId = postRequest('/channels/create/v2', param);
+
+    const channelId = requestHelper('POST', '/channels/create/v3', tokenData, param);
     expect(channelId).toStrictEqual({ channelId: expect.any(Number) });
   });
 
   test('Testing invalid token', () => {
     const param = {
-      token: user.token + 'yay!',
       name: 'pewpewpew!',
       isPublic: true,
     };
-    const channelId = postRequest('/channels/create/v2', param);
-    expect(channelId).toStrictEqual(ERROR);
+    tokenData.token = user.token + 'yay';
+
+    expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(403);
   });
 
   test('Testing 20+ name length', () => {
     const param = {
-      token: user.token,
       name: 'verycoolchannelname1234567891011121314151617181920',
       isPublic: true,
     };
-    const channelId = postRequest('/channels/create/v2', param);
-    expect(channelId).toStrictEqual(ERROR);
+
+    expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
   });
 
   test('Testing 0 name length', () => {
@@ -200,8 +195,8 @@ describe('HTTP - channelsCreateV2 Tests', () => {
       name: '',
       isPublic: true,
     };
-    const channelId = postRequest('/channels/create/v2', param);
-    expect(channelId).toStrictEqual(ERROR);
+
+    expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
   });
 });
 */

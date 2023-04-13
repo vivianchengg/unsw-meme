@@ -1,51 +1,64 @@
+<<<<<<< src/users.test.ts
 /*
 import { getRequest, postRequest, putRequest, deleteRequest } from './request';
 
 const ERROR = { error: expect.any(String) };
+=======
+import { requestHelper } from './request';
+>>>>>>> src/users.test.ts
 
 let user: any;
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
-  const person = {
+  requestHelper('DELETE', '/clear/v1', {}, {});
+  const userData = {
     email: 'jr@unsw.edu.au',
     password: 'password',
     nameFirst: 'Jake',
     nameLast: 'Renzella'
   };
-  user = postRequest('/auth/register/v2', person);
+  user = requestHelper('POST', '/auth/register/v3', {}, userData);
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
 describe('userProfileSetHandleV1 tests', () => {
   test('Invalid token', () => {
     const param = {
-      token: user.token + 'buffer',
       handleStr: 'theJAKErenzella'
     };
 
-    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+    const headerData = {
+      token: user.token + 'buffer'
+    };
+
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(400);
   });
 
   test('New handle not between 3-20 characters', () => {
     const param = {
-      token: user.token,
       handleStr: 'ohmygodILOVECOMP1531!!'
     };
 
-    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(400);
   });
 
   test('New handle contains non-alphanumeric characters', () => {
     const param = {
-      token: user.token,
       handleStr: 'やったCOMP1531が大好き!'
     };
 
-    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param)).toEqual(400);
   });
 
   test('New handle already taken', () => {
@@ -56,50 +69,76 @@ describe('userProfileSetHandleV1 tests', () => {
       nameLast: 'Jiang'
     };
 
-    const user2 = postRequest('/auth/register/v2', person2);
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, person2);
 
     const profileParam = {
-      token: user2.token,
       uId: user2.authUserId
     };
 
-    const user2Profile = getRequest('/user/profile/v2', profileParam);
+    const header1Data = {
+      token: user2.token
+    };
+
+    const user2Profile = requestHelper('GET', '/user/profile/v3', header1Data, profileParam);
 
     const param = {
-      token: user.token,
       handleStr: user2Profile.user.handleStr
     };
 
-    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual(ERROR);
+    const header2Data = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/sethandle/v2', header2Data, param)).toEqual(400);
   });
 
   test('Basic functionality', () => {
     const param = {
-      token: user.token,
       handleStr: 'theJAKErenzella'
     };
 
-    expect(putRequest('/user/profile/sethandle/v1', param)).toStrictEqual({});
+    const headerData = {
+      token: user.token
+    };
+
+    requestHelper('PUT', '/user/profile/sethandle/v2', headerData, param);
+
+    const userDetailData = {
+      uId: user.authUserId
+    };
+
+    const header1Data = {
+      token: user.token
+    };
+
+    const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
+    expect(userDetail.user.handleStr).toStrictEqual('theJAKErenzella');
   });
 });
 
 describe('userProfileSetEmailV1 tests', () => {
   test('Invalid token', () => {
     const param = {
-      token: user.token + 'buffer',
       email: 'jake23@unsw.edu.au'
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+    const headerData = {
+      token: user.token + 'buffer'
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(400);
   });
 
   test('Invalid email', () => {
     const param = {
-      token: user.token,
       email: 'buffer'
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(400);
   });
 
   test('Email already taken', () => {
@@ -110,101 +149,143 @@ describe('userProfileSetEmailV1 tests', () => {
       nameLast: 'Jiang'
     };
 
-    const user2 = postRequest('/auth/register/v2', person2);
+    const user2 = requestHelper('POST', '/auth/register/v3', {}, person2);
 
     const profileParam = {
-      token: user2.token,
       uId: user2.authUserId
     };
 
-    const user2Profile = getRequest('/user/profile/v2', profileParam);
+    const header1Data = {
+      token: user2.token
+    };
+
+    const user2Profile = requestHelper('GET', '/user/profile/v3', header1Data, profileParam);
 
     const param = {
-      token: user.token,
       email: user2Profile.user.email
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual(ERROR);
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setemail/v2', headerData, param)).toEqual(400);
   });
 
   test('Basic functionality', () => {
     const param = {
-      token: user.token,
       email: 'JR@unsw.edu.au'
     };
 
-    expect(putRequest('/user/profile/setemail/v1', param)).toStrictEqual({});
+    const headerData = {
+      token: user.token,
+    };
+
+    requestHelper('PUT', '/user/profile/setemail/v2', headerData, param);
+
+    const userDetailData = {
+      uId: user.authUserId
+    };
+
+    const header1Data = {
+      token: user.token
+    };
+
+    const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
+
+    expect(userDetail.user.email).toStrictEqual('JR@unsw.edu.au');
   });
 });
 
 describe('HTTP - /user/profile/setname/v1', () => {
   test('Invalid token', () => {
     const param = {
-      token: user.token + '1',
       nameFirst: 'yum',
-      nameLast: 'my',
+      nameLast: 'my'
     };
-    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+
+    const headerData = {
+      token: user.token + '1'
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('0 length first name', () => {
     const param = {
-      token: user.token,
       nameFirst: '',
-      nameLast: 'my',
+      nameLast: 'my'
     };
-    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('50+ length first name', () => {
     const param = {
-      token: user.token,
       nameFirst: 'a'.repeat(51),
-      nameLast: 'my',
+      nameLast: 'my'
     };
-    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('0 length last name', () => {
     const param = {
-      token: user.token,
       nameFirst: 'yum',
-      nameLast: '',
+      nameLast: ''
     };
-    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('50+ length lastname name', () => {
     const param = {
-      token: user.token,
       nameFirst: 'yum',
       nameLast: 'a'.repeat(51),
     };
-    expect(putRequest('/user/profile/setname/v1', param)).toStrictEqual(ERROR);
+
+    const headerData = {
+      token: user.token
+    };
+
+    expect(requestHelper('PUT', '/user/profile/setname/v2', headerData, param)).toEqual(400);
   });
 
   test('Valid input', () => {
     const param = {
-      token: user.token,
       nameFirst: 'yum',
       nameLast: 'my',
     };
-    putRequest('/user/profile/setname/v1', param);
 
-    const newparam = {
-      token: user.token,
-      uId: user.authUserId,
+    const headerData = {
+      token: user.token
     };
-    const details = getRequest('/user/profile/v2', newparam);
-    expect(details).toStrictEqual({
-      user: {
-        uId: user.authUserId,
-        email: 'jr@unsw.edu.au',
-        nameFirst: 'yum',
-        nameLast: 'my',
-        handleStr: 'jakerenzella',
-      }
-    });
+
+    requestHelper('PUT', '/user/profile/setname/v2', headerData, param);
+
+    const userDetailData = {
+      uId: user.authUserId
+    };
+
+    const header1Data = {
+      token: user.token
+    };
+
+    const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
+    expect(userDetail.user.nameFirst).toStrictEqual('yum');
+    expect(userDetail.user.nameLast).toStrictEqual('my');
   });
 });
 
@@ -213,7 +294,7 @@ describe('HTTP - /users/all/v1', () => {
     const param = {
       token: user.token + 'lol',
     };
-    expect(getRequest('/users/all/v1', param)).toStrictEqual(ERROR);
+    expect(requestHelper('GET', '/users/all/v2', param, {})).toEqual(400);
   });
 
   test('Valid Token', () => {
@@ -223,11 +304,13 @@ describe('HTTP - /users/all/v1', () => {
       nameFirst: 'abby',
       nameLast: 'boo',
     };
-    const user3 = postRequest('/auth/register/v2', person);
+    const user3 = requestHelper('POST', '/auth/register/v3', {}, person);
+
     const param = {
       token: user3.token,
     };
-    expect(getRequest('/users/all/v1', param)).toStrictEqual({
+
+    expect(requestHelper('GET', '/users/all/v2', param, {})).toStrictEqual({
       users: [
         {
           uId: user.authUserId,
@@ -248,13 +331,17 @@ describe('HTTP - /users/all/v1', () => {
 
 describe('userProfileV2 tests', () => {
   test('Testing valid token + uId', () => {
-    const param = {
-      token: user.token,
-      uId: user.authUserId,
+    const userDetailData = {
+      uId: user.authUserId
     };
-    const profile = getRequest('/user/profile/v2', param);
 
-    expect(profile).toStrictEqual({
+    const header1Data = {
+      token: user.token
+    };
+
+    const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
+
+    expect(userDetail).toStrictEqual({
       user: {
         uId: user.authUserId,
         email: 'jr@unsw.edu.au',
@@ -266,21 +353,29 @@ describe('userProfileV2 tests', () => {
   });
 
   test('Testing invalid token', () => {
-    const param = {
-      token: user.token + '1',
-      uId: user.authUserId,
+    const userDetailData = {
+      uId: user.authUserId
     };
-    const profile = getRequest('/user/profile/v2', param);
-    expect(profile).toStrictEqual(ERROR);
+
+    const header1Data = {
+      token: user.token + 'yay'
+    };
+
+    const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
+    expect(userDetail).toEqual(400);
   });
 
   test('Testing invalid uId', () => {
-    const param = {
-      token: user.token,
-      uId: user.authUserId + 1,
+    const userDetailData = {
+      uId: user.authUserId + 189
     };
-    const profile = getRequest('/user/profile/v2', param);
-    expect(profile).toStrictEqual(ERROR);
+
+    const header1Data = {
+      token: user.token
+    };
+
+    const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
+    expect(userDetail).toEqual(400);
   });
 });
 */

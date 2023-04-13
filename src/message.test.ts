@@ -2,7 +2,7 @@ import { requestHelper } from './request';
 
 let user: any;
 let user2: any;
-let user3: any;
+// let user3: any;
 let channel: any;
 let dm: any;
 let message: any;
@@ -164,6 +164,7 @@ describe('HTTP tests using Jest for messageRemoveV1', () => {
     tokenData.token = user3.token;
     expect(requestHelper('DELETE', '/message/remove/v2', tokenData, msg3Data)).toStrictEqual({});
   });
+
 });
 
 describe('HTTP tests using Jest for messageSendV1', () => {
@@ -481,3 +482,4 @@ describe('HTTP - /message/senddm/v1 tests', () => {
     expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toStrictEqual({ messageId: expect.any(Number) });
   });
 });
+*/
