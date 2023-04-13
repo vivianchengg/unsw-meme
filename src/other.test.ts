@@ -51,3 +51,4 @@ describe('Test clearV1 function', () => {
     expect(requestHelper('DELETE', '/clear/v1', {}, {})).toStrictEqual({});
   });
 });
+*/

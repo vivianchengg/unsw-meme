@@ -931,3 +931,4 @@ describe('channelRemoveOwnerV2 tests', () => {
     expect(requestHelper('POST', '/channel/removeowner/v2', token1Data, ownerData)).toStrictEqual(403);
   });
 });
+*/

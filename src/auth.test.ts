@@ -354,3 +354,4 @@ describe('authLogout Test', () => {
     expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toStrictEqual({});
   });
 });
+*/
