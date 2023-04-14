@@ -1,5 +1,6 @@
 import { getData, setData } from './dataStore';
 import { isValidToken } from './users';
+import HTTPError from "http-errors";
 
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
@@ -99,20 +100,22 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
   const data = getData();
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, "token is invalid")
   }
 
   const channel = data.channels.find(c => c.channelId === channelId);
   if (channel === undefined) {
-    return { error: 'channelId does not refer to a valid channel' };
+    throw HTTPError(400, "channelId does not refer to a valid channel");    
   }
 
   if (!channel.allMembers.includes(authUserId)) {
-    return { error: 'channelId is valid and the authorised user is not a member of the channel' };
+    throw HTTPError(403, "channelId is valid and the authorised user is not a member of the channel");
   }
 
   if (message.length < 1 || message.length > 1000) {
-    return { error: 'length of message is less than 1 or over 1000' };
+    throw HTTPError(400, "length of message is less than 1 or over 1000");    
+
+    
   }
 
   const retMsg = {
@@ -142,17 +145,17 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
   const authId = isValidToken(token);
 
   if (authId === null) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, "token is invalid")
   }
 
   // channel or dm
   const validMsg = msgValid(authId, messageId);
   if (validMsg === null) {
-    return { error: 'invalid message id' };
+    throw HTTPError(400, "invalid message id")
   }
 
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
-    return { error: 'user not sender and no owner permission' };
+    throw HTTPError(403, "user not sender and no owner permission")
   }
 
   for (const channel of data.channels) {
@@ -181,20 +184,21 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
   const authId = isValidToken(token);
 
   if (authId === null) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, "token is invalid")
   }
 
   if (message.length > 1000) {
-    return { error: 'length of message is over 1000' };
+    throw HTTPError(400, "length of message is over 1000");    
+
   }
 
   const validMsg = msgValid(authId, messageId);
   if (validMsg === null) {
-    return { error: 'invalid message id' };
+    throw HTTPError(400, "invalid message id")
   }
 
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
-    return { error: 'user not sender and no owner permission' };
+    throw HTTPError(403, "user not sender and no owner permission")
   }
 
   if (message.length === 0) {
