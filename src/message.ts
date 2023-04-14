@@ -267,7 +267,6 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
-
 /** Function that when given a message, pins it
   *
   * @param {string} - Token of individual's session
@@ -281,7 +280,7 @@ export const messagePinV1 = (token: string, messageId: number) => {
 
   if (authId === null) {
     throw HTTPError(403, 'Invalid token error');
-    //console.log("invalid token"); 
+    // console.log("invalid token");
   }
 
   // channel or dm
@@ -297,7 +296,7 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const channel of data.channels) {
     for (const msg of channel.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === true)  {
+        if (msg.pinned === true) {
           throw HTTPError(400, 'message is already pinned');
         }
         msg.pinned = true;
@@ -308,7 +307,7 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const dm of data.dms) {
     for (const msg of dm.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === true)  {
+        if (msg.pinned === true) {
           throw HTTPError(400, 'message is already pinned');
         }
         msg.pinned = true;

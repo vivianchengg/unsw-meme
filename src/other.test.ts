@@ -1,4 +1,4 @@
-/*import { requestHelper } from './request';
+/* import { requestHelper } from './request';
 
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
