@@ -82,4 +82,3 @@ export const setData = (newData: Data) => {
 export const getHash = (input: string) => {
   return crypto.createHash('sha256').update(input).digest('hex');
 };
-

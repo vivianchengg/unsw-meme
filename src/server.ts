@@ -210,7 +210,6 @@ app.post('/message/unpin/v1', (req: Request, res: Response) => {
   return res.json(messageUnpinV1(token, messageId));
 });
 
-
 // Keep this BENEATH route definitions
 // handles errors nicely
 app.use(errorHandler());

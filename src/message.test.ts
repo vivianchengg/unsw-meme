@@ -503,7 +503,7 @@ describe('HTTP - /message/pin/v1 tests', () => {
       messageId: message.messageId
     };
     tokenData.token = user2.token;
-    requestHelper('POST', '/message/pin/v1 ', tokenData, param)
+    requestHelper('POST', '/message/pin/v1 ', tokenData, param);
     expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
   });
 
@@ -512,12 +512,11 @@ describe('HTTP - /message/pin/v1 tests', () => {
       messageId: dmMsg2.messageId
     };
     tokenData.token = user2.token;
-    requestHelper('POST', '/message/pin/v1 ', tokenData, param)
+    requestHelper('POST', '/message/pin/v1 ', tokenData, param);
     expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
   });
 
   test('valid message in a joined channel/DM + authorised user does not have owner permissions in the channel/dm', () => {
-
     const join = {
       channelId: channel.channelId,
       uId: user3.authUserId
@@ -530,7 +529,7 @@ describe('HTTP - /message/pin/v1 tests', () => {
     };
 
     tokenData.token = user3.token;
-    
+
     expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(403);
   });
 
@@ -561,7 +560,6 @@ describe('HTTP - /message/unpin/v1 tests', () => {
 
     tokenData.token = user3.token + 1;
     expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual(403);
-
   });
 
   test('message invalid', () => {
@@ -598,8 +596,7 @@ describe('HTTP - /message/unpin/v1 tests', () => {
     };
     tokenData.token = user2.token;
     expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toStrictEqual({});
-   
-   
+
     const join = {
       channelId: channel.channelId,
       uId: user3.authUserId
@@ -608,7 +605,7 @@ describe('HTTP - /message/unpin/v1 tests', () => {
     requestHelper('POST', '/channel/invite/v3', tokenData, join);
 
     tokenData.token = user3.token;
-    
+
     expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual(403);
   });
 
