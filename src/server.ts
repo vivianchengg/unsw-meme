@@ -198,6 +198,12 @@ app.post('/message/senddm/v2', (req: Request, res: Response) => {
   return res.json(messageSendDmV1(token, dmId, message));
 });
 
+app.post('/message/pin/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId } = req.body;
+  return res.json(messageSendDmV1(token, messageId));
+});
+
 // Keep this BENEATH route definitions
 // handles errors nicely
 app.use(errorHandler());
