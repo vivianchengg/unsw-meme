@@ -311,3 +311,54 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 
   return { messageId: id };
 };
+
+/** Function that when given an pinned message, unpins it
+  *
+  * @param {string} - Token of individual's session
+  *  @param {number} - messageId of message that authorised user is trying to pin
+  * @returns {}
+  *
+*/
+export const messagePinV1 = (token: string, messageId: number) => {
+  const data = getData();
+  const authId = isValidToken(token);
+
+  if (authId === null) {
+    throw HTTPError(403, 'Invalid token error');
+  }
+
+  // channel or dm
+  const validMsg = msgValid(authId, messageId);
+  if (validMsg === null) {
+    throw HTTPError(400, 'Invalid message id error');
+  }
+
+  if (!isOwner(authId, messageId)) {
+    throw HTTPError(403, 'valid message in a joined channel/DM but not an owner');
+  }
+
+  for (const channel of data.channels) {
+    for (const msg of channel.messages) {
+      if (msg.messageId === messageId) {
+        if (msg.pinned === false)  {
+          throw HTTPError(400, 'message is not pinned');
+        }
+        msg.pinned = false;
+      }
+    }
+  }
+
+  for (const dm of data.dms) {
+    for (const msg of dm.messages) {
+      if (msg.messageId === messageId) {
+        if (msg.pinned === true)  {
+          throw HTTPError(400, 'message is not pinned');
+        }
+        msg.pinned = false;
+      }
+    }
+  }
+  setData(data);
+  return {};
+};
+
