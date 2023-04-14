@@ -100,11 +100,16 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
   const data = getData();
   const authUserId = isValidToken(token);
   if (authUserId === null) {
+<<<<<<< HEAD
     throw HTTPError(403, "token is invalid")
+=======
+    throw HTTPError(403, 'Invalid token error');
+>>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   const channel = data.channels.find(c => c.channelId === channelId);
   if (channel === undefined) {
+<<<<<<< HEAD
     throw HTTPError(400, "channelId does not refer to a valid channel");    
   }
 
@@ -116,6 +121,17 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
     throw HTTPError(400, "length of message is less than 1 or over 1000");    
 
     
+=======
+    throw HTTPError(400, 'Invalid channelId');
+  }
+
+  if (!channel.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'user is not a member of the channel');
+  }
+
+  if (message.length < 1 || message.length > 1000) {
+    throw HTTPError(400, 'Invalid message length');
+>>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   const retMsg = {
@@ -145,17 +161,29 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
   const authId = isValidToken(token);
 
   if (authId === null) {
+<<<<<<< HEAD
     throw HTTPError(403, "token is invalid")
+=======
+    throw HTTPError(403, 'Invalid token error');
+>>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   // channel or dm
   const validMsg = msgValid(authId, messageId);
   if (validMsg === null) {
+<<<<<<< HEAD
     throw HTTPError(400, "invalid message id")
   }
 
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
     throw HTTPError(403, "user not sender and no owner permission")
+=======
+    throw HTTPError(400, 'Invalid message id error');
+  }
+
+  if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
+    throw HTTPError(403, 'user not sender and no owner permission error');
+>>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   for (const channel of data.channels) {
@@ -184,21 +212,37 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
   const authId = isValidToken(token);
 
   if (authId === null) {
+<<<<<<< HEAD
     throw HTTPError(403, "token is invalid")
   }
 
   if (message.length > 1000) {
     throw HTTPError(400, "length of message is over 1000");    
 
+=======
+    throw HTTPError(403, 'Invalid token error');
+  }
+
+  if (message.length > 1000) {
+    throw HTTPError(400, 'Invalid message length');
+>>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   const validMsg = msgValid(authId, messageId);
   if (validMsg === null) {
+<<<<<<< HEAD
     throw HTTPError(400, "invalid message id")
   }
 
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
     throw HTTPError(403, "user not sender and no owner permission")
+=======
+    throw HTTPError(400, 'Invalid message id error');
+  }
+
+  if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
+    throw HTTPError(403, 'user is not sender or no owner permission');
+>>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   if (message.length === 0) {
@@ -237,21 +281,21 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   const data = getData();
 
   if (message.length < 1 || message.length > 1000) {
-    return { error: 'invalid message length' };
+    throw HTTPError(400, 'Invalid message length');
   }
 
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-    return { error: 'token is invalid' };
+    throw HTTPError(403, 'Invalid token error');
   }
 
   const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
-    return { error: 'invalid dmId' };
+    throw HTTPError(400, 'Invalid dmId');
   }
 
   if (!dm.allMembers.includes(authUserId)) {
-    return { error: 'user is not a member of dm' };
+    throw HTTPError(403, 'user is not a member of dm');
   }
 
   const id = createId();

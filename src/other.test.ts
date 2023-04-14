@@ -1,13 +1,11 @@
-import { getRequest, postRequest, deleteRequest } from './dataStore';
-
-const ERROR = { error: expect.any(String) };
+import { requestHelper } from './request';
 
 beforeEach(() => {
-  deleteRequest('/clear/v1', null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
 afterAll(() => {
-  deleteRequest('/clear/v1', null);
+  requestHelper('DELETE', '/clear/v1', {}, {});
 });
 
 describe('Test clearV1 function', () => {
@@ -19,36 +17,37 @@ describe('Test clearV1 function', () => {
       nameFirst: 'Vivian',
       nameLast: 'Cheng'
     };
-    const user = postRequest('/auth/register/v2', userData);
+    const user = requestHelper('POST', '/auth/register/v3', {}, userData);
 
     // new channel
+    const tokenData = {
+      token: user.token
+    };
     const channelData = {
       token: user.token,
       name: 'ABC',
       isPublic: true
     };
-    const channel = postRequest('/channels/create/v2', channelData);
+    const channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
 
     // clear
-    deleteRequest('/clear/v1', null);
+    requestHelper('DELETE', '/clear/v1', {}, {});
 
     // get user profile
     const profileData = {
-      token: user.token,
       uId: user.authUserId,
     };
 
     // get channel detail
     const detailData = {
-      token: user.token,
       channelId: channel.channelId,
     };
 
-    expect(getRequest('/user/profile/v2', profileData)).toStrictEqual(ERROR);
-    expect(getRequest('/channel/details/v2', detailData)).toStrictEqual(ERROR);
+    expect(requestHelper('GET', '/user/profile/v3', tokenData, profileData)).toStrictEqual(403);
+    expect(requestHelper('GET', '/channel/details/v3', tokenData, detailData)).toStrictEqual(403);
   });
 
   test('test clearV1 - basic output', () => {
-    expect(deleteRequest('/clear/v1', null)).toStrictEqual({});
+    expect(requestHelper('DELETE', '/clear/v1', {}, {})).toStrictEqual({});
   });
 });
