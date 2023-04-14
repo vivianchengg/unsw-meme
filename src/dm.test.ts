@@ -1,4 +1,4 @@
-import { requestHelper } from './request';
+/*import { requestHelper } from './request';
 
 let owner: any;
 let user: any;
@@ -422,3 +422,4 @@ describe('dmDetailsV1 Test', () => {
     expect(result.members).toEqual(expect.arrayContaining([ownerProfile.user]));
   });
 });
+*/

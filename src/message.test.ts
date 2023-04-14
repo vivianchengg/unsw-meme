@@ -491,7 +491,15 @@ describe('HTTP - /message/pin/v1 tests', () => {
     expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(403);
   });
 
-  test('The message is already pinned', () => {
+  test('message invalid', () => {
+    const param = {
+      messageId: dmMsg2.messageId + 1
+    };
+    tokenData.token = user2.token;
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+  });
+
+  test('The message is already pinned - channel', () => {
     const param = {
       messageId: message.messageId
     };
@@ -500,24 +508,46 @@ describe('HTTP - /message/pin/v1 tests', () => {
     expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
   });
 
-  test('valid message in a joined channel/DM + authorised user does not have owner permissiosn in the channel/dm', () => {
+  test('The message is already pinned - dm', () => {
     const param = {
-      messageId: message.messageId
+      messageId: dmMsg2.messageId
     };
+    tokenData.token = user2.token;
+    requestHelper('POST', '/message/pin/v1 ', tokenData, param)
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+  });
+
+  test('valid message in a joined channel/DM + authorised user does not have owner permissions in the channel/dm', () => {
 
     const join = {
       channelId: channel.channelId,
       uId: user3.authUserId
     };
 
-    tokenData.token = user3.token;
-
     requestHelper('POST', '/channel/invite/v3', tokenData, join);
 
     const param = {
       messageId: message.messageId
     };
+
+    tokenData.token = user3.token;
     
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(403);
+  });
+
+  test('valid input - channel', () => {
+    const param = {
+      messageId: message.messageId
+    };
+    tokenData.token = user2.token;
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual({});
+  });
+
+  test('valid input - dm', () => {
+    const param = {
+      messageId: dmMsg.messageId
+    };
+    tokenData.token = user2.token;
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual({});
   });
 });

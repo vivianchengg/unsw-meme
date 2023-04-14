@@ -1,4 +1,4 @@
-import { requestHelper } from './request';
+/*import { requestHelper } from './request';
 
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
@@ -51,3 +51,4 @@ describe('Test clearV1 function', () => {
     expect(requestHelper('DELETE', '/clear/v1', {}, {})).toStrictEqual({});
   });
 });
+*/

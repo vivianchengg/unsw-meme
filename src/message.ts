@@ -120,7 +120,8 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
     messageId: createId(),
     uId: authUserId,
     message: message,
-    timeSent: Math.floor((new Date()).getTime() / 1000)
+    timeSent: Math.floor((new Date()).getTime() / 1000),
+    pinned: false
   };
 
   channel.messages.unshift(retMsg);
@@ -257,6 +258,7 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
     uId: authUserId,
     message: message,
     timeSent: Math.floor((new Date()).getTime() / 1000),
+    pinned: false
   };
 
   dm.messages.unshift(msg);
@@ -266,8 +268,7 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 };
 
 
-/** Function that when given a message, updates it text with a new text
-  * if the new message is an empty string, the message is deleted
+/** Function that when given a message, pins it
   *
   * @param {string} - Token of individual's session
   *  @param {number} - messageId of message that authorised user is trying to pin
@@ -280,6 +281,7 @@ export const messagePinV1 = (token: string, messageId: number) => {
 
   if (authId === null) {
     throw HTTPError(403, 'Invalid token error');
+    //console.log("invalid token"); 
   }
 
   // channel or dm
@@ -295,6 +297,9 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const channel of data.channels) {
     for (const msg of channel.messages) {
       if (msg.messageId === messageId) {
+        if (msg.pinned === true)  {
+          throw HTTPError(400, 'message is already pinned');
+        }
         msg.pinned = true;
       }
     }
@@ -303,7 +308,10 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const dm of data.dms) {
     for (const msg of dm.messages) {
       if (msg.messageId === messageId) {
-        msg.message = true;
+        if (msg.pinned === true)  {
+          throw HTTPError(400, 'message is already pinned');
+        }
+        msg.pinned = true;
       }
     }
   }

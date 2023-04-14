@@ -17,6 +17,7 @@ export type Message = {
   uId: number,
   message: string,
   timeSent: number,
+  pinned: boolean
 }
 
 export type Channel = {
@@ -25,7 +26,7 @@ export type Channel = {
   isPublic: boolean,
   allMembers: number[],
   ownerMembers: number[],
-  messages: Message[]
+  messages: Message[],
 };
 
 export type Dm = {

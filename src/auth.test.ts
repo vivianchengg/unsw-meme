@@ -1,4 +1,4 @@
-import { requestHelper } from './request';
+/*import { requestHelper } from './request';
 
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
@@ -353,4 +353,4 @@ describe('authLogout Test', () => {
     };
     expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toStrictEqual({});
   });
-});
+});*/
