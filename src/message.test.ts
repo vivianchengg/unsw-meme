@@ -480,3 +480,44 @@ describe('HTTP - /message/senddm/v1 tests', () => {
     expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toStrictEqual({ messageId: expect.any(Number) });
   });
 });
+
+
+describe('HTTP - /message/pin/v1 tests', () => {
+  test('Invalid token', () => {
+    const param = {
+      messageId: message.messageId
+    };
+    tokenData.token = user2.token + 'yay!';
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(403);
+  });
+
+  test('The message is already pinned', () => {
+    const param = {
+      messageId: message.messageId
+    };
+    tokenData.token = user2.token;
+    requestHelper('POST', '/message/pin/v1 ', tokenData, param)
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+  });
+
+  test('valid message in a joined channel/DM + authorised user does not have owner permissiosn in the channel/dm', () => {
+    const param = {
+      messageId: message.messageId
+    };
+
+    const join = {
+      channelId: channel.channelId,
+      uId: user3.authUserId
+    };
+
+    tokenData.token = user3.token;
+
+    requestHelper('POST', '/channel/invite/v3', tokenData, join);
+
+    const param = {
+      messageId: message.messageId
+    };
+    
+    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+  });
+});
