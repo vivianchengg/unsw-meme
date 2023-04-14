@@ -1,6 +1,6 @@
 import { getData, setData } from './dataStore';
 import { isValidToken } from './users';
-import HTTPError from "http-errors";
+import HTTPError from 'http-errors';
 
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
@@ -100,28 +100,11 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
   const data = getData();
   const authUserId = isValidToken(token);
   if (authUserId === null) {
-<<<<<<< HEAD
-    throw HTTPError(403, "token is invalid")
-=======
     throw HTTPError(403, 'Invalid token error');
->>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   const channel = data.channels.find(c => c.channelId === channelId);
   if (channel === undefined) {
-<<<<<<< HEAD
-    throw HTTPError(400, "channelId does not refer to a valid channel");    
-  }
-
-  if (!channel.allMembers.includes(authUserId)) {
-    throw HTTPError(403, "channelId is valid and the authorised user is not a member of the channel");
-  }
-
-  if (message.length < 1 || message.length > 1000) {
-    throw HTTPError(400, "length of message is less than 1 or over 1000");    
-
-    
-=======
     throw HTTPError(400, 'Invalid channelId');
   }
 
@@ -131,14 +114,14 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
 
   if (message.length < 1 || message.length > 1000) {
     throw HTTPError(400, 'Invalid message length');
->>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   const retMsg = {
     messageId: createId(),
     uId: authUserId,
     message: message,
-    timeSent: Math.floor((new Date()).getTime() / 1000)
+    timeSent: Math.floor((new Date()).getTime() / 1000),
+    pinned: false
   };
 
   channel.messages.unshift(retMsg);
@@ -161,29 +144,17 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
   const authId = isValidToken(token);
 
   if (authId === null) {
-<<<<<<< HEAD
-    throw HTTPError(403, "token is invalid")
-=======
     throw HTTPError(403, 'Invalid token error');
->>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   // channel or dm
   const validMsg = msgValid(authId, messageId);
   if (validMsg === null) {
-<<<<<<< HEAD
-    throw HTTPError(400, "invalid message id")
-  }
-
-  if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
-    throw HTTPError(403, "user not sender and no owner permission")
-=======
     throw HTTPError(400, 'Invalid message id error');
   }
 
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
     throw HTTPError(403, 'user not sender and no owner permission error');
->>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   for (const channel of data.channels) {
@@ -212,37 +183,20 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
   const authId = isValidToken(token);
 
   if (authId === null) {
-<<<<<<< HEAD
-    throw HTTPError(403, "token is invalid")
-  }
-
-  if (message.length > 1000) {
-    throw HTTPError(400, "length of message is over 1000");    
-
-=======
     throw HTTPError(403, 'Invalid token error');
   }
 
   if (message.length > 1000) {
     throw HTTPError(400, 'Invalid message length');
->>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   const validMsg = msgValid(authId, messageId);
   if (validMsg === null) {
-<<<<<<< HEAD
-    throw HTTPError(400, "invalid message id")
-  }
-
-  if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
-    throw HTTPError(403, "user not sender and no owner permission")
-=======
     throw HTTPError(400, 'Invalid message id error');
   }
 
   if (!isSender(authId, messageId) && !isOwner(authId, messageId)) {
     throw HTTPError(403, 'user is not sender or no owner permission');
->>>>>>> a4b3cbb8a2995ae5222cd88295b4b5c1059d62cc
   }
 
   if (message.length === 0) {
@@ -304,6 +258,7 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
     uId: authUserId,
     message: message,
     timeSent: Math.floor((new Date()).getTime() / 1000),
+    pinned: false
   };
 
   dm.messages.unshift(msg);
@@ -312,7 +267,8 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
-/** Function that when given an pinned message, unpins it
+
+/** Function that when given a message, pins it
   *
   * @param {string} - Token of individual's session
   *  @param {number} - messageId of message that authorised user is trying to pin
@@ -320,6 +276,58 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   *
 */
 export const messagePinV1 = (token: string, messageId: number) => {
+  const data = getData();
+  const authId = isValidToken(token);
+
+  if (authId === null) {
+    throw HTTPError(403, 'Invalid token error');
+    //console.log("invalid token"); 
+  }
+
+  // channel or dm
+  const validMsg = msgValid(authId, messageId);
+  if (validMsg === null) {
+    throw HTTPError(400, 'Invalid message id error');
+  }
+
+  if (!isOwner(authId, messageId)) {
+    throw HTTPError(403, 'valid message in a joined channel/DM but not an owner');
+  }
+
+  for (const channel of data.channels) {
+    for (const msg of channel.messages) {
+      if (msg.messageId === messageId) {
+        if (msg.pinned === true)  {
+          throw HTTPError(400, 'message is already pinned');
+        }
+        msg.pinned = true;
+      }
+    }
+  }
+
+  for (const dm of data.dms) {
+    for (const msg of dm.messages) {
+      if (msg.messageId === messageId) {
+        if (msg.pinned === true)  {
+          throw HTTPError(400, 'message is already pinned');
+        }
+        msg.pinned = true;
+      }
+    }
+  }
+  setData(data);
+  return {};
+};
+
+
+/** Function that when given an pinned message, unpins it
+  *
+  * @param {string} - Token of individual's session
+  *  @param {number} - messageId of message that authorised user is trying to pin
+  * @returns {}
+  *
+*/
+export const messageUnpinV1 = (token: string, messageId: number) => {
   const data = getData();
   const authId = isValidToken(token);
 
@@ -351,7 +359,7 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const dm of data.dms) {
     for (const msg of dm.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === true)  {
+        if (msg.pinned === false)  {
           throw HTTPError(400, 'message is not pinned');
         }
         msg.pinned = false;
@@ -361,4 +369,5 @@ export const messagePinV1 = (token: string, messageId: number) => {
   setData(data);
   return {};
 };
+
 

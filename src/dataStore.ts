@@ -17,6 +17,7 @@ export type Message = {
   uId: number,
   message: string,
   timeSent: number,
+  pinned: boolean
 }
 
 export type Channel = {
@@ -81,3 +82,4 @@ export const setData = (newData: Data) => {
 export const getHash = (input: string) => {
   return crypto.createHash('sha256').update(input).digest('hex');
 };
+
