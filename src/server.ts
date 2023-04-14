@@ -9,7 +9,7 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels'
 import { clearV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
-import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1 } from './message';
+import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messageUnpinV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
 
 // Set up web app
@@ -197,6 +197,13 @@ app.post('/message/senddm/v2', (req: Request, res: Response) => {
   const { dmId, message } = req.body;
   return res.json(messageSendDmV1(token, dmId, message));
 });
+
+app.post('/message/unpin/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId } = req.body;
+  return res.json(messageUnpinV1(token, messageId));
+});
+
 
 // Keep this BENEATH route definitions
 // handles errors nicely
