@@ -1,6 +1,7 @@
-import { getData, setData } from './dataStore';
+import { getData, setData, getHash } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
+import HTTPError from 'http-errors';
 
 /**
   * check whether email entered belong to a user
@@ -106,18 +107,19 @@ export const authLoginV1 = (email: string, password: string) => {
 
   // error: email entered does not belong to a user or incorrect password
   if (!isEmailFromUser(email)) {
-    return { error: 'invalid email' };
+    throw HTTPError(400, 'invalid email');
   }
 
   const user = data.users.find(person => person.email === email);
-  if (user.password !== password) {
-    return { error: 'incorrect password' };
+  if (user.password !== getHash(password)) {
+    throw HTTPError(400, 'incorrect password');
   }
 
   const id = user.uId;
 
   const token = getNewToken();
-  user.token.push(token);
+  const hashedToken = getHash(token);
+  user.token.push(hashedToken);
   setData(data);
 
   return {
@@ -140,23 +142,23 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const data = getData();
 
   if (!validator.isEmail(email)) {
-    return { error: 'invalid email' };
+    throw HTTPError(400, 'invalid email');
   }
 
   if (isEmailFromUser(email)) {
-    return { error: 'email already taken' };
+    throw HTTPError(400, 'email already taken');
   }
 
   if (password.length < 6) {
-    return { error: 'password < 6 characters' };
+    throw HTTPError(400, 'password < 6 characters');
   }
 
   if (nameFirst.length < 1 || nameFirst.length > 50) {
-    return { error: 'incorrect firstname length' };
+    throw HTTPError(400, 'incorrect firstname length');
   }
 
   if (nameLast.length < 1 || nameLast.length > 50) {
-    return { error: 'incorrect lastname length' };
+    throw HTTPError(400, 'incorrect lastname length');
   }
 
   const handle = newHandle(nameFirst, nameLast);
@@ -168,6 +170,8 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   }
 
   const token = getNewToken();
+  const hashedToken = getHash(token);
+  const hashedPwd = getHash(password);
 
   const newUser = {
     uId: id,
@@ -175,9 +179,9 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     nameLast: nameLast,
     email: email,
     handleStr: handle,
-    password: password,
+    password: hashedPwd,
     pId: pId,
-    token: [token],
+    token: [hashedToken],
   };
 
   data.users.push(newUser);
@@ -198,10 +202,12 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
 export const authLogoutV1 = (token: string) => {
   const data = getData();
   if (!isValidToken(token)) {
-    return { error: 'invalid token' };
+    throw HTTPError(403, 'invalid token');
   }
+
+  const hashedToken = getHash(token);
   for (const user of data.users) {
-    user.token = user.token.filter(t => t !== token);
+    user.token = user.token.filter(t => t !== hashedToken);
   }
   setData(data);
   return {};
