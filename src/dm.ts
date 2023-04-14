@@ -60,8 +60,20 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
     messages: message
   };
   data.dms.push(newDm);
-  setData(data);
 
+  const notifMsg = `${owner.handleStr} added you to ${dmName}`;
+  const notif = {
+    channelId: -1,
+    dmId: dmId,
+    notificationMessage: notifMsg
+  };
+
+  for (const userId of uIds) {
+    const user = data.users.find(u => u.uId === userId);
+    user.notifications.unshift(notif);
+  }
+
+  setData(data);
   return {
     dmId: dmId
   };
