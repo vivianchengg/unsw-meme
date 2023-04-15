@@ -6,7 +6,7 @@ import errorHandler from 'middleware-http-errors';
 import { echo } from './echo';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelLeaveV2, channelAddOwnerV2, channelRemoveOwnerV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
-import { clearV1, notificationsGetV1 } from './other';
+import { clearV1, notificationsGetV1, searchV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
 import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1 } from './message';
@@ -196,6 +196,12 @@ app.post('/message/senddm/v2', (req: Request, res: Response) => {
   const token = req.header('token');
   const { dmId, message } = req.body;
   return res.json(messageSendDmV1(token, dmId, message));
+});
+
+app.get('/search/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const queryStr = req.query.queryStr as string;
+  return res.json(searchV1(token, queryStr));
 });
 
 app.get('/notifications/get/v1', (req: Request, res: Response) => {
