@@ -295,36 +295,36 @@ describe('searchV1 test', () => {
       name: 'ABC',
       isPublic: true
     };
-    const channel1 = requestHelper('POST', '/channels/create/v3', token1Data, channel1Data);
+    requestHelper('POST', '/channels/create/v3', token1Data, channel1Data);
 
     const channelMsg1Data = {
       channelId: channel.channelId,
       message: 'Hello, world!'
     };
-    const channelMsg1 = requestHelper('POST', '/message/send/v2', tokenData, channelMsg1Data);
+    requestHelper('POST', '/message/send/v2', tokenData, channelMsg1Data);
 
     const channelMsg2Data = {
       channelId: channel.channelId,
       message: 'Foobarhello2000'
     };
-    const channelMsg2 = requestHelper('POST', '/message/send/v2', tokenData, channelMsg2Data);
+    requestHelper('POST', '/message/send/v2', tokenData, channelMsg2Data);
 
     const dm1Data = {
       uIds: [newUser2.authUserId]
     };
     const dm1 = requestHelper('POST', '/dm/create/v2', tokenData, dm1Data);
-  
+
     const dm2Data = {
       uIds: [newUser2.authUserId]
     };
-    const dm2 = requestHelper('POST', '/dm/create/v2', tokenData, dm2Data);
-  
+    requestHelper('POST', '/dm/create/v2', tokenData, dm2Data);
+
     const dmMsgData = {
       dmId: dm1.dmId,
       message: 'Example message!'
     };
-    const dmMsg = requestHelper('POST', '/message/senddm/v2', tokenData, dmMsgData);
-  
+    requestHelper('POST', '/message/senddm/v2', tokenData, dmMsgData);
+
     const query1Data = {
       queryStr: 'hello'
     };

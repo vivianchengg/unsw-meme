@@ -53,12 +53,12 @@ export const searchV1 = (token: string, queryStr: string) => {
   if (uId === null) {
     throw HTTPError(403, 'invalid token');
   }
- 
+
   if (queryStr.length < 1 || queryStr.length > 1000) {
     throw HTTPError(400, 'queryStr length < 1 or > 1000');
   }
 
-  let matchingMsg: Message[] = [];
+  const matchingMsg: Message[] = [];
 
   for (const channel of data.channels) {
     if (channel.allMembers.includes(uId)) {
