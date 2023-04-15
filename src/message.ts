@@ -2,6 +2,8 @@ import { getData, setData, React } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 
+let reservedMessages = 0;
+
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
   * @param {number} - authId of authorised user
@@ -84,6 +86,7 @@ const createId = () => {
   }
 
   length += 1;
+  length += reservedMessages;
   return length;
 };
 
@@ -281,5 +284,62 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
  * @returns {{ messageId: number }}
 */
 export const messageSendLaterDMV1 = (token: string, dmId: number, message: string, timeSent: number) => {
-  return { messageId: 0 };
+  let data = getData();
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+
+  let dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    throw HTTPError(400, 'invalid dmId');
+  }
+
+  const minLength = 1;
+  const maxLength = 1000;
+  if (message.length < minLength || message.length > maxLength) {
+    throw HTTPError(400, 'Message too short or long');
+  }
+
+  let timeNow = new Date().getTime();
+  if (timeSent < timeNow) {
+    throw HTTPError(400, 'Time sent is in the past');
+  }
+
+  if (!dm.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'Authorised user not in DM');
+  }
+
+  const reservedId = createId();
+  reservedMessages += 1;
+
+  timeNow = new Date().getTime();
+  while (timeNow < timeSent) {
+    timeNow = new Date().getTime();
+  }
+
+  // Check if DM has been removed before sending message
+  data = getData();
+  dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    return { messageId: undefined };
+  }
+
+  const react: React[] = [];
+  const retMsg = {
+    messageId: reservedId,
+    uId: authUserId,
+    message: message,
+    timeSent: Math.floor(timeSent / 1000),
+    reacts: react,
+    isPinned: false
+  };
+
+  dm.messages.unshift(retMsg);
+  setData(data);
+  reservedMessages -= 1;
+
+  return {
+    messageId: reservedId
+  };
 };
