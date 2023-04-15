@@ -8,7 +8,7 @@ import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, ch
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1, notificationsGetV1, searchV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
-import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1 } from './auth';
+import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
 import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
 
@@ -212,6 +212,11 @@ app.get('/notifications/get/v1', (req: Request, res: Response) => {
 app.post('/auth/passwordreset/request/v1', (req: Request, res: Response) => {
   const { email } = req.body;
   return res.json(authPasswordRequestV1(email));
+});
+
+app.post('/auth/passwordreset/reset/v1', (req: Request, res: Response) => {
+  const { resetCode, newPassword } = req.body;
+  return res.json(authPasswordResetV1(resetCode, newPassword));
 });
 
 // Keep this BENEATH route definitions

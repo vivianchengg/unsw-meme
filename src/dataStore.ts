@@ -24,7 +24,7 @@ export type User = {
   token: string[],
   profileImgUrl: string,
   notifications: Notif[],
-  resetCode: number
+  resetCode: string
 };
 
 export type Message = {
