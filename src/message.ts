@@ -1,4 +1,4 @@
-import { getData, setData } from './dataStore';
+import { getData, setData, React } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 
@@ -116,12 +116,15 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
     throw HTTPError(400, 'Invalid message length');
   }
 
+  const react: React[] = [];
+
   const retMsg = {
     messageId: createId(),
     uId: authUserId,
     message: message,
     timeSent: Math.floor((new Date()).getTime() / 1000),
-    pinned: false
+    reacts: react,
+    isPinned: false
   };
 
   channel.messages.unshift(retMsg);
@@ -253,12 +256,14 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   }
 
   const id = createId();
+  const react: React[] = [];
   const msg = {
     messageId: id,
     uId: authUserId,
     message: message,
     timeSent: Math.floor((new Date()).getTime() / 1000),
-    pinned: false
+    reacts: react,
+    isPinned: false
   };
 
   dm.messages.unshift(msg);
@@ -296,10 +301,10 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const channel of data.channels) {
     for (const msg of channel.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === true) {
+        if (msg.isPinned === true) {
           throw HTTPError(400, 'message is already pinned');
         }
-        msg.pinned = true;
+        msg.isPinned = true;
       }
     }
   }
@@ -307,10 +312,10 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const dm of data.dms) {
     for (const msg of dm.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === true) {
+        if (msg.isPinned === true) {
           throw HTTPError(400, 'message is already pinned');
         }
-        msg.pinned = true;
+        msg.isPinned = true;
       }
     }
   }
@@ -346,10 +351,10 @@ export const messageUnpinV1 = (token: string, messageId: number) => {
   for (const channel of data.channels) {
     for (const msg of channel.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === false) {
+        if (msg.isPinned === false) {
           throw HTTPError(400, 'message is not pinned');
         }
-        msg.pinned = false;
+        msg.isPinned = false;
       }
     }
   }
@@ -357,10 +362,10 @@ export const messageUnpinV1 = (token: string, messageId: number) => {
   for (const dm of data.dms) {
     for (const msg of dm.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === false) {
+        if (msg.isPinned === false) {
           throw HTTPError(400, 'message is not pinned');
         }
-        msg.pinned = false;
+        msg.isPinned = false;
       }
     }
   }
