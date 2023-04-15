@@ -2,6 +2,8 @@ import { getData, setData, React } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 
+let reservedMessages = 0;
+
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
   * @param {number} - authId of authorised user
@@ -84,6 +86,7 @@ const createId = () => {
   }
 
   length += 1;
+  length += reservedMessages;
   return length;
 };
 
@@ -270,4 +273,66 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   setData(data);
 
   return { messageId: id };
+};
+
+/**
+ * Sends message from authorised user to channel at specified time in the future
+ * @param {string} token
+ * @param {number} channelId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns {{ messageId: number }}
+*/
+export const messageSendLaterV1 = (token: string, channelId: number, message: string, timeSent: number) => {
+  const data = getData();
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel === undefined) {
+    throw HTTPError(400, 'invalid channelId');
+  }
+
+  const minLength = 1;
+  const maxLength = 1000;
+  if (message.length < minLength || message.length > maxLength) {
+    throw HTTPError(400, 'Message too short or long');
+  }
+
+  let timeNow = new Date().getTime();
+  if (timeSent < timeNow) {
+    throw HTTPError(400, 'Time sent is in the past');
+  }
+
+  if (!channel.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'Authorised user not in channel');
+  }
+
+  const reservedId = createId();
+  reservedMessages += 1;
+
+  timeNow = new Date().getTime();
+  while (timeNow < timeSent) {
+    timeNow = new Date().getTime();
+  }
+
+  const react: React[] = [];
+  const retMsg = {
+    messageId: reservedId,
+    uId: authUserId,
+    message: message,
+    timeSent: Math.floor(timeSent / 1000),
+    reacts: react,
+    isPinned: false
+  };
+
+  channel.messages.unshift(retMsg);
+  setData(data);
+  reservedMessages -= 1;
+
+  return {
+    messageId: reservedId
+  };
 };
