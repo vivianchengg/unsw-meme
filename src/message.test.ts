@@ -309,7 +309,6 @@ describe('MessageEditV1 test', () => {
 
     // global owner tries to edit
     const param3 = {
-
       messageId: dmMsg3.messageId,
       message: 'lol'
     };
