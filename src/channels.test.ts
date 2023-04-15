@@ -1,4 +1,4 @@
-/* import { requestHelper } from './request';
+import { requestHelper } from './request';
 
 let user: any;
 let channel: any;
@@ -197,4 +197,3 @@ describe('HTTP - channelsCreateV2 Tests', () => {
     expect(requestHelper('POST', '/channels/create/v3', tokenData, param)).toEqual(400);
   });
 });
-*/
