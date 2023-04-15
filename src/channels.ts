@@ -41,6 +41,12 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
   const owners = [authUserId];
   const members = [authUserId];
   const message: Message[] = [];
+  const timeFinish: number = null;
+  const standup = {
+    isActive: false,
+    timeFinish: timeFinish,
+    starterId: -1
+  };
 
   const channel = {
     channelId: size,
@@ -48,7 +54,8 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
     isPublic: isPublic,
     ownerMembers: owners,
     allMembers: members,
-    messages: message
+    messages: message,
+    standup: standup
   };
 
   data.channels.push(channel);
