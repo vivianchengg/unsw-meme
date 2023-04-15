@@ -1,4 +1,4 @@
-import { getData, setData } from './dataStore';
+import { getData, setData, React } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 
@@ -116,12 +116,15 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
     throw HTTPError(400, 'Invalid message length');
   }
 
+  const react: React[] = [];
+
   const retMsg = {
     messageId: createId(),
     uId: authUserId,
     message: message,
     timeSent: Math.floor((new Date()).getTime() / 1000),
-    pinned: false
+    reacts: react,
+    isPinned: false
   };
 
   channel.messages.unshift(retMsg);
@@ -253,12 +256,14 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   }
 
   const id = createId();
+  const react: React[] = [];
   const msg = {
     messageId: id,
     uId: authUserId,
     message: message,
     timeSent: Math.floor((new Date()).getTime() / 1000),
-    pinned: false
+    reacts: react,
+    isPinned: false
   };
 
   dm.messages.unshift(msg);

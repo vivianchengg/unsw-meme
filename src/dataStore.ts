@@ -1,6 +1,18 @@
 import fs from 'fs';
 import crypto from 'crypto';
 
+export type React = {
+  reactId: number,
+  uIds: number [],
+  isThisUserReacted: boolean
+};
+
+export type Notif = {
+  channelId: number,
+  dmId: number,
+  notificationMessage: string
+};
+
 export type User = {
   uId: number,
   nameFirst: string,
@@ -10,6 +22,7 @@ export type User = {
   password: string,
   pId: number,
   token: string[],
+  profileImgUrl: string
 };
 
 export type Message = {
@@ -17,8 +30,16 @@ export type Message = {
   uId: number,
   message: string,
   timeSent: number,
-  pinned: boolean
-}
+  reacts: React[],
+  isPinned: boolean
+};
+
+export type Standup = {
+  isActive: boolean,
+  timeFinish: number,
+  starterId: number
+};
+>>>>>>> 055f5d2d033f3ad652b2483032e096bf8f6fb94f
 
 export type Channel = {
   channelId: number,
@@ -27,6 +48,7 @@ export type Channel = {
   allMembers: number[],
   ownerMembers: number[],
   messages: Message[],
+  standup: Standup
 };
 
 export type Dm = {
