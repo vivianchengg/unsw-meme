@@ -172,6 +172,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const token = getNewToken();
   const hashedToken = getHash(token);
   const hashedPwd = getHash(password);
+  const url: string = null;
 
   const newUser = {
     uId: id,
@@ -182,6 +183,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     password: hashedPwd,
     pId: pId,
     token: [hashedToken],
+    profileImgUrl: url
   };
 
   data.users.push(newUser);
