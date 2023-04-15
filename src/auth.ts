@@ -175,6 +175,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const hashedPwd = getHash(password);
   const url: string = null;
   const notif: Notif[] = [];
+  const resetCode: string = null;
 
   const newUser = {
     uId: id,
@@ -187,7 +188,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     token: [hashedToken],
     profileImgUrl: url,
     notifications: notif,
-    resetCode: -1
+    resetCode: resetCode
   };
 
   data.users.push(newUser);
@@ -234,8 +235,8 @@ export const authPasswordRequestV1 = (email: string) => {
   }
   user.token = [];
 
-  const code = Math.floor(Math.random() * 1000);
-  user.resetCode = code;
+  const code = (Math.floor(Math.random() * 1000));
+  user.resetCode = getHash(code.toString());
   const senderEmail = 'fleta.kuphal@ethereal.email';
   const senderPwd = 'pMRJmnxG2KMYg1hCDG';
 
@@ -253,7 +254,7 @@ export const authPasswordRequestV1 = (email: string) => {
     from: `1531Project <${senderEmail}>`,
     to: `${user.nameFirst} ${user.nameLast} <${user.email}>`,
     subject: 'Password reset request',
-    text: `Reset code: ${code}`
+    text: `Reset code: ${user.resetCode}`
   };
 
   transporter.sendMail(options).then((i) => {
@@ -261,6 +262,31 @@ export const authPasswordRequestV1 = (email: string) => {
     console.log(`Message sent: ${messageUrl}`);
   });
 
+  setData(data);
+  return {};
+};
+
+/**
+  * reset password
+  * invalidate reset code if used
+  *
+  * @param {number} resetCode
+  * @param {string} password
+  * @returns {}
+*/
+export const authPasswordResetV1 = (resetCode: string, newPassword: string) => {
+  const data = getData();
+  const user = data.users.find(u => u.resetCode === resetCode);
+  if (user === undefined) {
+    throw HTTPError(400, 'invalid resetCode');
+  }
+
+  if (newPassword.length < 6) {
+    throw HTTPError(400, 'password length < 6');
+  }
+
+  user.password = getHash(newPassword);
+  user.resetCode = null;
   setData(data);
   return {};
 };
