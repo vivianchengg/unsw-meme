@@ -488,7 +488,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
       message: 'i love food wbu?',
       timeSent: new Date().getTime() + 2000,
     };
-    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
 
   test('Invalid token', () => {
@@ -501,7 +501,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
       message: 'i love food wbu?',
       timeSent: new Date().getTime() + 2000,
     };
-    expect(requestHelper('POST', '/message/sendlater/v1', invalidTokenData, param)).toEqual(403);
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', invalidTokenData, param)).toEqual(403);
   });
 
   test('Message less than 1 character', () => {
@@ -510,7 +510,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
       message: '',
       timeSent: new Date().getTime() + 2000,
     };
-    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
 
   test('Message over 1000 characters', () => {
@@ -519,7 +519,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
       message: 'b'.repeat(1001),
       timeSent: new Date().getTime() + 2000,
     };
-    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
 
   test('timeSent is in the past', () => {
@@ -528,7 +528,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
       message: 'i love food wbu?',
       timeSent: new Date().getTime() - 2000,
     };
-    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
 
   test('User not member of DM but channelId is valid', () => {
@@ -541,20 +541,43 @@ describe('/message/sendlaterdm/v1 tests', () => {
       message: 'i love food wbu?',
       timeSent: new Date().getTime() + 2000,
     };
-    expect(requestHelper('POST', '/message/sendlater/v1', token1Data, param)).toEqual(403);
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param)).toEqual(403);
   });
 
+  // test('DM deleted before message is sent', () => {
+  //   const token1Data = {
+  //     token: user3.token,
+  //   };
+
+  //   const param = {
+  //     dmId: dm.dmId,
+  //     message: 'i love food wbu?',
+  //     timeSent: new Date().getTime() + 10000,
+  //   };
+  //   const message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param).messageId;
+
+  //   const dmParam = {
+  //     dmId: dm.dmId
+  //   };
+  //   requestHelper('DELETE', '/dm/remove/v2', tokenData, dmParam);
+  //   expect(message).toEqual(undefined);
+  // });
+
   test('Basic functionality', () => {
+    const token1Data = {
+      token: user3.token
+    };
+
     const param = {
       dmId: dm.dmId,
       message: 'i love food wbu?',
       timeSent: new Date().getTime() + 2000,
     };
-    message = requestHelper('POST', '/message/sendlater/v1', tokenData, param);
+    message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param);
     expect(message.messageId).toStrictEqual(expect.any(Number));
 
     const messageParam = {
-      channelId: dm.dmId,
+      dmId: dm.dmId,
       message: 'i love food wbu?',
     };
     expect(requestHelper('POST', '/message/senddm/v2', tokenData, messageParam).messageId).toBeGreaterThan(message.messageId);
