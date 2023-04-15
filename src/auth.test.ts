@@ -1,4 +1,5 @@
 import { requestHelper } from './request';
+import { getData } from './dataStore';
 
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
@@ -352,5 +353,77 @@ describe('authLogout Test', () => {
       token: token
     };
     expect(requestHelper('POST', '/auth/logout/v2', logoutData, {})).toStrictEqual({});
+  });
+});
+
+describe('pwd reset request test', () => {
+  test('invalid email', () => {
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    const user = requestHelper('POST', '/auth/register/v3', {}, regData);
+
+    const reg1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    requestHelper('POST', '/auth/register/v3', {}, reg1Data);
+
+    const param = {
+      token: user.token,
+    };
+    const allUser1 = requestHelper('GET', '/users/all/v2', param, {});
+
+    const resetData = {
+      email: 'vc567@unsw.edu.au'
+    };
+    requestHelper('POST', '/auth/passwordreset/request/v1', {}, resetData);
+
+    const allUser2 = requestHelper('GET', '/users/all/v2', param, {});
+
+    expect(allUser1).toStrictEqual(allUser2);
+  });
+
+  test('valid email', () => {
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    requestHelper('POST', '/auth/register/v3', {}, regData);
+
+    const reg1Data = {
+      email: 'vc1@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    requestHelper('POST', '/auth/register/v3', {}, reg1Data);
+
+    let data = getData();
+    console.log(JSON.stringify(data, null, 2));
+    expect(data.users[0].resetCode).toStrictEqual(-1);
+    expect(data.users[0].token.length).toStrictEqual(1);
+    expect(data.users[1].resetCode).toStrictEqual(-1);
+
+    const resetData = {
+      email: 'vc@unsw.edu.au'
+    };
+    requestHelper('POST', '/auth/passwordreset/request/v1', {}, resetData);
+    data = getData();
+    console.log(JSON.stringify(data, null, 2));
+    expect(data.users[0].resetCode).not.toStrictEqual(-1);
+    expect(data.users[0].token).toStrictEqual([]);
+    expect(data.users[1].resetCode).toStrictEqual(-1);
   });
 });
