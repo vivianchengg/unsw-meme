@@ -480,3 +480,76 @@ describe('HTTP - /message/senddm/v1 tests', () => {
     expect(requestHelper('POST', '/message/senddm/v2', tokenData, param)).toStrictEqual({ messageId: expect.any(Number) });
   });
 });
+
+describe('/message/sendlater/v1 tests', () => {
+  test('Invalid channel ID', () => {
+    const param = {
+      channelId: channel.channelId + 1,
+      message: 'i love food wbu?',
+      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+    };
+    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('Invalid token', () => {
+    const invalidTokenData = {
+      token: user2.token + 'incorrect',
+    };
+
+    const param = {
+      channelId: channel.channelId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+    };
+    expect(requestHelper('POST', '/message/sendlater/v1', invalidTokenData, param)).toEqual(403);
+  });
+
+  test('Message less than 1 character', () => {
+    const param = {
+      channelId: channel.channelId,
+      message: '',
+      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+    };
+    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('Message over 1000 characters', () => {
+    const param = {
+      channelId: channel.channelId,
+      message: 'b'.repeat(1001),
+      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+    };
+    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('timeSent is in the past', () => {
+    const param = {
+      channelId: channel.channelId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor((new Date()).getTime() / 1000) - 2000,
+    };
+    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('User not member of channel but channelId is valid', () => {
+    const token1Data = {
+      token: user.token,
+    };
+
+    const param = {
+      channelId: channel.channelId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+    };
+    expect(requestHelper('POST', '/message/sendlater/v1', token1Data, param)).toEqual(403);
+  });
+
+  test('Basic functionality', () => {
+    const param = {
+      channelId: channel.channelId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+    };
+    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param).messageId).toStrictEqual(expect.any(Number));
+  });
+});
