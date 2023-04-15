@@ -271,3 +271,15 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 
   return { messageId: id };
 };
+
+/**
+ * Sends message from authorised user to DM at specified time in the future
+ * @param {string} token
+ * @param {number} dmId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns {{ messageId: number }}
+*/
+export const messageSendLaterDMV1 = (token: string, dmId: number, message: string, timeSent: number) => {
+  return { messageId: 0 };
+};
