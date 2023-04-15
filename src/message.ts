@@ -301,10 +301,10 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const channel of data.channels) {
     for (const msg of channel.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === true) {
+        if (msg.isPinned === true) {
           throw HTTPError(400, 'message is already pinned');
         }
-        msg.pinned = true;
+        msg.isPinned = true;
       }
     }
   }
@@ -312,10 +312,10 @@ export const messagePinV1 = (token: string, messageId: number) => {
   for (const dm of data.dms) {
     for (const msg of dm.messages) {
       if (msg.messageId === messageId) {
-        if (msg.pinned === true) {
+        if (msg.isPinned === true) {
           throw HTTPError(400, 'message is already pinned');
         }
-        msg.pinned = true;
+        msg.isPinned = true;
       }
     }
   }

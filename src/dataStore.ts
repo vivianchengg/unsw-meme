@@ -39,7 +39,6 @@ export type Standup = {
   timeFinish: number,
   starterId: number
 };
->>>>>>> 055f5d2d033f3ad652b2483032e096bf8f6fb94f
 
 export type Channel = {
   channelId: number,
