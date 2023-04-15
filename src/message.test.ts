@@ -486,7 +486,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId + 1,
       message: 'i love food wbu?',
-      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+      timeSent: new Date().getTime() + 2000,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -499,7 +499,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'i love food wbu?',
-      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+      timeSent: new Date().getTime() + 2000,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', invalidTokenData, param)).toEqual(403);
   });
@@ -508,7 +508,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: '',
-      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+      timeSent: new Date().getTime() + 2000,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -517,7 +517,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'b'.repeat(1001),
-      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+      timeSent: new Date().getTime() + 2000,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -526,7 +526,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'i love food wbu?',
-      timeSent: Math.floor((new Date()).getTime() / 1000) - 2000,
+      timeSent: new Date().getTime() - 2000,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -539,7 +539,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'i love food wbu?',
-      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+      timeSent: new Date().getTime() + 2000,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', token1Data, param)).toEqual(403);
   });
@@ -547,9 +547,16 @@ describe('/message/sendlater/v1 tests', () => {
   test('Basic functionality', () => {
     const param = {
       channelId: channel.channelId,
-      message: 'i love food wbu?',
-      timeSent: Math.floor((new Date()).getTime() / 1000) + 2000,
+      message: 'Nobody likes food surely!',
+      timeSent: new Date().getTime() + 2000,
     };
-    expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param).messageId).toStrictEqual(expect.any(Number));
+    message = requestHelper('POST', '/message/sendlater/v1', tokenData, param);
+    expect(message.messageId).toStrictEqual(expect.any(Number));
+
+    const messageParam = {
+      channelId: channel.channelId,
+      message: 'i love food wbu?',
+    };
+    expect(requestHelper('POST', '/message/send/v2', tokenData, messageParam).messageId).toBeGreaterThan(message.messageId);
   });
 });
