@@ -236,29 +236,29 @@ export const authPasswordRequestV1 = (email: string) => {
 
   const code = Math.floor(Math.random() * 1000);
   user.resetCode = code;
+  const senderEmail = 'fleta.kuphal@ethereal.email';
+  const senderPwd = 'pMRJmnxG2KMYg1hCDG';
 
-  nodemailer.createTestAccount((err, account) => {
-    const transporter = nodemailer.createTransport({
-      host: 'smtp.ethereal.email',
-      port: 587,
-      secure: false,
-      auth: {
-        user: account.user,
-        pass: account.pass
-      }
-    });
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,
+    auth: {
+      user: senderEmail,
+      pass: senderPwd
+    }
+  });
 
-    const options = {
-      from: `1531Project <${account.user}>`,
-      to: `${user.nameFirst} ${user.nameLast} <${user.email}>`,
-      subject: 'Password reset request',
-      text: `Reset code: ${code}`
-    };
+  const options = {
+    from: `1531Project <${senderEmail}>`,
+    to: `${user.nameFirst} ${user.nameLast} <${user.email}>`,
+    subject: 'Password reset request',
+    text: `Reset code: ${code}`
+  };
 
-    transporter.sendMail(options).then((i) => {
-      const messageUrl = nodemailer.getTestMessageUrl(i);
-      console.log(`Message sent: ${messageUrl}`);
-    });
+  transporter.sendMail(options).then((i) => {
+    const messageUrl = nodemailer.getTestMessageUrl(i);
+    console.log(`Message sent: ${messageUrl}`);
   });
 
   setData(data);

@@ -411,7 +411,6 @@ describe('pwd reset request test', () => {
     requestHelper('POST', '/auth/register/v3', {}, reg1Data);
 
     let data = getData();
-    console.log(JSON.stringify(data, null, 2));
     expect(data.users[0].resetCode).toStrictEqual(-1);
     expect(data.users[0].token.length).toStrictEqual(1);
     expect(data.users[1].resetCode).toStrictEqual(-1);
@@ -421,7 +420,6 @@ describe('pwd reset request test', () => {
     };
     requestHelper('POST', '/auth/passwordreset/request/v1', {}, resetData);
     data = getData();
-    console.log(JSON.stringify(data, null, 2));
     expect(data.users[0].resetCode).not.toStrictEqual(-1);
     expect(data.users[0].token).toStrictEqual([]);
     expect(data.users[1].resetCode).toStrictEqual(-1);
