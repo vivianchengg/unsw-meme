@@ -1,4 +1,4 @@
-import { getData, setData, getHash } from './dataStore';
+import { getData, setData, getHash, Notif } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
 import HTTPError from 'http-errors';
@@ -25,7 +25,7 @@ const isEmailFromUser = (email: string): boolean => {
   * @param {string} handle
   * @returns {boolean}
 */
-const isHandleTaken = (handle: string): boolean => {
+export const isHandleTaken = (handle: string): boolean => {
   const data = getData();
   const user = data.users.find(person => person.handleStr === handle);
   if (user === undefined) {
@@ -173,6 +173,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const hashedToken = getHash(token);
   const hashedPwd = getHash(password);
   const url: string = null;
+  const notif: Notif[] = [];
 
   const newUser = {
     uId: id,
@@ -183,7 +184,8 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     password: hashedPwd,
     pId: pId,
     token: [hashedToken],
-    profileImgUrl: url
+    profileImgUrl: url,
+    notifications: notif
   };
 
   data.users.push(newUser);
