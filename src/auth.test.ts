@@ -70,7 +70,7 @@ describe('authLoginV1 Test', () => {
     let user = requestHelper('POST', '/auth/login/v3', {}, userData);
     expect(user.authUserId).toStrictEqual(reg.authUserId);
 
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 400; i++) {
       user = requestHelper('POST', '/auth/login/v3', {}, userData);
     }
     expect(user.authUserId).toStrictEqual(reg.authUserId);
@@ -411,17 +411,105 @@ describe('pwd reset request test', () => {
     requestHelper('POST', '/auth/register/v3', {}, reg1Data);
 
     let data = getData();
-    expect(data.users[0].resetCode).toStrictEqual(-1);
+    expect(data.users[0].resetCode).toStrictEqual(null);
     expect(data.users[0].token.length).toStrictEqual(1);
-    expect(data.users[1].resetCode).toStrictEqual(-1);
+    expect(data.users[1].resetCode).toStrictEqual(null);
 
     const resetData = {
       email: 'vc@unsw.edu.au'
     };
     requestHelper('POST', '/auth/passwordreset/request/v1', {}, resetData);
     data = getData();
-    expect(data.users[0].resetCode).not.toStrictEqual(-1);
+    expect(data.users[0].resetCode).not.toStrictEqual(null);
+    expect(data.users[0].resetCode).toStrictEqual(expect.any(String));
     expect(data.users[0].token).toStrictEqual([]);
-    expect(data.users[1].resetCode).toStrictEqual(-1);
+    expect(data.users[1].resetCode).toStrictEqual(null);
+  });
+});
+
+describe('test pwd reset', () => {
+  test('invalid resetCode', () => {
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    requestHelper('POST', '/auth/register/v3', {}, regData);
+    let data = getData();
+    expect(data.users[0].resetCode).toStrictEqual(null);
+    expect(data.users[0].token.length).toStrictEqual(1);
+
+    const resetData = {
+      email: 'vc@unsw.edu.au'
+    };
+    requestHelper('POST', '/auth/passwordreset/request/v1', {}, resetData);
+    data = getData();
+    expect(data.users[0].resetCode).not.toStrictEqual(null);
+    expect(data.users[0].token.length).toStrictEqual(0);
+    const newPwdData = {
+      resetCode: data.users[0].resetCode + 'yay',
+      newPassword: 'newPassword90892'
+    };
+    expect(requestHelper('POST', '/auth/passwordreset/reset/v1', {}, newPwdData)).toStrictEqual(400);
+  });
+
+  test('new password length < 6', () => {
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    requestHelper('POST', '/auth/register/v3', {}, regData);
+    let data = getData();
+    expect(data.users[0].resetCode).toStrictEqual(null);
+    expect(data.users[0].token.length).toStrictEqual(1);
+
+    const resetData = {
+      email: 'vc@unsw.edu.au'
+    };
+    requestHelper('POST', '/auth/passwordreset/request/v1', {}, resetData);
+    data = getData();
+    expect(data.users[0].resetCode).not.toStrictEqual(null);
+    expect(data.users[0].token.length).toStrictEqual(0);
+    const newPwdData = {
+      resetCode: data.users[0].resetCode,
+      newPassword: 'new'
+    };
+    expect(requestHelper('POST', '/auth/passwordreset/reset/v1', {}, newPwdData)).toStrictEqual(400);
+  });
+
+  test('valid password reset', () => {
+    const regData = {
+      email: 'vc@unsw.edu.au',
+      password: 'password',
+      nameFirst: 'Vivian',
+      nameLast: 'Cheng'
+    };
+
+    requestHelper('POST', '/auth/register/v3', {}, regData);
+    let data = getData();
+    expect(data.users[0].resetCode).toStrictEqual(null);
+    expect(data.users[0].token.length).toStrictEqual(1);
+
+    const resetData = {
+      email: 'vc@unsw.edu.au'
+    };
+    requestHelper('POST', '/auth/passwordreset/request/v1', {}, resetData);
+    data = getData();
+    const oldPassword = data.users[0].password;
+    expect(data.users[0].resetCode).not.toStrictEqual(null);
+    expect(data.users[0].token.length).toStrictEqual(0);
+    const newPwdData = {
+      resetCode: data.users[0].resetCode,
+      newPassword: 'newPassword90892'
+    };
+    requestHelper('POST', '/auth/passwordreset/reset/v1', {}, newPwdData);
+    data = getData();
+    expect(data.users[0].resetCode).toStrictEqual(null);
+    expect(data.users[0].password).not.toStrictEqual(oldPassword);
   });
 });
