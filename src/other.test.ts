@@ -77,7 +77,6 @@ beforeEach(() => {
     token: user.token
   };
   const channelData = {
-    token: user.token,
     name: 'ABC',
     isPublic: true
   };
@@ -261,5 +260,80 @@ describe('notifications/get/v1 test', () => {
 
     expect(notif2.notifications[0].channelId).toStrictEqual(-1);
     expect(notif2.notifications[0].dmId).toStrictEqual(dm.dmId);
+  });
+});
+
+describe('searchV1 test', () => {
+  test('invalid token', () => {
+    const invalidToken = {
+      token: user.token + 'yay'
+    };
+
+    const searchData = {
+      queryStr: 'Hello'
+    };
+
+    expect(requestHelper('GET', '/search/v1', invalidToken, searchData)).toStrictEqual(403);
+  });
+
+  test('invalid queryStr length', () => {
+    const search1Data = {
+      queryStr: ''
+    };
+
+    expect(requestHelper('GET', '/search/v1', tokenData, search1Data)).toStrictEqual(400);
+
+    const search2Data = {
+      queryStr: 'a'.repeat(1001)
+    };
+
+    expect(requestHelper('GET', '/search/v1', tokenData, search2Data)).toStrictEqual(400);
+  });
+
+  test('valid test', () => {
+    const channel1Data = {
+      name: 'ABC',
+      isPublic: true
+    };
+    const channel1 = requestHelper('POST', '/channels/create/v3', token1Data, channel1Data);
+
+    const channelMsg1Data = {
+      channelId: channel.channelId,
+      message: 'Hello, world!'
+    };
+    const channelMsg1 = requestHelper('POST', '/message/send/v2', tokenData, channelMsg1Data);
+
+    const channelMsg2Data = {
+      channelId: channel.channelId,
+      message: 'Foobarhello2000'
+    };
+    const channelMsg2 = requestHelper('POST', '/message/send/v2', tokenData, channelMsg2Data);
+
+    const dm1Data = {
+      uIds: [newUser2.authUserId]
+    };
+    const dm1 = requestHelper('POST', '/dm/create/v2', tokenData, dm1Data);
+  
+    const dm2Data = {
+      uIds: [newUser2.authUserId]
+    };
+    const dm2 = requestHelper('POST', '/dm/create/v2', tokenData, dm2Data);
+  
+    const dmMsgData = {
+      dmId: dm1.dmId,
+      message: 'Example message!'
+    };
+    const dmMsg = requestHelper('POST', '/message/senddm/v2', tokenData, dmMsgData);
+  
+    const query1Data = {
+      queryStr: 'hello'
+    };
+    expect(requestHelper('GET', '/search/v1', tokenData, query1Data).messages.length).toStrictEqual(2);
+
+    const query2Data = {
+      queryStr: '!'
+    };
+    expect(requestHelper('GET', '/search/v1', tokenData, query2Data).messages.length).toStrictEqual(2);
+    expect(requestHelper('GET', '/search/v1', token1Data, query1Data).messages.length).toStrictEqual(0);
   });
 });
