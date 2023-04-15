@@ -1,7 +1,87 @@
 import { requestHelper } from './request';
 
+let user: any;
+let channel: any;
+let tokenData: any;
+let token1Data: any;
+let token2Data: any;
+let newUser1: any;
+let newUser2: any;
+let userHandle: any;
+let user1Handle: any;
+let user2Handle: any;
+
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
+
+  // user
+  const userData = {
+    email: 'vc@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Vivian',
+    nameLast: 'Cheng'
+  };
+  user = requestHelper('POST', '/auth/register/v3', {}, userData);
+
+  const userDetailData = {
+    uId: user.authUserId
+  };
+
+  const headerData = {
+    token: user.token
+  };
+
+  const userDetail = requestHelper('GET', '/user/profile/v3', headerData, userDetailData);
+  userHandle = userDetail.user.handleStr;
+
+  const newUser1Data = {
+    email: 'vc1@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Vivian',
+    nameLast: 'Cheng'
+  };
+  newUser1 = requestHelper('POST', '/auth/register/v3', {}, newUser1Data);
+
+  const user1DetailData = {
+    uId: newUser1.authUserId
+  };
+
+  const user1Detail = requestHelper('GET', '/user/profile/v3', headerData, user1DetailData);
+  user1Handle = user1Detail.user.handleStr;
+
+  const newUser2Data = {
+    email: 'vc2@unsw.edu.au',
+    password: 'password',
+    nameFirst: 'Vivian',
+    nameLast: 'Cheng'
+  };
+  newUser2 = requestHelper('POST', '/auth/register/v3', {}, newUser2Data);
+
+  const user2DetailData = {
+    uId: newUser2.authUserId
+  };
+
+  const user2Detail = requestHelper('GET', '/user/profile/v3', headerData, user2DetailData);
+  user2Handle = user2Detail.user.handleStr;
+
+  token1Data = {
+    token: newUser1.token
+  };
+
+  token2Data = {
+    token: newUser2.token
+  };
+
+  // channel
+  tokenData = {
+    token: user.token
+  };
+  const channelData = {
+    token: user.token,
+    name: 'ABC',
+    isPublic: true
+  };
+  channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
 });
 
 afterAll(() => {
@@ -10,26 +90,6 @@ afterAll(() => {
 
 describe('Test clearV1 function', () => {
   test('test clearV1 - user and channel', () => {
-    // new user
-    const userData = {
-      email: 'vc@unsw.edu.au',
-      password: 'password',
-      nameFirst: 'Vivian',
-      nameLast: 'Cheng'
-    };
-    const user = requestHelper('POST', '/auth/register/v3', {}, userData);
-
-    // new channel
-    const tokenData = {
-      token: user.token
-    };
-    const channelData = {
-      token: user.token,
-      name: 'ABC',
-      isPublic: true
-    };
-    const channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
-
     // clear
     requestHelper('DELETE', '/clear/v1', {}, {});
 
@@ -48,6 +108,158 @@ describe('Test clearV1 function', () => {
   });
 
   test('test clearV1 - basic output', () => {
+    const userDetail = requestHelper('GET', '/users/all/v2', tokenData, {}).users;
+    expect(userDetail[0].uId).toStrictEqual(user.authUserId);
     expect(requestHelper('DELETE', '/clear/v1', {}, {})).toStrictEqual({});
+    expect(requestHelper('GET', '/users/all/v2', tokenData, {})).toEqual(403);
+  });
+});
+
+describe('notifications/get/v1 test', () => {
+  test('invalid token', () => {
+    const invalidTokenData = {
+      token: user.token + 'yay'
+    };
+    expect(requestHelper('GET', '/notifications/get/v1', invalidTokenData, {})).toEqual(403);
+  });
+
+  test('valid notif: being tagged', () => {
+    // message
+    const token1Data = {
+      token: newUser1.token
+    };
+
+    const param = {
+      channelId: channel.channelId
+    };
+    requestHelper('POST', '/channel/join/v3', token1Data, param);
+    let notif = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif.notifications).toStrictEqual([]);
+
+    const channelMsgData = {
+      channelId: channel.channelId,
+      message: `hello @${user1Handle}, @${user2Handle}!`
+    };
+    const channelMsg = requestHelper('POST', '/message/send/v2', tokenData, channelMsgData);
+    notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif.notifications).toStrictEqual([]);
+    let notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(notif2.notifications).toStrictEqual([]);
+    notif = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif.notifications[0].channelId).toStrictEqual(channel.channelId);
+    expect(notif.notifications[0].dmId).toStrictEqual(-1);
+
+    // msg edited
+    const param3 = {
+      messageId: channelMsg.messageId,
+      message: `hello @${user2Handle}`
+    };
+    requestHelper('PUT', '/message/edit/v2', tokenData, param3);
+    const notif1 = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif1).toStrictEqual(notif);
+    notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(notif2.notifications).toStrictEqual([]);
+
+    const param4 = {
+      messageId: channelMsg.messageId,
+      message: `hello @${userHandle} @noway${userHandle}`
+    };
+    requestHelper('PUT', '/message/edit/v2', tokenData, param4);
+    notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif.notifications.length).toStrictEqual(1);
+  });
+
+  test('valid notif: tag themselves', () => {
+    const channelMsgData = {
+      channelId: channel.channelId,
+      message: `hello @${userHandle}! Bye @${user2Handle}`
+    };
+    const channelMsg = requestHelper('POST', '/message/send/v2', tokenData, channelMsgData);
+
+    const notif1 = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif1.notifications[0].channelId).toStrictEqual(channel.channelId);
+    expect(notif1.notifications[0].dmId).toStrictEqual(-1);
+
+    // non member will not receive notif
+    const invalidNotif = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(invalidNotif.notifications).toStrictEqual([]);
+
+    // not affected by remove
+    const param1 = {
+      messageId: channelMsg.messageId,
+    };
+    requestHelper('DELETE', '/message/remove/v2', tokenData, param1);
+    const notif2 = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif2).toStrictEqual(notif1);
+  });
+
+  test('valid notif: dm', () => {
+    const dmData = {
+      uIds: [newUser2.authUserId]
+    };
+    const dm = requestHelper('POST', '/dm/create/v2', tokenData, dmData);
+    let notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif.notifications).toStrictEqual([]);
+
+    const dmMsgData = {
+      dmId: dm.dmId,
+      message: `hello @${userHandle} @${user2Handle} where is @${user1Handle}`
+    };
+    const dmMsg = requestHelper('POST', '/message/senddm/v2', tokenData, dmMsgData);
+    notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    let notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    let notif1 = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif1.notifications).toStrictEqual([]);
+    expect(notif.notifications[0].channelId).toStrictEqual(-1);
+    expect(notif.notifications[0].dmId).toStrictEqual(dm.dmId);
+    expect(notif2.notifications.length).toStrictEqual(2);
+
+    const param3 = {
+      messageId: dmMsg.messageId,
+      message: `hello @${user1Handle} @yay${user1Handle}`
+    };
+    requestHelper('PUT', '/message/edit/v2', tokenData, param3);
+    notif1 = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif1.notifications).toStrictEqual([]);
+    notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(notif2.notifications.length).toStrictEqual(2);
+
+    const param4 = {
+      messageId: dmMsg.messageId,
+      message: `hello @${user2Handle} @noway${user2Handle} @${userHandle}`
+    };
+    requestHelper('PUT', '/message/edit/v2', tokenData, param4);
+    notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(notif.notifications.length).toStrictEqual(2);
+    expect(notif2.notifications.length).toStrictEqual(3);
+  });
+
+  test('valid notif: being added: channel invite then dm create', () => {
+    // channel invite
+    const inviteData = {
+      channelId: channel.channelId,
+      uId: newUser1.authUserId
+    };
+    requestHelper('POST', '/channel/invite/v3', tokenData, inviteData);
+
+    const notif = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif.notifications[0].channelId).toStrictEqual(channel.channelId);
+    expect(notif.notifications[0].dmId).toStrictEqual(-1);
+
+    // dm create
+    const dmData = {
+      uIds: [newUser1.authUserId, newUser2.authUserId]
+    };
+    const dm = requestHelper('POST', '/dm/create/v2', tokenData, dmData);
+    const notif1 = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    const notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(notif1.notifications[0].channelId).toStrictEqual(-1);
+    expect(notif1.notifications[0].dmId).toStrictEqual(dm.dmId);
+    expect(notif1.notifications[1].channelId).toStrictEqual(channel.channelId);
+    expect(notif1.notifications[1].dmId).toStrictEqual(-1);
+
+    expect(notif2.notifications[0].channelId).toStrictEqual(-1);
+    expect(notif2.notifications[0].dmId).toStrictEqual(dm.dmId);
   });
 });
