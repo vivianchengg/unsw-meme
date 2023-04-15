@@ -95,6 +95,7 @@ export const userProfileV1 = (token: string, uId: number) => {
         nameFirst: user.nameFirst,
         nameLast: user.nameLast,
         handleStr: user.handleStr,
+        profileImgUrl: user.profileImgUrl
       };
     }
   }
@@ -231,7 +232,8 @@ export const usersAllV1 = (token: string) => {
       email: user.email,
       nameFirst: user.nameFirst,
       nameLast: user.nameLast,
-      handleStr: user.handleStr
+      handleStr: user.handleStr,
+      profileImgUrl: user.profileImgUrl
     };
     list.push(detail);
   }

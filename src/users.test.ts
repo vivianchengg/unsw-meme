@@ -310,13 +310,15 @@ describe('HTTP - /users/all/v1', () => {
           email: 'jr@unsw.edu.au',
           nameFirst: 'Jake',
           nameLast: 'Renzella',
-          handleStr: 'jakerenzella'
+          handleStr: 'jakerenzella',
+          profileImgUrl: null
         }, {
           uId: user3.authUserId,
           email: 'abc@unsw.edu.au',
           nameFirst: 'abby',
           nameLast: 'boo',
-          handleStr: 'abbyboo'
+          handleStr: 'abbyboo',
+          profileImgUrl: null
         }]
     });
   });
@@ -333,7 +335,6 @@ describe('userProfileV2 tests', () => {
     };
 
     const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
-
     expect(userDetail).toStrictEqual({
       user: {
         uId: user.authUserId,
@@ -341,6 +342,7 @@ describe('userProfileV2 tests', () => {
         nameFirst: 'Jake',
         nameLast: 'Renzella',
         handleStr: 'jakerenzella',
+        profileImgUrl: null
       }
     });
   });
