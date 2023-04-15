@@ -1,4 +1,4 @@
-/* import request from 'sync-request';
+import request from 'sync-request';
 import config from './config.json';
 
 const OK = 200;
@@ -9,7 +9,7 @@ const url = config.url;
 /*
 Iteration 2
 */
-/*
+
 describe('HTTP tests using Jest', () => {
   test('Test successful echo', () => {
     const res = request(
@@ -43,4 +43,3 @@ describe('HTTP tests using Jest', () => {
     expect(bodyObj.error).toStrictEqual({ message: 'Cannot echo "echo"' });
   });
 });
-*/
