@@ -493,7 +493,6 @@ describe('HTTP - /message/pin/v1 tests', () => {
     const param = {
       messageId: dmMsg2.messageId + 1
     };
-    tokenData.token = user2.token;
     expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(400);
   });
 
@@ -501,7 +500,6 @@ describe('HTTP - /message/pin/v1 tests', () => {
     const param = {
       messageId: message.messageId
     };
-    tokenData.token = user2.token;
     requestHelper('POST', '/message/pin/v1', tokenData, param);
     expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(400);
   });
@@ -510,8 +508,7 @@ describe('HTTP - /message/pin/v1 tests', () => {
     const param = {
       messageId: dmMsg2.messageId
     };
-    tokenData.token = user2.token;
-    requestHelper('POST', '/message/pin/v1', tokenData, param);
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual({});
     expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(400);
   });
 
@@ -564,5 +561,96 @@ describe('HTTP - /message/pin/v1 tests', () => {
     requestHelper('POST', '/message/pin/v1', tokenData, param);
     msg = requestHelper('GET', '/dm/messages/v2', tokenData, param1);
     expect(msg.messages[1].isPinned).toStrictEqual(true);
+  });
+});
+
+describe('HTTP - /message/unpin/v1 tests', () => {
+  test('Invalid token', () => {
+    const param = {
+      messageId: message.messageId
+    };
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toStrictEqual({});
+    tokenData.token = user2.token + 'yay!';
+    expect(requestHelper('POST', '/message/unpin/v1', tokenData, param)).toEqual(403);
+  });
+
+  test('message invalid', () => {
+    const param = {
+      messageId: dmMsg2.messageId + 1
+    };
+    tokenData.token = user2.token;
+    expect(requestHelper('POST', '/message/unpin/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('The message is already unpinned - channel', () => {
+    const param = {
+      messageId: message.messageId
+    };
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toStrictEqual({});
+    expect(requestHelper('POST', '/message/unpin/v1', tokenData, param)).toStrictEqual({});
+    expect(requestHelper('POST', '/message/unpin/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('The message is already unpinned - dm', () => {
+    const param = {
+      messageId: dmMsg2.messageId
+    };
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toStrictEqual({});
+    expect(requestHelper('POST', '/message/unpin/v1', tokenData, param)).toStrictEqual({});
+    expect(requestHelper('POST', '/message/unpin/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('valid message in a joined channel/DM + authorised user does not have owner permissions in the channel/dm', () => {
+    const join = {
+      channelId: channel.channelId,
+      uId: user3.authUserId
+    };
+
+    requestHelper('POST', '/channel/invite/v3', tokenData, join);
+
+    const param = {
+      messageId: message.messageId
+    };
+
+    tokenData.token = user3.token;
+
+    expect(requestHelper('POST', '/message/unpin/v1', tokenData, param)).toEqual(403);
+  });
+
+  test('valid input - channel', () => {
+    const param = {
+      messageId: message.messageId
+    };
+
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toStrictEqual({});
+
+    const param1 = {
+      channelId: channel.channelId,
+      start: 0
+    };
+
+    let msg = requestHelper('GET', '/channel/messages/v3', tokenData, param1);
+    expect(msg.messages[0].isPinned).toStrictEqual(true);
+    requestHelper('POST', '/message/unpin/v1', tokenData, param);
+    msg = requestHelper('GET', '/channel/messages/v3', tokenData, param1);
+    expect(msg.messages[0].isPinned).toStrictEqual(false);
+  });
+
+  test('valid input - dm', () => {
+    const param = {
+      messageId: dmMsg.messageId
+    };
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toStrictEqual({});
+
+    const param1 = {
+      dmId: dm.dmId,
+      start: 0
+    };
+
+    let msg = requestHelper('GET', '/dm/messages/v2', tokenData, param1);
+    expect(msg.messages[1].isPinned).toStrictEqual(true);
+    requestHelper('POST', '/message/unpin/v1', tokenData, param);
+    msg = requestHelper('GET', '/dm/messages/v2', tokenData, param1);
+    expect(msg.messages[1].isPinned).toStrictEqual(false);
   });
 });
