@@ -3,8 +3,7 @@ import crypto from 'crypto';
 
 export type React = {
   reactId: number,
-  uIds: number [],
-  isThisUserReacted: boolean
+  uIds: number[]
 };
 
 export type Notif = {
