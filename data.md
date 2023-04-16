@@ -27,6 +27,7 @@ let data = {
           uId: 1,
           message: 'Goodbye world',
           timeSent: 162775623,
+          pinned: false 
         }
       ],
       start: 0,
