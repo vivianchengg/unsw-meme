@@ -275,12 +275,12 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
-const sendDelayedMessage = (dmId: number,) => {
-  data = getData();
+const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number, message: string, timeSent: number) => {
+  const data = getData();
   console.log(data.dms);
-  dm = data.dms.find(d => d.dmId === dmId);
+  const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
-    return { messageId: undefined };
+    reservedId = undefined;
   }
 
   const react: React[] = [];
@@ -296,6 +296,7 @@ const sendDelayedMessage = (dmId: number,) => {
   dm.messages.unshift(retMsg);
   setData(data);
   reservedMessages -= 1;
+  return true;
 };
 
 /**
@@ -337,12 +338,13 @@ export const messageSendLaterDMV1 = (token: string, dmId: number, message: strin
   reservedMessages += 1;
 
   timeNow = new Date().getTime();
-  while (timeNow < timeSent) {
-    timeNow = new Date().getTime();
+  const isSent = setTimeout(sendDelayedMessage, timeSent - timeNow, dmId, reservedId, authUserId, message, timeSent);
+
+  if (!isSent) {
+    reservedId = undefined;
   }
 
-  // Check if DM has been removed before sending message
-
+  console.log(data.dms);
   return {
     messageId: reservedId
   };
