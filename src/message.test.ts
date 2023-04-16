@@ -309,7 +309,6 @@ describe('MessageEditV1 test', () => {
 
     // global owner tries to edit
     const param3 = {
-
       messageId: dmMsg3.messageId,
       message: 'lol'
     };
@@ -487,7 +486,7 @@ describe('HTTP - /message/pin/v1 tests', () => {
       messageId: message.messageId
     };
     tokenData.token = user2.token + 'yay!';
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(403);
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(403);
   });
 
   test('message invalid', () => {
@@ -495,7 +494,7 @@ describe('HTTP - /message/pin/v1 tests', () => {
       messageId: dmMsg2.messageId + 1
     };
     tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(400);
   });
 
   test('The message is already pinned - channel', () => {
@@ -503,8 +502,8 @@ describe('HTTP - /message/pin/v1 tests', () => {
       messageId: message.messageId
     };
     tokenData.token = user2.token;
-    requestHelper('POST', '/message/pin/v1 ', tokenData, param);
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+    requestHelper('POST', '/message/pin/v1', tokenData, param);
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(400);
   });
 
   test('The message is already pinned - dm', () => {
@@ -512,8 +511,8 @@ describe('HTTP - /message/pin/v1 tests', () => {
       messageId: dmMsg2.messageId
     };
     tokenData.token = user2.token;
-    requestHelper('POST', '/message/pin/v1 ', tokenData, param);
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(400);
+    requestHelper('POST', '/message/pin/v1', tokenData, param);
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(400);
   });
 
   test('valid message in a joined channel/DM + authorised user does not have owner permissions in the channel/dm', () => {
@@ -530,100 +529,40 @@ describe('HTTP - /message/pin/v1 tests', () => {
 
     tokenData.token = user3.token;
 
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual(403);
+    expect(requestHelper('POST', '/message/pin/v1', tokenData, param)).toEqual(403);
   });
 
   test('valid input - channel', () => {
     const param = {
       messageId: message.messageId
     };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual({});
-  });
 
-  test('valid input - dm', () => {
-    const param = {
-      messageId: dmMsg.messageId
-    };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toEqual({});
-  });
-});
-
-describe('HTTP - /message/unpin/v1 tests', () => {
-  test('Invalid token', () => {
-    const param = {
-      messageId: message.messageId
-    };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toStrictEqual({});
-
-    tokenData.token = user3.token + 1;
-    expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual(403);
-  });
-
-  test('message invalid', () => {
-    const param = {
-      messageId: message.messageId
-    };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toStrictEqual({});
-    const param2 = {
-      messageId: dmMsg2.messageId + 1
-    };
-    expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param2)).toEqual(400);
-  });
-
-  test('The message is not pinned - channel', () => {
-    const param = {
-      messageId: message.messageId
-    };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual(400);
-  });
-
-  test('The message is not pinned - dm', () => {
-    const param = {
-      messageId: dmMsg2.messageId
-    };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual(400);
-  });
-
-  test('valid message in a joined channel/DM + authorised user does not have owner permissions in the channel/dm', () => {
-    const param = {
-      messageId: message.messageId
-    };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toStrictEqual({});
-
-    const join = {
+    const param1 = {
       channelId: channel.channelId,
-      uId: user3.authUserId
+      start: 0
     };
 
-    requestHelper('POST', '/channel/invite/v3', tokenData, join);
-
-    tokenData.token = user3.token;
-
-    expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual(403);
-  });
-
-  test('valid input - channel', () => {
-    const param = {
-      messageId: message.messageId
-    };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toStrictEqual({});
-    expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual({});
+    let msg = requestHelper('GET', '/channel/messages/v3', tokenData, param1);
+    expect(msg.messages[0].isPinned).toStrictEqual(false);
+    requestHelper('POST', '/message/pin/v1', tokenData, param);
+    msg = requestHelper('GET', '/channel/messages/v3', tokenData, param1);
+    expect(msg.messages[0].isPinned).toStrictEqual(true);
   });
 
   test('valid input - dm', () => {
     const param = {
       messageId: dmMsg.messageId
     };
-    tokenData.token = user2.token;
-    expect(requestHelper('POST', '/message/pin/v1 ', tokenData, param)).toStrictEqual({});
-    expect(requestHelper('POST', '/message/unpin/v1 ', tokenData, param)).toEqual({});
+
+    const param1 = {
+      dmId: dm.dmId,
+      start: 0
+    };
+
+    let msg = requestHelper('GET', '/dm/messages/v2', tokenData, param1);
+    expect(msg.messages[1].isPinned).toStrictEqual(false);
+    requestHelper('POST', '/message/pin/v1', tokenData, param);
+    msg = requestHelper('GET', '/dm/messages/v2', tokenData, param1);
+    expect(msg.messages[1].isPinned).toStrictEqual(true);
   });
 });

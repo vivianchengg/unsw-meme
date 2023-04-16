@@ -6,9 +6,9 @@ import errorHandler from 'middleware-http-errors';
 import { echo } from './echo';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelLeaveV2, channelAddOwnerV2, channelRemoveOwnerV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
-import { clearV1 } from './other';
+import { clearV1, notificationsGetV1, searchV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
-import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
+import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
 import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messagePinV1, messageUnpinV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
 
@@ -208,6 +208,27 @@ app.post('/message/unpin/v1', (req: Request, res: Response) => {
   const token = req.header('token');
   const { messageId } = req.body;
   return res.json(messageUnpinV1(token, messageId));
+});
+
+app.get('/search/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const queryStr = req.query.queryStr as string;
+  return res.json(searchV1(token, queryStr));
+});
+
+app.get('/notifications/get/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  return res.json(notificationsGetV1(token));
+});
+
+app.post('/auth/passwordreset/request/v1', (req: Request, res: Response) => {
+  const { email } = req.body;
+  return res.json(authPasswordRequestV1(email));
+});
+
+app.post('/auth/passwordreset/reset/v1', (req: Request, res: Response) => {
+  const { resetCode, newPassword } = req.body;
+  return res.json(authPasswordResetV1(resetCode, newPassword));
 });
 
 // Keep this BENEATH route definitions

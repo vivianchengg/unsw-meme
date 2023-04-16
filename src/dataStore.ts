@@ -22,7 +22,9 @@ export type User = {
   password: string,
   pId: number,
   token: string[],
-  profileImgUrl: string
+  profileImgUrl: string,
+  notifications: Notif[],
+  resetCode: string
 };
 
 export type Message = {
