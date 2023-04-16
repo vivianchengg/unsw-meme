@@ -544,24 +544,24 @@ describe('/message/sendlaterdm/v1 tests', () => {
     expect(requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param)).toEqual(403);
   });
 
-  // test('DM deleted before message is sent', () => {
-  //   const token1Data = {
-  //     token: user3.token,
-  //   };
+  test.only('DM deleted before message is sent', () => {
+    const token1Data = {
+      token: user3.token,
+    };
 
-  //   const param = {
-  //     dmId: dm.dmId,
-  //     message: 'i love food wbu?',
-  //     timeSent: new Date().getTime() + 10000,
-  //   };
-  //   const message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param).messageId;
+    const param = {
+      dmId: dm.dmId,
+      message: 'i love food wbu?',
+      timeSent: new Date().getTime() + 10000,
+    };
+    const message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param).messageId;
 
-  //   const dmParam = {
-  //     dmId: dm.dmId
-  //   };
-  //   requestHelper('DELETE', '/dm/remove/v2', tokenData, dmParam);
-  //   expect(message).toEqual(undefined);
-  // });
+    const dmParam = {
+      dmId: dm.dmId
+    };
+    requestHelper('DELETE', '/dm/remove/v2', tokenData, dmParam);
+    expect(message).toEqual(undefined);
+  });
 
   test('Basic functionality', () => {
     const token1Data = {

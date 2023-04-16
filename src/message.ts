@@ -275,6 +275,29 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
+const sendDelayedMessage = (dmId: number,) => {
+  data = getData();
+  console.log(data.dms);
+  dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    return { messageId: undefined };
+  }
+
+  const react: React[] = [];
+  const retMsg = {
+    messageId: reservedId,
+    uId: authUserId,
+    message: message,
+    timeSent: Math.floor(timeSent / 1000),
+    reacts: react,
+    isPinned: false
+  };
+
+  dm.messages.unshift(retMsg);
+  setData(data);
+  reservedMessages -= 1;
+};
+
 /**
  * Sends message from authorised user to DM at specified time in the future
  * @param {string} token
@@ -319,25 +342,6 @@ export const messageSendLaterDMV1 = (token: string, dmId: number, message: strin
   }
 
   // Check if DM has been removed before sending message
-  data = getData();
-  dm = data.dms.find(d => d.dmId === dmId);
-  if (dm === undefined) {
-    return { messageId: undefined };
-  }
-
-  const react: React[] = [];
-  const retMsg = {
-    messageId: reservedId,
-    uId: authUserId,
-    message: message,
-    timeSent: Math.floor(timeSent / 1000),
-    reacts: react,
-    isPinned: false
-  };
-
-  dm.messages.unshift(retMsg);
-  setData(data);
-  reservedMessages -= 1;
 
   return {
     messageId: reservedId
