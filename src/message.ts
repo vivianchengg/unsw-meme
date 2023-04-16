@@ -391,7 +391,6 @@ export const messagePinV1 = (token: string, messageId: number) => {
 
   if (authId === null) {
     throw HTTPError(403, 'Invalid token error');
-    // console.log("invalid token");
   }
 
   // channel or dm
