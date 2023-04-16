@@ -1,6 +1,7 @@
 import { getData, setData, getHash } from './dataStore';
 import validator from 'validator';
 import HTTPError from 'http-errors';
+import { isEmailFromUser, isHandleTaken } from './auth';
 
 /**
   * Finds the authUserId given a token, if invalid token, return null.
@@ -158,7 +159,7 @@ export const userProfileSetHandleV1 = (token: string, handleStr: string) => {
     throw HTTPError(400, 'Length of handleStr is not between 3-20 characters');
   }
 
-  if (data.users.find(u => u.handleStr === handleStr) !== undefined) {
+  if (isHandleTaken(handleStr)) {
     throw HTTPError(400, 'Handle already taken by another user');
   }
 
@@ -194,7 +195,7 @@ export const userProfileSetEmailV1 = (token: string, email: string) => {
     throw HTTPError(400, 'Invalid email entered');
   }
 
-  if (data.users.find(u => u.email === email) !== undefined) {
+  if (isEmailFromUser(email)) {
     throw HTTPError(400, 'Email already taken by another user');
   }
 
@@ -227,15 +228,17 @@ export const usersAllV1 = (token: string) => {
 
   const list = [];
   for (const user of data.users) {
-    const detail = {
-      uId: user.uId,
-      email: user.email,
-      nameFirst: user.nameFirst,
-      nameLast: user.nameLast,
-      handleStr: user.handleStr,
-      profileImgUrl: user.profileImgUrl
-    };
-    list.push(detail);
+    if (!user.isRemoved) {
+      const detail = {
+        uId: user.uId,
+        email: user.email,
+        nameFirst: user.nameFirst,
+        nameLast: user.nameLast,
+        handleStr: user.handleStr,
+        profileImgUrl: user.profileImgUrl
+      };
+      list.push(detail);
+    }
   }
 
   return {

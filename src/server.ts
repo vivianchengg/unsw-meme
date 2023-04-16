@@ -6,7 +6,7 @@ import errorHandler from 'middleware-http-errors';
 import { echo } from './echo';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelLeaveV2, channelAddOwnerV2, channelRemoveOwnerV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
-import { clearV1, notificationsGetV1, searchV1 } from './other';
+import { clearV1, notificationsGetV1, searchV1, adminuserRemoveV1, adminuserPermChangeV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
 import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messagePinV1, messageUnpinV1 } from './message';
@@ -229,6 +229,18 @@ app.post('/auth/passwordreset/request/v1', (req: Request, res: Response) => {
 app.post('/auth/passwordreset/reset/v1', (req: Request, res: Response) => {
   const { resetCode, newPassword } = req.body;
   return res.json(authPasswordResetV1(resetCode, newPassword));
+});
+
+app.post('/admin/userpermission/change/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { uId, permissionId } = req.body;
+  return res.json(adminuserPermChangeV1(token, uId, permissionId));
+});
+
+app.delete('/admin/user/remove/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const uId = parseInt(req.query.uId as string);
+  return res.json(adminuserRemoveV1(token, uId));
 });
 
 // Keep this BENEATH route definitions
