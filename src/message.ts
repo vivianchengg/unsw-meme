@@ -280,7 +280,8 @@ const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number
   console.log(data.dms);
   const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
-    reservedId = undefined;
+    reservedMessages -= 1;
+    return false;
   }
 
   const react: React[] = [];
@@ -288,7 +289,7 @@ const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number
     messageId: reservedId,
     uId: authUserId,
     message: message,
-    timeSent: Math.floor(timeSent / 1000),
+    timeSent: timeSent,
     reacts: react,
     isPinned: false
   };
@@ -308,13 +309,13 @@ const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number
  * @returns {{ messageId: number }}
 */
 export const messageSendLaterDMV1 = (token: string, dmId: number, message: string, timeSent: number) => {
-  let data = getData();
+  const data = getData();
   const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
 
-  let dm = data.dms.find(d => d.dmId === dmId);
+  const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
     throw HTTPError(400, 'invalid dmId');
   }
@@ -325,7 +326,7 @@ export const messageSendLaterDMV1 = (token: string, dmId: number, message: strin
     throw HTTPError(400, 'Message too short or long');
   }
 
-  let timeNow = new Date().getTime();
+  let timeNow = Math.floor(new Date().getTime() / 1000);
   if (timeSent < timeNow) {
     throw HTTPError(400, 'Time sent is in the past');
   }
@@ -334,10 +335,10 @@ export const messageSendLaterDMV1 = (token: string, dmId: number, message: strin
     throw HTTPError(403, 'Authorised user not in DM');
   }
 
-  const reservedId = createId();
+  let reservedId = createId();
   reservedMessages += 1;
 
-  timeNow = new Date().getTime();
+  timeNow = Math.floor(new Date().getTime() / 1000);
   const isSent = setTimeout(sendDelayedMessage, timeSent - timeNow, dmId, reservedId, authUserId, message, timeSent);
 
   if (!isSent) {

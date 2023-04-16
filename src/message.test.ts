@@ -486,7 +486,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId + 1,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
@@ -499,7 +499,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlaterdm/v1', invalidTokenData, param)).toEqual(403);
   });
@@ -508,7 +508,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId,
       message: '',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
@@ -517,7 +517,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId,
       message: 'b'.repeat(1001),
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
@@ -526,12 +526,12 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() - 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) - 2,
     };
     expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
   });
 
-  test('User not member of DM but channelId is valid', () => {
+  test('User not member of DM but dmId is valid', () => {
     const token1Data = {
       token: user.token,
     };
@@ -539,12 +539,12 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param)).toEqual(403);
   });
 
-  test.only('DM deleted before message is sent', () => {
+  test('DM deleted before message is sent', () => {
     const token1Data = {
       token: user3.token,
     };
@@ -552,7 +552,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 10000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 10,
     };
     const message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param).messageId;
 
@@ -571,7 +571,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
     const param = {
       dmId: dm.dmId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param);
     expect(message.messageId).toStrictEqual(expect.any(Number));
