@@ -9,7 +9,7 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels'
 import { clearV1, notificationsGetV1, searchV1, adminuserRemoveV1, adminuserPermChangeV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
-import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messagePinV1, messageUnpinV1 } from './message';
+import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messagePinV1, messageUnpinV1, messageReactV1, messageUnreactV1, messageShareV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
 
 // Set up web app
@@ -208,6 +208,24 @@ app.post('/message/unpin/v1', (req: Request, res: Response) => {
   const token = req.header('token');
   const { messageId } = req.body;
   return res.json(messageUnpinV1(token, messageId));
+});
+
+app.post('/message/react/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId, reactId } = req.body;
+  return res.json(messageReactV1(token, messageId, reactId));
+});
+
+app.post('/message/unreact/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId, reactId } = req.body;
+  return res.json(messageUnreactV1(token, messageId, reactId));
+});
+
+app.post('/message/share/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { ogMessageId, message, channelId, dmId } = req.body;
+  return res.json(messageShareV1(token, ogMessageId, message, channelId, dmId));
 });
 
 app.get('/search/v1', (req: Request, res: Response) => {

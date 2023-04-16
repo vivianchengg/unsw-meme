@@ -74,6 +74,12 @@ beforeEach(() => {
   dmMsg2 = requestHelper('POST', '/message/senddm/v2', tokenData, dmMsg2Data);
 
   tokenData.token = user2.token;
+
+  const reactData = {
+    messageId: dmMsg.messageId,
+    reactId: 1
+  };
+  requestHelper('POST', '/message/react/v1', tokenData, reactData);
 });
 
 afterAll(() => {
@@ -652,5 +658,413 @@ describe('HTTP - /message/unpin/v1 tests', () => {
     requestHelper('POST', '/message/unpin/v1', tokenData, param);
     msg = requestHelper('GET', '/dm/messages/v2', tokenData, param1);
     expect(msg.messages[1].isPinned).toStrictEqual(false);
+  });
+});
+
+describe('message/react/v1 tests', () => {
+  test('messageId is invalid', () => {
+    // channel
+    const param = {
+      messageId: message.messageId - 100,
+      reactId: 1,
+    };
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual(400);
+
+    // dm
+    const param2 = {
+      messageId: dmMsg.messageId - 100,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param2)).toStrictEqual(400);
+  });
+
+  test('user is not member of msgId channel', () => {
+    tokenData.token = user.token;
+    const param = {
+      messageId: message.messageId,
+      reactId: 1,
+    };
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('reactId is invalid', () => {
+    const param = {
+      messageId: message.messageId,
+      reactId: 0,
+    };
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('user has already reacted with reactId', () => {
+    // channel
+    const param = {
+      messageId: message.messageId,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual({});
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('invalid token', () => {
+    tokenData.token = user.token - 10;
+    const param = {
+      messageId: message.messageId,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual(403);
+  });
+
+  test('valid input - channel', () => {
+    const param = {
+      messageId: message.messageId,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual({});
+
+    const invite = {
+      channelId: channel.channelId,
+      uId: user3.authUserId,
+    };
+    requestHelper('POST', '/channel/invite/v3', tokenData, invite);
+
+    tokenData.token = user3.token;
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual({});
+
+    const msgList = {
+      channelId: channel.channelId,
+      start: 0,
+    };
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, msgList).messages[0].reacts).toStrictEqual([{
+      reactId: 1,
+      uIds: [20, 30],
+    }]);
+  });
+
+  test('valid input dm', () => {
+    const param = {
+      messageId: dmMsg.messageId,
+      reactId: 1
+    };
+
+    tokenData.token = user3.token;
+    expect(requestHelper('POST', '/message/react/v1', tokenData, param)).toStrictEqual({});
+
+    const msgList = {
+      dmId: dm.dmId,
+      start: 0,
+    };
+
+    const msgResult = requestHelper('GET', '/dm/messages/v2', tokenData, msgList);
+    expect(msgResult.messages[1].reacts).toStrictEqual([{
+      reactId: 1,
+      uIds: [20, 30],
+    }]);
+  });
+});
+
+describe('message/unreact/v1 tests', () => {
+  test('token is invalid', () => {
+    const param = {
+      messageId: dmMsg.messageId,
+      reactId: 1
+    };
+    tokenData.token = user.token - 10;
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual(403);
+  });
+
+  test('msgId is invalid', () => {
+    const param = {
+      messageId: dmMsg.messageId + 100,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('user is not a member', () => {
+    const param = {
+      messageId: dmMsg.messageId,
+      reactId: 1
+    };
+    tokenData.token = user.token;
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('reactId is invalid', () => {
+    const param = {
+      messageId: dmMsg.messageId,
+      reactId: -1
+    };
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('msgId is invalid', () => {
+    const param = {
+      messageId: dmMsg.messageId + 100,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('user does not contain the reactId that user used', () => {
+    const param = {
+      messageId: dmMsg.messageId,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual({});
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('channel - valid input', () => {
+    // create react
+    const react = {
+      messageId: message.messageId,
+      reactId: 1
+    };
+    requestHelper('POST', '/message/react/v1', tokenData, react);
+
+    // remove react
+    const param = {
+      messageId: message.messageId,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual({});
+
+    // list reactions
+    const list = {
+      channelId: channel.channelId,
+      start: 0
+    };
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, list).messages[0].reacts).toStrictEqual([{
+      reactId: 1,
+      uIds: [],
+    }]);
+  });
+
+  test('dm - valid input', () => {
+    // remove react
+    const param = {
+      messageId: dmMsg.messageId,
+      reactId: 1
+    };
+    expect(requestHelper('POST', '/message/unreact/v1', tokenData, param)).toStrictEqual({});
+
+    // list reactions
+    const list = {
+      dmId: dm.dmId,
+      start: 0
+    };
+    expect(requestHelper('GET', '/dm/messages/v2', tokenData, list).messages[1].reacts).toStrictEqual([{
+      reactId: 1,
+      uIds: [],
+    }]);
+  });
+});
+
+describe('message/share/v1 tests', () => {
+  test('both channelId + dmId is invalid', () => {
+    const param = {
+      ogMessageId: message.messageId,
+      message: 'lol',
+      channelId: channel.channelId - 100,
+      dmId: dm.dmId - 100,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('neither channelId nor dmId is -1', () => {
+    const param = {
+      ogMessageId: message.messageId,
+      message: 'lol',
+      channelId: channel.channelId,
+      dmId: dm.dmId,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('ogMessageId does not refer to a valid msgId that user has joined', () => {
+    tokenData.token = user.token;
+
+    // channel
+    const param = {
+      ogMessageId: message.messageId - 100,
+      message: 'lol',
+      channelId: channel.channelId,
+      dmId: -1,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(400);
+
+    // dm
+    const param2 = {
+      ogMessageId: dmMsg.messageId - 100,
+      message: 'lol',
+      channelId: -1,
+      dmId: dmMsg.dmId,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param2)).toStrictEqual(400);
+  });
+
+  test('optional msg is +1000 length', () => {
+    const param = {
+      ogMessageId: dmMsg.messageId,
+      message: 'a'.repeat(1001),
+      channelId: -1,
+      dmId: dm.dmId,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('user has not joined channel - where msg it sent to', () => {
+    const tokenData2 = {
+      token: user3.token,
+    };
+    const channel2Data = {
+      name: 'lol',
+      isPublic: 'true',
+    };
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData2, channel2Data);
+
+    const param = {
+      ogMessageId: message.messageId,
+      message: 'lol',
+      channelId: channel2.channelId,
+      dmId: -1,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(403);
+  });
+
+  test('user has not joined dm - where msg it sent to', () => {
+    const tokenData2 = {
+      token: user3.token
+    };
+
+    const dm2Data = {
+      uIds: [user.authUserId]
+    };
+    const dm2 = requestHelper('POST', '/dm/create/v2', tokenData2, dm2Data);
+    const param = {
+      ogMessageId: dmMsg.messageId,
+      message: 'lol',
+      channelId: -1,
+      dmId: dm2.dmId,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(403);
+  });
+
+  test('both channelId and messageId is valid', () => {
+    const param = {
+      ogMessageId: message.messageId,
+      message: 'lol',
+      channelId: channel.channelId,
+      dmId: dm.dmId
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(400);
+  });
+
+  test('invalid token', () => {
+    tokenData.token = user.token - 2;
+    const param = {
+      ogMessageId: message.messageId,
+      message: 'lol',
+      channelId: channel.channelId,
+      dmId: -1,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual(403);
+  });
+
+  test('valid channel send', () => {
+    // user 3 joins channel
+
+    const profile = {
+      uId: user2.authUserId
+    };
+    const user2Detail = requestHelper('GET', '/user/profile/v3', tokenData, profile);
+    const user2Handle = user2Detail.user.handleStr;
+
+    const profile2 = {
+      uId: user3.authUserId
+    };
+    tokenData.token = user3.token;
+    const userDetail = requestHelper('GET', '/user/profile/v3', tokenData, profile2);
+    const userHandle = userDetail.user.handleStr;
+
+    tokenData.token = user2.token;
+
+    const join = {
+      channelId: channel.channelId,
+      uId: user3.authUserId,
+    };
+    requestHelper('POST', '/channel/invite/v3', tokenData, join);
+
+    tokenData.token = user3.token;
+
+    // user 3 creates channel
+    const channel2Data = {
+      name: 'lol',
+      isPublic: 'true',
+    };
+    const channel2 = requestHelper('POST', '/channels/create/v3', tokenData, channel2Data);
+    // sharing message from channel to channel 2
+    let param = {
+      ogMessageId: message.messageId,
+      message: `I like food @${userHandle}`,
+      channelId: channel2.channelId,
+      dmId: -1
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual({ sharedMessageId: expect.any(Number) });
+    param = {
+      ogMessageId: message.messageId,
+      message: `Hey @${user2Handle}!`,
+      channelId: channel2.channelId,
+      dmId: -1
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual({ sharedMessageId: expect.any(Number) });
+
+    // sharing og msg + ''
+    param = {
+      ogMessageId: message.messageId,
+      message: '',
+      channelId: channel2.channelId,
+      dmId: -1
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual({ sharedMessageId: expect.any(Number) });
+
+    const msg = {
+      channelId: channel2.channelId,
+      start: 0
+    };
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, msg).messages[0].message).toStrictEqual('hello ellen');
+    expect(requestHelper('GET', '/channel/messages/v3', tokenData, msg).messages[1].message).toStrictEqual('hello ellen\nHey @arialee0!');
+  });
+
+  test('valid sending channel msg to dm', () => {
+    const join = {
+      channelId: channel.channelId,
+      uId: user3.authUserId,
+    };
+    requestHelper('POST', '/channel/invite/v3', tokenData, join);
+
+    tokenData.token = user3.token;
+    // user 3 creates dm
+    const dm2Data = {
+      uIds: [user.authUserId]
+    };
+    const dm2 = requestHelper('POST', '/dm/create/v2', tokenData, dm2Data);
+
+    // sharing message from dm to dm 2
+    const param = {
+      ogMessageId: message.messageId,
+      message: 'food',
+      channelId: -1,
+      dmId: dm2.dmId,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param)).toStrictEqual({ sharedMessageId: expect.any(Number) });
+    // sharing ogMsg + ''
+    const param2 = {
+      ogMessageId: message.messageId,
+      message: '',
+      channelId: -1,
+      dmId: dm2.dmId,
+    };
+    expect(requestHelper('POST', '/message/share/v1', tokenData, param2)).toStrictEqual({ sharedMessageId: expect.any(Number) });
   });
 });

@@ -27,6 +27,36 @@ export const checkMsgTag = (message: string) => {
   return handle;
 };
 
+/**
+  * checks if user has reacted with reactId
+  *
+  * @param {number} authUserId
+  * @param {number} messageId
+  * @param {number} reactId
+  * @returns {boolean}
+*/
+const userReacted = (authUserId: number, messageId: number, reactId: number) => {
+  const data = getData();
+
+  const channel = data.channels.find(c => c.messages.find(m => m.messageId === messageId));
+  const dm = data.dms.find(d => d.messages.find(m => m.messageId === messageId));
+
+  let platform;
+  if (channel === undefined) {
+    platform = dm;
+  } else {
+    platform = channel;
+  }
+
+  const message = platform.messages.find(m => m.messageId === messageId);
+  const react = message.reacts.find(i => i.reactId === reactId && i.uIds.includes(authUserId));
+  if (react !== undefined) {
+    return true;
+  }
+
+  return false;
+};
+
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
   * @param {number} - authId of authorised user
@@ -143,6 +173,13 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
   }
 
   const react: React[] = [];
+  const uIds: number[] = [];
+
+  const reactData = {
+    reactId: 1,
+    uIds: uIds
+  };
+  react.push(reactData);
 
   const retMsg = {
     messageId: createId(),
@@ -346,6 +383,14 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 
   const id = createId();
   const react: React[] = [];
+  const uIds: number[] = [];
+
+  const reactData = {
+    reactId: 1,
+    uIds: uIds
+  };
+  react.push(reactData);
+
   const msg = {
     messageId: id,
     uId: authUserId,
@@ -474,6 +519,206 @@ export const messageUnpinV1 = (token: string, messageId: number) => {
       }
     }
   }
+  setData(data);
+  return {};
+};
+
+/**
+  * Sharing a message from user
+  *
+  * @param {string} token
+  * @param {number} ogMessageId
+  * @param {string} message
+  * @param {number} channelId
+  * @param {number} dmId
+  * @returns {{ sharedMessageId: number }}
+*/
+export const messageShareV1 = (token: string, ogMessageId: number, message: string, channelId: number, dmId: number) => {
+  const data = getData();
+
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  const dm = data.dms.find(d => d.dmId === dmId);
+  if (channel === undefined && dm === undefined) {
+    throw HTTPError(400, 'channelId and dmId is invalid');
+  }
+
+  if (channelId !== -1 && dmId !== -1) {
+    throw HTTPError(400, 'neither channelId nor dmId is -1');
+  }
+
+  const validMsg = msgValid(authUserId, ogMessageId);
+  if (validMsg === null) {
+    throw HTTPError(400, 'invalid ogMessageId + user not a member of');
+  }
+
+  if (message.length > 1000) {
+    throw HTTPError(400, 'length of msg +1000 length');
+  }
+
+  let platform;
+  if (channel === undefined) {
+    platform = dm;
+  } else {
+    platform = channel;
+  }
+
+  if (!platform.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'user is not a member of platform that they-re sending to');
+  }
+
+  const ogMsg = validMsg.messages.find(m => m.messageId === ogMessageId);
+
+  const sharedMsgId = createId();
+  const react: React[] = [];
+
+  let msgFormat;
+  if (message === '') {
+    msgFormat = ogMsg.message;
+  } else {
+    msgFormat = `${ogMsg.message}\n${message}`;
+  }
+
+  const msg = {
+    messageId: sharedMsgId,
+    uId: authUserId,
+    message: msgFormat,
+    timeSent: Math.floor((new Date()).getTime() / 1000),
+    reacts: react,
+    isPinned: false,
+  };
+  platform.messages.unshift(msg);
+
+  // add notif to option message
+  if (message !== '') {
+    const sender = data.users.find(s => s.uId === authUserId);
+    const msg = message.slice(0, 20);
+    const notifMsg = `${sender.handleStr} tagged you in ${platform.name}: ${msg}`;
+    const notif = {
+      channelId: channelId,
+      dmId: dmId,
+      notificationMessage: notifMsg
+    };
+    const handles = checkMsgTag(message);
+    for (const h of handles) {
+      const user = data.users.find(u => u.handleStr === h);
+      if (platform.allMembers.includes(user.uId)) {
+        user.notifications.unshift(notif);
+      }
+    }
+  }
+
+  setData(data);
+  return { sharedMessageId: sharedMsgId };
+};
+
+/**
+  * adds a reaction of reactId from user
+  *
+  * @param {string} token
+  * @param {number} messageId
+  * @param {number} reactId
+  * @returns {void}
+*/
+export const messageReactV1 = (token: string, messageId: number, reactId: number) => {
+  const data = getData();
+
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'Invalid token');
+  }
+
+  const validMsg = msgValid(authUserId, messageId);
+  if (validMsg === null) {
+    throw HTTPError(400, 'messageId invalid and user not in platform');
+  }
+
+  const rId = [1];
+  if (!rId.includes(reactId)) {
+    throw HTTPError(400, 'invalid reactId');
+  }
+
+  if (userReacted(authUserId, messageId, reactId)) {
+    throw HTTPError(400, 'user has already reacted with the reactId');
+  }
+
+  const channel = data.channels.find(c => c.messages.find(m => m.messageId === messageId));
+  const dm = data.dms.find(d => d.messages.find(m => m.messageId === messageId));
+
+  let platform;
+  if (channel === undefined) {
+    platform = dm;
+  } else {
+    platform = channel;
+  }
+
+  const message = platform.messages.find(m => m.messageId === messageId);
+  const react = message.reacts.find(i => i.reactId === reactId);
+  react.uIds.push(authUserId);
+
+  const user = data.users.find(u => u.uId === authUserId);
+  const notifMsg = `${user.handleStr} reacted to your message in ${platform.name}`;
+  let notif;
+  if (channel === undefined) {
+    notif = { channelId: -1, dmId: dm.dmId, notificationMessage: notifMsg };
+  }
+  if (dm === undefined) {
+    notif = { channelId: channel.channelId, dmId: -1, notificationMessage: notifMsg };
+  }
+  user.notifications.unshift(notif);
+
+  setData(data);
+  return {};
+};
+
+/**
+  * Removes a reaction from a message
+  *
+  * @param {string} token
+  * @param {number} messageId
+  * @param {number} reactId
+  * @returns {void}
+*/
+export const messageUnreactV1 = (token: string, messageId: number, reactId: number) => {
+  const data = getData();
+
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'Invalid token');
+  }
+
+  const validMsg = msgValid(authUserId, messageId);
+  if (validMsg === null) {
+    throw HTTPError(400, 'invalid msgId or/and user is not member');
+  }
+
+  const rId = [1];
+  if (!rId.includes(reactId)) {
+    throw HTTPError(400, 'invalid reactId');
+  }
+
+  if (!userReacted(authUserId, messageId, reactId)) {
+    throw HTTPError(400, 'message does not contain user-s reactId');
+  }
+
+  const channel = data.channels.find(c => c.messages.find(m => m.messageId === messageId));
+  const dm = data.dms.find(d => d.messages.find(m => m.messageId === messageId));
+
+  let platform;
+  if (channel === undefined) {
+    platform = dm;
+  } else {
+    platform = channel;
+  }
+
+  const message = platform.messages.find(m => m.messageId === messageId);
+  const react = message.reacts.find(i => i.reactId === reactId);
+  react.uIds = react.uIds.filter(uId => uId !== authUserId);
+
   setData(data);
   return {};
 };

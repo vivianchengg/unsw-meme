@@ -269,6 +269,25 @@ describe('notifications/get/v1 test', () => {
     expect(notif2.notifications[0].channelId).toStrictEqual(-1);
     expect(notif2.notifications[0].dmId).toStrictEqual(dm.dmId);
   });
+
+  test('valid notif: messageReact', () => {
+    const send = {
+      channelId: channel.channelId,
+      message: 'hey'
+    };
+    const msg = requestHelper('POST', '/message/send/v2', tokenData, send);
+
+    const react = {
+      messageId: msg.messageId,
+      reactId: 1,
+    };
+    requestHelper('POST', '/message/react/v1', tokenData, react);
+
+    const notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif.notifications[0].channelId).toStrictEqual(channel.channelId);
+    expect(notif.notifications[0].dmId).toStrictEqual(-1);
+    expect(notif.notifications[0].notificationMessage).toStrictEqual('viviancheng reacted to your message in ABC');
+  });
 });
 
 describe('searchV1 test', () => {
