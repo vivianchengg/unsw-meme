@@ -1,7 +1,8 @@
-import { getData, setData, getHash } from './dataStore';
+import { getData, setData, getHash, Notif } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
 import HTTPError from 'http-errors';
+import nodemailer from 'nodemailer';
 
 /**
   * check whether email entered belong to a user
@@ -25,7 +26,7 @@ const isEmailFromUser = (email: string): boolean => {
   * @param {string} handle
   * @returns {boolean}
 */
-const isHandleTaken = (handle: string): boolean => {
+export const isHandleTaken = (handle: string): boolean => {
   const data = getData();
   const user = data.users.find(person => person.handleStr === handle);
   if (user === undefined) {
@@ -173,6 +174,8 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const hashedToken = getHash(token);
   const hashedPwd = getHash(password);
   const url: string = null;
+  const notif: Notif[] = [];
+  const resetCode: string = null;
 
   const newUser = {
     uId: id,
@@ -183,7 +186,9 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     password: hashedPwd,
     pId: pId,
     token: [hashedToken],
-    profileImgUrl: url
+    profileImgUrl: url,
+    notifications: notif,
+    resetCode: resetCode
   };
 
   data.users.push(newUser);
@@ -211,6 +216,77 @@ export const authLogoutV1 = (token: string) => {
   for (const user of data.users) {
     user.token = user.token.filter(t => t !== hashedToken);
   }
+  setData(data);
+  return {};
+};
+
+/**
+  * send secret password reset code to email
+  * log out all sessions
+  *
+  * @param {string} email
+  * @returns {}
+*/
+export const authPasswordRequestV1 = (email: string) => {
+  const data = getData();
+  const user = data.users.find(u => u.email === email);
+  if (user === undefined) {
+    return {};
+  }
+  user.token = [];
+
+  const code = (Math.floor(Math.random() * 1000));
+  user.resetCode = getHash(code.toString());
+  const senderEmail = 'fleta.kuphal@ethereal.email';
+  const senderPwd = 'pMRJmnxG2KMYg1hCDG';
+
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.ethereal.email',
+    port: 587,
+    secure: false,
+    auth: {
+      user: senderEmail,
+      pass: senderPwd
+    }
+  });
+
+  const options = {
+    from: `1531Project <${senderEmail}>`,
+    to: `${user.nameFirst} ${user.nameLast} <${user.email}>`,
+    subject: 'Password reset request',
+    text: `Reset code: ${user.resetCode}`
+  };
+
+  transporter.sendMail(options).then((i) => {
+    const messageUrl = nodemailer.getTestMessageUrl(i);
+    console.log(`Message sent: ${messageUrl}`);
+  });
+
+  setData(data);
+  return {};
+};
+
+/**
+  * reset password
+  * invalidate reset code if used
+  *
+  * @param {number} resetCode
+  * @param {string} password
+  * @returns {}
+*/
+export const authPasswordResetV1 = (resetCode: string, newPassword: string) => {
+  const data = getData();
+  const user = data.users.find(u => u.resetCode === resetCode);
+  if (user === undefined) {
+    throw HTTPError(400, 'invalid resetCode');
+  }
+
+  if (newPassword.length < 6) {
+    throw HTTPError(400, 'password length < 6');
+  }
+
+  user.password = getHash(newPassword);
+  user.resetCode = null;
   setData(data);
   return {};
 };
