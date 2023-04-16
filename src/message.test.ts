@@ -486,7 +486,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId + 1,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -499,7 +499,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', invalidTokenData, param)).toEqual(403);
   });
@@ -508,7 +508,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: '',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -517,7 +517,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'b'.repeat(1001),
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -526,7 +526,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() - 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) - 2,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', tokenData, param)).toEqual(400);
   });
@@ -539,7 +539,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'i love food wbu?',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     expect(requestHelper('POST', '/message/sendlater/v1', token1Data, param)).toEqual(403);
   });
@@ -548,7 +548,7 @@ describe('/message/sendlater/v1 tests', () => {
     const param = {
       channelId: channel.channelId,
       message: 'Nobody likes food surely!',
-      timeSent: new Date().getTime() + 2000,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
     };
     message = requestHelper('POST', '/message/sendlater/v1', tokenData, param);
     expect(message.messageId).toStrictEqual(expect.any(Number));

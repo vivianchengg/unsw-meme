@@ -275,6 +275,29 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
+const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: number, message: string, timeSent: number) => {
+  const data = getData();
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel === undefined) {
+    return false;
+  }
+
+  const react: React[] = [];
+  const retMsg = {
+    messageId: reservedId,
+    uId: authUserId,
+    message: message,
+    timeSent: Math.floor(timeSent / 1000),
+    reacts: react,
+    isPinned: false
+  };
+
+  channel.messages.unshift(retMsg);
+  setData(data);
+  reservedMessages -= 1;
+  return true;
+};
+
 /**
  * Sends message from authorised user to channel at specified time in the future
  * @param {string} token
@@ -301,7 +324,7 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
     throw HTTPError(400, 'Message too short or long');
   }
 
-  let timeNow = new Date().getTime();
+  let timeNow = Math.floor(new Date().getTime() / 1000);
   if (timeSent < timeNow) {
     throw HTTPError(400, 'Time sent is in the past');
   }
@@ -313,26 +336,12 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
   const reservedId = createId();
   reservedMessages += 1;
 
-  timeNow = new Date().getTime();
-  while (timeNow < timeSent) {
-    timeNow = new Date().getTime();
+  timeNow = Math.floor(new Date().getTime() / 1000);
+  const isSent = setTimeout(sendDelayedMessage, timeSent - timeNow, reservedId, authUserId, message, timeSent);
+
+  if (isSent) {
+    return {
+      messageId: reservedId
+    };
   }
-
-  const react: React[] = [];
-  const retMsg = {
-    messageId: reservedId,
-    uId: authUserId,
-    message: message,
-    timeSent: Math.floor(timeSent / 1000),
-    reacts: react,
-    isPinned: false
-  };
-
-  channel.messages.unshift(retMsg);
-  setData(data);
-  reservedMessages -= 1;
-
-  return {
-    messageId: reservedId
-  };
 };
