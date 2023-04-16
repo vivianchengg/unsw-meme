@@ -24,7 +24,8 @@ export type User = {
   token: string[],
   profileImgUrl: string,
   notifications: Notif[],
-  resetCode: string
+  resetCode: string,
+  isRemoved: boolean
 };
 
 export type Message = {
@@ -88,8 +89,8 @@ Example usage
 
 // Use get() to access the data
 export const getData = (): Data => {
-  const json = fs.readFileSync('./src/data.json', { flag: 'r' });
-  const data = JSON.parse(json.toString());
+  const json = fs.readFileSync('./src/data.json', 'utf8');
+  const data = JSON.parse(json);
   return data;
 };
 
@@ -98,8 +99,8 @@ export const getData = (): Data => {
 // - Javascript uses pass-by-reference for objects... read more here: https://stackoverflow.com/questions/13104494/does-javascript-pass-by-reference
 // Hint: this function might be useful to edit in iteration 2
 export const setData = (newData: Data) => {
-  const dataString = JSON.stringify(newData);
-  fs.writeFileSync('./src/data.json', dataString, { flag: 'w' });
+  const dataString = JSON.stringify(newData, null, 2);
+  fs.writeFileSync('./src/data.json', dataString);
 };
 
 export const getHash = (input: string) => {

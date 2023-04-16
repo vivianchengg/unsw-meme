@@ -10,7 +10,7 @@ import nodemailer from 'nodemailer';
   * @param {string} email
   * @returns {boolean}
 */
-const isEmailFromUser = (email: string): boolean => {
+export const isEmailFromUser = (email: string): boolean => {
   const data = getData();
 
   const user = data.users.find(person => person.email === email);
@@ -188,7 +188,8 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     token: [hashedToken],
     profileImgUrl: url,
     notifications: notif,
-    resetCode: resetCode
+    resetCode: resetCode,
+    isRemoved: false
   };
 
   data.users.push(newUser);
