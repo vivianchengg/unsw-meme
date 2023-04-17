@@ -3,6 +3,8 @@ import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 import { isHandleTaken } from './auth';
 
+let reservedMessages = 0;
+
 /** check message and return tag
   *
   * @param {string} message
@@ -139,6 +141,7 @@ const createId = () => {
   }
 
   length += 1;
+  length += reservedMessages;
   return length;
 };
 
@@ -423,6 +426,159 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
+/**
+ * Sends message to channel that is delayed until timeSent
+ * @param {number} reservedId
+ * @param {number} channelId
+ * @param {number} authUserId
+ * @param {string} message
+ * @param {number} timeSent
+ */
+const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: number, message: string, timeSent: number) => {
+  const data = getData();
+  const channel = data.channels.find(c => c.channelId === channelId);
+  const user = data.users.find(u => u.uId === authUserId);
+
+  const react: React[] = [];
+  const uIds: number[] = [];
+  const reactData = {
+    reactId: 1,
+    uIds: uIds
+  };
+  react.push(reactData);
+
+  const retMsg = {
+    messageId: reservedId,
+    uId: authUserId,
+    message: message,
+    timeSent: Math.floor(timeSent / 1000),
+    reacts: react,
+    isPinned: false
+  };
+
+  channel.messages.unshift(retMsg);
+
+  // add notif
+  const msg = message.slice(0, 20);
+  const notifMsg = `${user.handleStr} tagged you in ${channel.name}: ${msg}`;
+  const notif = {
+    channelId: channel.channelId,
+    dmId: -1,
+    notificationMessage: notifMsg
+  };
+
+  const handles = checkMsgTag(message);
+  for (const h of handles) {
+    const user = data.users.find(u => u.handleStr === h);
+    if (channel.allMembers.includes(user.uId)) {
+      user.notifications.unshift(notif);
+    }
+  }
+
+  setData(data);
+  reservedMessages -= 1;
+};
+
+/**
+ * Sends delayed message to DM at timeSent
+ * @param {number} dmId
+ * @param {number} reservedId
+ * @param {number} authUserId
+ * @param {string} message
+ * @param {number} timeSent
+ */
+const sendDelayedMessageDM = (dmId: number, reservedId: number, authUserId: number, message: string, timeSent: number) => {
+  const data = getData();
+  const dm = data.dms.find(d => d.dmId === dmId);
+  const user = data.users.find(u => u.uId === authUserId);
+
+  const react: React[] = [];
+  const uIds: number[] = [];
+
+  const reactData = {
+    reactId: 1,
+    uIds: uIds
+  };
+  react.push(reactData);
+
+  const retMsg = {
+    messageId: reservedId,
+    uId: authUserId,
+    message: message,
+    timeSent: timeSent,
+    reacts: react,
+    isPinned: false
+  };
+
+  dm.messages.unshift(retMsg);
+
+  // add notif
+  const msg1 = message.slice(0, 20);
+  const notifMsg = `${user.handleStr} tagged you in ${dm.name}: ${msg1}`;
+  const notif = {
+    channelId: -1,
+    dmId: dmId,
+    notificationMessage: notifMsg
+  };
+
+  const handles = checkMsgTag(message);
+  for (const h of handles) {
+    const user = data.users.find(u => u.handleStr === h);
+    if (dm.allMembers.includes(user.uId)) {
+      user.notifications.unshift(notif);
+    }
+  }
+
+  setData(data);
+  reservedMessages -= 1;
+};
+
+/**
+ * Sends message from authorised user to channel at specified time in the future
+ * @param {string} token
+ * @param {number} channelId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns {{ messageId: number }}
+*/
+export const messageSendLaterV1 = (token: string, channelId: number, message: string, timeSent: number) => {
+  const data = getData();
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel === undefined) {
+    throw HTTPError(400, 'invalid channelId');
+  }
+
+  const minLength = 1;
+  const maxLength = 1000;
+  if (message.length < minLength || message.length > maxLength) {
+    throw HTTPError(400, 'Message too short or long');
+  }
+
+  let timeNow = Math.floor(new Date().getTime() / 1000);
+  if (timeSent < timeNow) {
+    throw HTTPError(400, 'Time sent is in the past');
+  }
+
+  if (!channel.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'Authorised user not in channel');
+  }
+
+  const reservedId = createId();
+  reservedMessages += 1;
+
+  timeNow = Math.floor(new Date().getTime() / 1000);
+  setTimeout(sendDelayedMessage, timeSent - timeNow, reservedId, channelId, authUserId, message, timeSent);
+
+  return {
+    messageId: reservedId
+  };
+};
+
 /** Function that when given a message, pins it
   *
   * @param {string} - Token of individual's session
@@ -614,6 +770,53 @@ export const messageShareV1 = (token: string, ogMessageId: number, message: stri
 
   setData(data);
   return { sharedMessageId: sharedMsgId };
+};
+
+/**
+ * Sends message from authorised user to DM at specified time in the future
+ * @param {string} token
+ * @param {number} dmId
+ * @param {string} message
+ * @param {number} timeSent
+ * @returns {{ messageId: number }}
+*/
+export const messageSendLaterDMV1 = (token: string, dmId: number, message: string, timeSent: number) => {
+  const data = getData();
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+
+  const dm = data.dms.find(d => d.dmId === dmId);
+  if (dm === undefined) {
+    throw HTTPError(400, 'invalid dmId');
+  }
+
+  const minLength = 1;
+  const maxLength = 1000;
+  if (message.length < minLength || message.length > maxLength) {
+    throw HTTPError(400, 'Message too short or long');
+  }
+
+  let timeNow = Math.floor(new Date().getTime() / 1000);
+  if (timeSent < timeNow) {
+    throw HTTPError(400, 'Time sent is in the past');
+  }
+
+  if (!dm.allMembers.includes(authUserId)) {
+    throw HTTPError(403, 'Authorised user not in DM');
+  }
+
+  const reservedId = createId();
+  reservedMessages += 1;
+
+  timeNow = Math.floor(new Date().getTime() / 1000);
+  setTimeout(sendDelayedMessageDM, timeSent - timeNow, dmId, reservedId, authUserId, message, timeSent);
+
+  console.log(data.dms);
+  return {
+    messageId: reservedId
+  };
 };
 
 /**

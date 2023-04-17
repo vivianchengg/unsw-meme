@@ -200,6 +200,35 @@ describe('notifications/get/v1 test', () => {
     expect(notif2).toStrictEqual(notif1);
   });
 
+  test('valid notif: tag themselves for sendLater', () => {
+    const channelMsgData = {
+      channelId: channel.channelId,
+      message: `hello @${userHandle}! Bye @${user2Handle}`,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 5
+    };
+    const channelMsg = requestHelper('POST', '/message/sendlater/v1', tokenData, channelMsgData);
+    let timeNow = Math.floor(new Date().getTime() / 1000);
+    while (timeNow < channelMsgData.timeSent) {
+      timeNow = Math.floor(new Date().getTime() / 1000);
+    }
+
+    const notif1 = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif1.notifications[0].channelId).toStrictEqual(channel.channelId);
+    expect(notif1.notifications[0].dmId).toStrictEqual(-1);
+
+    // non member will not receive notif
+    const invalidNotif = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(invalidNotif.notifications).toStrictEqual([]);
+
+    // not affected by remove
+    const param1 = {
+      messageId: channelMsg.messageId,
+    };
+    requestHelper('DELETE', '/message/remove/v2', tokenData, param1);
+    const notif2 = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif2).toStrictEqual(notif1);
+  });
+
   test('valid notif: dm', () => {
     const dmData = {
       uIds: [newUser2.authUserId]
@@ -213,6 +242,54 @@ describe('notifications/get/v1 test', () => {
       message: `hello @${userHandle} @${user2Handle} where is @${user1Handle}`
     };
     const dmMsg = requestHelper('POST', '/message/senddm/v2', tokenData, dmMsgData);
+    notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    let notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    let notif1 = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif1.notifications).toStrictEqual([]);
+    expect(notif.notifications[0].channelId).toStrictEqual(-1);
+    expect(notif.notifications[0].dmId).toStrictEqual(dm.dmId);
+    expect(notif2.notifications.length).toStrictEqual(2);
+
+    const param3 = {
+      messageId: dmMsg.messageId,
+      message: `hello @${user1Handle} @yay${user1Handle}`
+    };
+    requestHelper('PUT', '/message/edit/v2', tokenData, param3);
+    notif1 = requestHelper('GET', '/notifications/get/v1', token1Data, {});
+    expect(notif1.notifications).toStrictEqual([]);
+    notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(notif2.notifications.length).toStrictEqual(2);
+
+    const param4 = {
+      messageId: dmMsg.messageId,
+      message: `hello @${user2Handle} @noway${user2Handle} @${userHandle}`
+    };
+    requestHelper('PUT', '/message/edit/v2', tokenData, param4);
+    notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(notif.notifications.length).toStrictEqual(2);
+    expect(notif2.notifications.length).toStrictEqual(3);
+  });
+
+  test('valid notif: dm message sendLater', () => {
+    const dmData = {
+      uIds: [newUser2.authUserId]
+    };
+    const dm = requestHelper('POST', '/dm/create/v2', tokenData, dmData);
+    let notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif.notifications).toStrictEqual([]);
+
+    const dmMsgData = {
+      dmId: dm.dmId,
+      message: `hello @${userHandle} @${user2Handle} where is @${user1Handle}`,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 5
+    };
+    const dmMsg = requestHelper('POST', '/message/sendlaterdm/v1', tokenData, dmMsgData);
+    let timeNow = Math.floor(new Date().getTime() / 1000);
+    while (timeNow < dmMsgData.timeSent) {
+      timeNow = Math.floor(new Date().getTime() / 1000);
+    }
+
     notif = requestHelper('GET', '/notifications/get/v1', tokenData, {});
     let notif2 = requestHelper('GET', '/notifications/get/v1', token2Data, {});
     let notif1 = requestHelper('GET', '/notifications/get/v1', token1Data, {});
