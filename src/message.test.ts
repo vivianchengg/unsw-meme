@@ -566,6 +566,115 @@ describe('/message/sendlater/v1 tests', () => {
   });
 });
 
+describe('/message/sendlaterdm/v1 tests', () => {
+  test('Invalid dm ID', () => {
+    const param = {
+      dmId: dm.dmId + 1,
+      message: 'i love food wbu?',
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
+    };
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('Invalid token', () => {
+    const invalidTokenData = {
+      token: user2.token + 'incorrect',
+    };
+
+    const param = {
+      dmId: dm.dmId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
+    };
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', invalidTokenData, param)).toEqual(403);
+  });
+
+  test('Message less than 1 character', () => {
+    const param = {
+      dmId: dm.dmId,
+      message: '',
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
+    };
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('Message over 1000 characters', () => {
+    const param = {
+      dmId: dm.dmId,
+      message: 'b'.repeat(1001),
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
+    };
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('timeSent is in the past', () => {
+    const param = {
+      dmId: dm.dmId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor(new Date().getTime() / 1000) - 2,
+    };
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', tokenData, param)).toEqual(400);
+  });
+
+  test('User not member of DM but dmId is valid', () => {
+    const token1Data = {
+      token: user.token,
+    };
+
+    const param = {
+      dmId: dm.dmId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
+    };
+    expect(requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param)).toEqual(403);
+  });
+
+  test('DM deleted before message is sent', () => {
+    const token1Data = {
+      token: user3.token,
+    };
+
+    const param = {
+      dmId: dm.dmId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor(new Date().getTime() / 1000) + 10,
+    };
+    const message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param).messageId;
+    expect(message).toStrictEqual(expect.any(Number));
+
+    const dmParam = {
+      dmId: dm.dmId
+    };
+    requestHelper('DELETE', '/dm/remove/v2', tokenData, dmParam);
+
+    const messageParam = {
+      dmId: dm.dmId,
+      start: 0
+    };
+    expect(requestHelper('GET', '/dm/messages/v2', tokenData, messageParam)).toEqual(400);
+  });
+
+  test('Basic functionality', () => {
+    const token1Data = {
+      token: user3.token
+    };
+
+    const param = {
+      dmId: dm.dmId,
+      message: 'i love food wbu?',
+      timeSent: Math.floor(new Date().getTime() / 1000) + 2,
+    };
+    message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param);
+    expect(message.messageId).toStrictEqual(expect.any(Number));
+
+    const messageParam = {
+      dmId: dm.dmId,
+      message: 'i love food wbu?',
+    };
+    expect(requestHelper('POST', '/message/senddm/v2', tokenData, messageParam).messageId).toBeGreaterThan(message.messageId);
+  });
+});
+
 describe('HTTP - /message/pin/v1 tests', () => {
   test('Invalid token', () => {
     const param = {

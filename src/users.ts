@@ -275,14 +275,12 @@ export const userProfileUploadPhotoV1 = async (token: string, imgUrl: string, xS
   }
 
   if (!validator.isURL(imgUrl)) {
-    console.log('invalid url');
     throw HTTPError(400, 'invalid url');
   }
 
   const res = request('GET', imgUrl);
 
   if (res.statusCode !== 200) {
-    console.log('other than 200');
     throw HTTPError(400, 'imgUrl returns HTTP status other than 200');
   }
 
