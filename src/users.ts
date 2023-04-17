@@ -2,6 +2,12 @@ import { getData, setData, getHash } from './dataStore';
 import validator from 'validator';
 import HTTPError from 'http-errors';
 import { isEmailFromUser, isHandleTaken } from './auth';
+import request from 'sync-request';
+import fs from 'fs';
+import sharp from 'sharp';
+import { port, url } from './config.json';
+
+const SERVER_URL = `${url}:${port}`;
 
 /**
   * Finds the authUserId given a token, if invalid token, return null.
@@ -244,4 +250,66 @@ export const usersAllV1 = (token: string) => {
   return {
     users: list,
   };
+};
+
+/**
+  * upload cropped profile pic
+  * @param {string} token
+  * @param {string} imgUrl
+  * @param {number} xStart
+  * @param {number} yStart
+  * @param {number} xEnd
+  * @param {number} yEnd
+  * @returns {}
+*/
+export const userProfileUploadPhotoV1 = async (token: string, imgUrl: string, xStart: number, yStart: number, xEnd: number, yEnd: number) => {
+  const data = getData();
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+  const user = data.users.find(u => u.uId === authUserId);
+
+  if (xEnd <= xStart || yEnd <= yStart) {
+    throw HTTPError(400, 'end < start');
+  }
+
+  if (!validator.isURL(imgUrl)) {
+    console.log('invalid url');
+    throw HTTPError(400, 'invalid url');
+  }
+
+  const res = request('GET', imgUrl);
+
+  if (res.statusCode !== 200) {
+    console.log('other than 200');
+    throw HTTPError(400, 'imgUrl returns HTTP status other than 200');
+  }
+
+  const body = res.getBody();
+
+  try {
+    const metadata = await sharp(body).metadata();
+    if (metadata.format !== 'jpg' && metadata.format !== 'jpeg') {
+      throw HTTPError(400, 'image uploaded is not a JPG');
+    }
+    const height = metadata.height;
+    const width = metadata.width;
+
+    if (xStart < 0 || yStart < 0 || xStart > width || yStart > height || xEnd > width || yEnd > height || xEnd < 0 || yEnd < 0) {
+      throw HTTPError(400, 'not within dimensions');
+    }
+
+    fs.writeFileSync('./static/imgurl/image.jpg', body, { flag: 'w' });
+
+    sharp('./static/imgurl/image.jpg').extract({ left: xStart, top: yStart, width: xEnd - xStart, height: yEnd - yStart }).toFile(`./static/imgurl/${authUserId}.jpg`);
+
+    user.profileImgUrl = `${SERVER_URL}/imgurl/${authUserId}.jpg`;
+    console.log(user.profileImgUrl);
+    setData(data);
+    return {};
+  } catch (err) {
+    console.error(err.message);
+    throw err;
+  }
 };

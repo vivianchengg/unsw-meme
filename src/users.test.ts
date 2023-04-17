@@ -1,5 +1,7 @@
 import { requestHelper } from './request';
+import { port, url } from './config.json';
 
+const SERVER_URL = `${url}:${port}`;
 let user: any;
 
 beforeEach(() => {
@@ -371,5 +373,163 @@ describe('userProfileV2 tests', () => {
 
     const userDetail = requestHelper('GET', '/user/profile/v3', header1Data, userDetailData);
     expect(userDetail).toEqual(400);
+  });
+});
+
+describe('HTML - user/profile/uploadphoto/v1 tests', () => {
+  test('imgUrl returns an HTTP status other than 200, or any other errors occur when attempting to retrieve the image', () => {
+    const param = {
+      imgUrl: 'http:/what-is-this',
+      xStart: 2,
+      yStart: 2,
+      xEnd: 4,
+      yEnd: 4
+    };
+    const headerData = {
+      token: user.token
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param)).toStrictEqual(400);
+
+    const param1 = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles',
+      xStart: 2,
+      yStart: 2,
+      xEnd: 4,
+      yEnd: 4
+    };
+    const header1Data = {
+      token: user.token
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', header1Data, param1)).toStrictEqual(400);
+  });
+
+  test('any of xStart, yStart, xEnd, yEnd are not within the dimensions of the image at the URL : xStart or yStart less than 0', () => {
+    const param = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: -40,
+      yStart: 2,
+      xEnd: 4,
+      yEnd: 9
+    };
+    const headerData = {
+      token: user.token
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param)).toStrictEqual(400);
+
+    const param2 = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: 1,
+      yStart: -243,
+      xEnd: 4,
+      yEnd: 9
+    };
+
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param2)).toStrictEqual(400);
+  });
+
+  test('any of xStart, yStart, xEnd, yEnd are not within the dimensions of the image at the URL: xStart is greater than width, or yStart is greater than height', () => {
+    const param = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: 1620,
+      yStart: 2,
+      xEnd: 1630,
+      yEnd: 9
+    };
+    const headerData = {
+      token: user.token
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param)).toStrictEqual(400);
+
+    const param2 = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: 1,
+      yStart: 870,
+      xEnd: 4,
+      yEnd: 880
+    };
+
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param2)).toStrictEqual(400);
+  });
+
+  test('xEnd is less than or equal to xStart', () => {
+    const param = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: 8,
+      yStart: 2,
+      xEnd: 4,
+      yEnd: 9
+    };
+    const headerData = {
+      token: user.token
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param)).toStrictEqual(400);
+  });
+
+  test('yEnd is less than or equal to yStart', () => {
+    const param = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: 2,
+      yStart: 9,
+      xEnd: 4,
+      yEnd: 2
+    };
+    const headerData = {
+      token: user.token
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param)).toStrictEqual(400);
+  });
+
+  test('image uploaded is not a JPG', () => {
+    const param = {
+      imgUrl: 'http://www.jakerenzella.com/static/f3f0f6b37152e744baf502d4c2181164/4c27b/jake-photo.webp',
+      xStart: 1,
+      yStart: 2,
+      xEnd: 4,
+      yEnd: 9
+    };
+    const headerData = {
+      token: user.token
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param)).toStrictEqual(400);
+  });
+
+  test('invalid token', () => {
+    const param = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: 1,
+      yStart: 20,
+      xEnd: 1000,
+      yEnd: 200
+    };
+    const headerData = {
+      token: user.token + 'yay'
+    };
+    expect(requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param)).toStrictEqual(403);
+  });
+
+  test('valid input', () => {
+    const param = {
+      imgUrl: 'http://cdn.britannica.com/62/99062-050-C3752373/Turtles.jpg',
+      xStart: 1,
+      yStart: 20,
+      xEnd: 1000,
+      yEnd: 200
+    };
+    const headerData = {
+      token: user.token
+    };
+    requestHelper('POST', '/user/profile/uploadphoto/v1', headerData, param);
+
+    const profileParam = {
+      uId: user.authUserId
+    };
+
+    const header1Data = {
+      token: user.token
+    };
+
+    const userProfile = requestHelper('GET', '/user/profile/v3', header1Data, profileParam);
+
+    expect(userProfile.user.profileImgUrl).toEqual(`${SERVER_URL}/imgurl/${user.authUserId}.jpg`);
   });
 });
