@@ -786,7 +786,7 @@ describe('message/react/v1 tests', () => {
   });
 
   test('invalid token', () => {
-    tokenData.token = user.token - 10;
+    tokenData.token = user.token + 'yay';
     const param = {
       messageId: message.messageId,
       reactId: 1
@@ -1041,7 +1041,7 @@ describe('message/share/v1 tests', () => {
   });
 
   test('invalid token', () => {
-    tokenData.token = user.token - 2;
+    tokenData.token = user.token + 'yay';
     const param = {
       ogMessageId: message.messageId,
       message: 'lol',
