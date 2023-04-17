@@ -87,10 +87,10 @@ const getNewId = (): number => {
   * @returns {string}
 */
 const getNewToken = () => {
-  let tokenNum = Math.floor(Math.random() * 1000);
+  let tokenNum = Math.floor(Math.random() * 200);
   let tokenString = tokenNum.toString();
   while (isValidToken(tokenString)) {
-    tokenNum = Math.floor(Math.random() * 1000);
+    tokenNum = Math.floor(Math.random() * 200);
     tokenString = tokenNum.toString();
   }
   return tokenString;

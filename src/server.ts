@@ -7,7 +7,7 @@ import { echo } from './echo';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelLeaveV2, channelAddOwnerV2, channelRemoveOwnerV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1, notificationsGetV1, searchV1, adminuserRemoveV1, adminuserPermChangeV1 } from './other';
-import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
+import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1, userProfileUploadPhotoV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
 import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messagePinV1, messageUnpinV1, messageReactV1, messageUnreactV1, messageShareV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
@@ -261,9 +261,21 @@ app.delete('/admin/user/remove/v1', (req: Request, res: Response) => {
   return res.json(adminuserRemoveV1(token, uId));
 });
 
+app.post('/user/profile/uploadphoto/v1', async (req: Request, res: Response) => {
+  try {
+    const token = await req.header('token');
+    const { imgUrl, xStart, yStart, xEnd, yEnd } = req.body;
+    const result = await userProfileUploadPhotoV1(token, imgUrl, xStart, yStart, xEnd, yEnd);
+    return res.json(result);
+  } catch (error) {
+    return res.status(error.statusCode).json({ message: error.message });
+  }
+});
+
 // Keep this BENEATH route definitions
 // handles errors nicely
 app.use(errorHandler());
+app.use('/imgurl', express.static('static/imgurl'));
 
 // start server
 const server = app.listen(PORT, HOST, () => {
