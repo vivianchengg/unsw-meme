@@ -200,6 +200,35 @@ describe('notifications/get/v1 test', () => {
     expect(notif2).toStrictEqual(notif1);
   });
 
+  test('valid notif: tag themselves for sendLater', () => {
+    const channelMsgData = {
+      channelId: channel.channelId,
+      message: `hello @${userHandle}! Bye @${user2Handle}`,
+      timeSent: Math.floor(new Date().getTime() / 1000) + 5
+    };
+    const channelMsg = requestHelper('POST', '/message/sendlater/v1', tokenData, channelMsgData);
+    let timeNow = Math.floor(new Date().getTime() / 1000);
+    while (timeNow < channelMsgData.timeSent) {
+      timeNow = Math.floor(new Date().getTime() / 1000);
+    }
+
+    const notif1 = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif1.notifications[0].channelId).toStrictEqual(channel.channelId);
+    expect(notif1.notifications[0].dmId).toStrictEqual(-1);
+
+    // non member will not receive notif
+    const invalidNotif = requestHelper('GET', '/notifications/get/v1', token2Data, {});
+    expect(invalidNotif.notifications).toStrictEqual([]);
+
+    // not affected by remove
+    const param1 = {
+      messageId: channelMsg.messageId,
+    };
+    requestHelper('DELETE', '/message/remove/v2', tokenData, param1);
+    const notif2 = requestHelper('GET', '/notifications/get/v1', tokenData, {});
+    expect(notif2).toStrictEqual(notif1);
+  });
+
   test('valid notif: dm', () => {
     const dmData = {
       uIds: [newUser2.authUserId]

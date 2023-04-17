@@ -1,5 +1,1357 @@
 {
-  "users": [],
-  "channels": [],
+  "users": [
+    {
+      "uId": 10,
+      "nameFirst": "Jake",
+      "nameLast": "Renzella",
+      "email": "jr@unsw.edu.au",
+      "handleStr": "jakerenzella",
+      "password": "5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8",
+      "pId": 1,
+      "token": [
+        "76a50887d8f1c2e9301755428990ad81479ee21c25b43215cf524541e0503269"
+      ],
+      "profileImgUrl": null,
+      "notifications": [],
+      "resetCode": null,
+      "isRemoved": false
+    },
+    {
+      "uId": 20,
+      "nameFirst": "aria",
+      "nameLast": "lee",
+      "email": "arialee@gmail.com",
+      "handleStr": "arialee",
+      "password": "fb8d793c57c891eed7298afb9f4097f24ed56c722088cc720921d0cd5f5a1c5e",
+      "pId": 2,
+      "token": [
+        "5620e84be3e5141819e0d9e4ba10b782ba40e232e56352ed636dc0282161b543"
+      ],
+      "profileImgUrl": null,
+      "notifications": [],
+      "resetCode": null,
+      "isRemoved": false
+    }
+  ],
+  "channels": [
+    {
+      "channelId": 1,
+      "name": "COMP1531",
+      "isPublic": true,
+      "ownerMembers": [
+        10
+      ],
+      "allMembers": [
+        10
+      ],
+      "messages": [
+        {
+          "messageId": 100,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724920,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 99,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724920,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 98,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724920,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 97,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 96,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 95,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 94,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 93,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 92,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 91,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 90,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 89,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 88,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724919,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 87,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 86,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 85,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 84,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 83,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 82,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 81,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 80,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 79,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 78,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 77,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 76,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 75,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 74,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724918,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 73,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 72,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 71,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 70,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 69,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 68,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 67,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 66,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 65,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 64,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 63,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 62,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724917,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 61,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 60,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 59,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 58,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 57,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 56,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 55,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 54,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 53,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724916,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 52,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 51,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 50,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 49,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 48,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 47,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 46,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 45,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 44,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 43,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 42,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 41,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 40,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 39,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724915,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 38,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 37,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 36,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 35,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 34,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 33,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 32,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 31,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 30,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 29,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 28,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 27,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 26,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 25,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 24,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 23,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724914,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 22,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 21,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 20,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 19,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 18,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 17,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 16,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 15,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 14,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 13,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 12,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 11,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 10,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 9,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 8,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 7,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 6,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724913,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 5,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724912,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 4,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724912,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 3,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724912,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 2,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724912,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        },
+        {
+          "messageId": 1,
+          "uId": 10,
+          "message": "This is good",
+          "timeSent": 1681724912,
+          "reacts": [
+            {
+              "reactId": 1,
+              "uIds": []
+            }
+          ],
+          "isPinned": false
+        }
+      ],
+      "standup": {
+        "isActive": false,
+        "timeFinish": null,
+        "starterId": -1
+      }
+    }
+  ],
   "dms": []
 }

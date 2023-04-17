@@ -9,7 +9,7 @@ import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels'
 import { clearV1, notificationsGetV1, searchV1, adminuserRemoveV1, adminuserPermChangeV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
-import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messageSendLaterDMV1, messagePinV1, messageUnpinV1, messageReactV1, messageUnreactV1, messageShareV1 } from './message';
+import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messageSendLaterDMV1, messagePinV1, messageUnpinV1, messageReactV1, messageUnreactV1, messageShareV1, messageSendLaterV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
 
 // Set up web app
@@ -202,6 +202,12 @@ app.post('/message/sendlaterdm/v1', (req: Request, res: Response) => {
   const token = req.header('token');
   const { dmId, message, timeSent } = req.body;
   return res.json(messageSendLaterDMV1(token, dmId, message, timeSent));
+});
+
+app.post('/message/sendlater/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { channelId, message, timeSent } = req.body;
+  return res.json(messageSendLaterV1(token, channelId, message, timeSent));
 });
 
 app.post('/message/pin/v1', (req: Request, res: Response) => {
