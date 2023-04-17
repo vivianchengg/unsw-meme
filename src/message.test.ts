@@ -555,6 +555,7 @@ describe('/message/sendlaterdm/v1 tests', () => {
       timeSent: Math.floor(new Date().getTime() / 1000) + 10,
     };
     const message = requestHelper('POST', '/message/sendlaterdm/v1', token1Data, param).messageId;
+    expect(message).toStrictEqual(expect.any(Number));
 
     const dmParam = {
       dmId: dm.dmId

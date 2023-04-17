@@ -1,8 +1,33 @@
 import { getData, setData, React } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
+import { isHandleTaken } from './auth';
 
 let reservedMessages = 0;
+
+/** check message and return tag
+  *
+  * @param {string} message
+  * @returns {string[]} handle
+*/
+export const checkMsgTag = (message: string) => {
+  const regex = /@([A-Za-z0-9]+)([A-Za-z0-9]|$)/g;
+  let tags = message.match(regex)?.map(m => m.slice(1));
+  const handle: string[] = [];
+  if (tags === undefined) {
+    return handle;
+  }
+
+  // remove duplicates
+  tags = tags.filter((e, i) => tags.indexOf(e) === i);
+  for (const t of tags) {
+    if (isHandleTaken(t)) {
+      handle.push(t);
+    }
+  }
+
+  return handle;
+};
 
 /** Checks if messageId is of a valid message within a channel/dm that the authorised user has joined
   *
@@ -277,15 +302,16 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 
 /**
  * Sends delayed message at timeSent
- * @param {number} dmId 
- * @param {number} reservedId 
- * @param {number} authUserId 
- * @param {string} message 
- * @param {number} timeSent 
+ * @param {number} dmId
+ * @param {number} reservedId
+ * @param {number} authUserId
+ * @param {string} message
+ * @param {number} timeSent
  */
 const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number, message: string, timeSent: number) => {
   const data = getData();
   const dm = data.dms.find(d => d.dmId === dmId);
+  const user = data.users.find(u => u.uId === authUserId);
 
   const react: React[] = [];
   const retMsg = {
@@ -298,6 +324,24 @@ const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number
   };
 
   dm.messages.unshift(retMsg);
+
+  // add notif
+  const msg1 = message.slice(0, 20);
+  const notifMsg = `${user.handleStr} tagged you in ${dm.name}: ${msg1}`;
+  const notif = {
+    channelId: -1,
+    dmId: dmId,
+    notificationMessage: notifMsg
+  };
+
+  const handles = checkMsgTag(message);
+  for (const h of handles) {
+    const user = data.users.find(u => u.handleStr === h);
+    if (dm.allMembers.includes(user.uId)) {
+      user.notifications.unshift(notif);
+    }
+  }
+
   setData(data);
   reservedMessages -= 1;
 };
