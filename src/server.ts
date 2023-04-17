@@ -6,10 +6,10 @@ import errorHandler from 'middleware-http-errors';
 import { echo } from './echo';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelLeaveV2, channelAddOwnerV2, channelRemoveOwnerV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
-import { clearV1 } from './other';
+import { clearV1, notificationsGetV1, searchV1, adminuserRemoveV1, adminuserPermChangeV1 } from './other';
 import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1 } from './users';
-import { authRegisterV1, authLoginV1, authLogoutV1 } from './auth';
-import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messageSendLaterDMV1 } from './message';
+import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
+import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messageSendLaterDMV1, messagePinV1, messageUnpinV1, messageReactV1, messageUnreactV1, messageShareV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
 
 // Set up web app
@@ -202,6 +202,69 @@ app.post('/message/sendlaterdm/v1', (req: Request, res: Response) => {
   const token = req.header('token');
   const { dmId, message, timeSent } = req.body;
   return res.json(messageSendLaterDMV1(token, dmId, message, timeSent));
+});
+
+app.post('/message/pin/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId } = req.body;
+  return res.json(messagePinV1(token, messageId));
+});
+
+app.post('/message/unpin/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId } = req.body;
+  return res.json(messageUnpinV1(token, messageId));
+});
+
+app.post('/message/react/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId, reactId } = req.body;
+  return res.json(messageReactV1(token, messageId, reactId));
+});
+
+app.post('/message/unreact/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { messageId, reactId } = req.body;
+  return res.json(messageUnreactV1(token, messageId, reactId));
+});
+
+app.post('/message/share/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { ogMessageId, message, channelId, dmId } = req.body;
+  return res.json(messageShareV1(token, ogMessageId, message, channelId, dmId));
+});
+
+app.get('/search/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const queryStr = req.query.queryStr as string;
+  return res.json(searchV1(token, queryStr));
+});
+
+app.get('/notifications/get/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  return res.json(notificationsGetV1(token));
+});
+
+app.post('/auth/passwordreset/request/v1', (req: Request, res: Response) => {
+  const { email } = req.body;
+  return res.json(authPasswordRequestV1(email));
+});
+
+app.post('/auth/passwordreset/reset/v1', (req: Request, res: Response) => {
+  const { resetCode, newPassword } = req.body;
+  return res.json(authPasswordResetV1(resetCode, newPassword));
+});
+
+app.post('/admin/userpermission/change/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { uId, permissionId } = req.body;
+  return res.json(adminuserPermChangeV1(token, uId, permissionId));
+});
+
+app.delete('/admin/user/remove/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const uId = parseInt(req.query.uId as string);
+  return res.json(adminuserRemoveV1(token, uId));
 });
 
 // Keep this BENEATH route definitions

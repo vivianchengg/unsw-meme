@@ -519,7 +519,6 @@ describe('channelAddOwnerV2 tests', () => {
       token: user1.token
     };
     const newChannelData = {
-      token: user1.token,
       name: 'COMP2511',
       isPublic: true
     };
@@ -745,7 +744,6 @@ describe('channelRemoveOwnerV2 tests', () => {
       token: user1.token
     };
     const newChannelData = {
-      token: user1.token,
       name: 'COMP2511',
       isPublic: true
     };
