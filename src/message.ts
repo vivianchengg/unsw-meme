@@ -275,6 +275,14 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
+/**
+ * Sends delayed message at timeSent
+ * @param {number} dmId 
+ * @param {number} reservedId 
+ * @param {number} authUserId 
+ * @param {string} message 
+ * @param {number} timeSent 
+ */
 const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number, message: string, timeSent: number) => {
   const data = getData();
   const dm = data.dms.find(d => d.dmId === dmId);
