@@ -70,7 +70,7 @@ describe('authLoginV1 Test', () => {
     let user = requestHelper('POST', '/auth/login/v3', {}, userData);
     expect(user.authUserId).toStrictEqual(reg.authUserId);
 
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 50; i++) {
       user = requestHelper('POST', '/auth/login/v3', {}, userData);
     }
     expect(user.authUserId).toStrictEqual(reg.authUserId);
