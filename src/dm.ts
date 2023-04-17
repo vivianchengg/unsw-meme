@@ -133,12 +133,8 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
     throw HTTPError(403, 'user is not an owner');
   }
 
-  console.log('Before remove:');
-  console.log(data.dms);
   data.dms = data.dms.filter(d => d.dmId !== dmId);
   setData(data);
-  console.log('After remove');
-  console.log(data.dms);
   return {};
 };
 

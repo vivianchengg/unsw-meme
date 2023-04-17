@@ -277,12 +277,7 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 
 const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number, message: string, timeSent: number) => {
   const data = getData();
-  console.log(data.dms);
   const dm = data.dms.find(d => d.dmId === dmId);
-  if (dm === undefined) {
-    reservedMessages -= 1;
-    return false;
-  }
 
   const react: React[] = [];
   const retMsg = {
@@ -297,7 +292,6 @@ const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number
   dm.messages.unshift(retMsg);
   setData(data);
   reservedMessages -= 1;
-  return true;
 };
 
 /**
@@ -335,15 +329,11 @@ export const messageSendLaterDMV1 = (token: string, dmId: number, message: strin
     throw HTTPError(403, 'Authorised user not in DM');
   }
 
-  let reservedId = createId();
+  const reservedId = createId();
   reservedMessages += 1;
 
   timeNow = Math.floor(new Date().getTime() / 1000);
-  const isSent = setTimeout(sendDelayedMessage, timeSent - timeNow, dmId, reservedId, authUserId, message, timeSent);
-
-  if (!isSent) {
-    reservedId = undefined;
-  }
+  setTimeout(sendDelayedMessage, timeSent - timeNow, dmId, reservedId, authUserId, message, timeSent);
 
   console.log(data.dms);
   return {

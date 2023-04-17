@@ -560,7 +560,12 @@ describe('/message/sendlaterdm/v1 tests', () => {
       dmId: dm.dmId
     };
     requestHelper('DELETE', '/dm/remove/v2', tokenData, dmParam);
-    expect(message).toEqual(undefined);
+
+    const messageParam = {
+      dmId: dm.dmId,
+      start: 0
+    };
+    expect(requestHelper('GET', '/dm/messages/v2', tokenData, messageParam)).toEqual(400);
   });
 
   test('Basic functionality', () => {
