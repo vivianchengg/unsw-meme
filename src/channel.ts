@@ -116,6 +116,18 @@ export const channelInviteV3 = (token: string, channelId: number, uId: number) =
   }
 
   channel.allMembers.push(uId);
+
+  const owner = data.users.find(u => u.uId === authUserId);
+  const notifMsg = `${owner.handleStr} added you to ${channel.name}`;
+  const notif = {
+    channelId: channel.channelId,
+    dmId: -1,
+    notificationMessage: notifMsg
+  };
+
+  const user = data.users.find(u => u.uId === uId);
+  user.notifications.unshift(notif);
+
   setData(data);
   return {};
 };

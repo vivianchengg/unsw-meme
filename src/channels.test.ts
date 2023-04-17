@@ -189,7 +189,6 @@ describe('HTTP - channelsCreateV2 Tests', () => {
 
   test('Testing 0 name length', () => {
     const param = {
-      token: user.token,
       name: '',
       isPublic: true,
     };
