@@ -275,12 +275,17 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
   return { messageId: id };
 };
 
+/**
+ * Sends message that is delayed until timeSent
+ * @param {number} reservedId 
+ * @param {number} channelId 
+ * @param {number} authUserId 
+ * @param {string} message 
+ * @param {number} timeSent 
+ */
 const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: number, message: string, timeSent: number) => {
   const data = getData();
   const channel = data.channels.find(c => c.channelId === channelId);
-  if (channel === undefined) {
-    return false;
-  }
 
   const react: React[] = [];
   const retMsg = {
@@ -295,7 +300,6 @@ const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: n
   channel.messages.unshift(retMsg);
   setData(data);
   reservedMessages -= 1;
-  return true;
 };
 
 /**
@@ -337,11 +341,9 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
   reservedMessages += 1;
 
   timeNow = Math.floor(new Date().getTime() / 1000);
-  const isSent = setTimeout(sendDelayedMessage, timeSent - timeNow, reservedId, authUserId, message, timeSent);
+  setTimeout(sendDelayedMessage, timeSent - timeNow, reservedId, channelId, authUserId, message, timeSent);
 
-  if (isSent) {
-    return {
-      messageId: reservedId
-    };
-  }
+  return {
+    messageId: reservedId
+  };
 };
