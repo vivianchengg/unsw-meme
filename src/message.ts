@@ -440,6 +440,14 @@ const sendDelayedMessage = (dmId: number, reservedId: number, authUserId: number
   const user = data.users.find(u => u.uId === authUserId);
 
   const react: React[] = [];
+  const uIds: number[] = [];
+
+  const reactData = {
+    reactId: 1,
+    uIds: uIds
+  };
+  react.push(reactData);
+
   const retMsg = {
     messageId: reservedId,
     uId: authUserId,
