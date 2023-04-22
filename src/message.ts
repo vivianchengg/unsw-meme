@@ -577,7 +577,7 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
 
   timeNow = Math.floor(new Date().getTime() / 1000);
   setTimeout(sendDelayedMessage, timeSent - timeNow, reservedId, channelId, authUserId, message, timeSent);
-  
+
   return {
     messageId: reservedId
   };
