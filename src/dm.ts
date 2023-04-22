@@ -210,12 +210,12 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
     throw HTTPError(400, 'start is greater than the total number of messages in the channel');
   }
 
-  const authUser = isValidToken(token);
-  if (authUser === null) {
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
     throw HTTPError(403, 'Invalid token error');
   }
 
-  if (!dm.allMembers.includes(authUser)) {
+  if (!dm.allMembers.includes(authUserId)) {
     throw HTTPError(403, 'user is not member of DM');
   }
 
@@ -227,6 +227,14 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
   } else {
     end = -1;
     messages = dm.messages.slice(start);
+  }
+
+  for (const msg of messages) {
+    for (const r of msg.reacts) {
+      if (r.uIds.includes(authUserId)) {
+        r.isThisUserReacted = true;
+      }
+    }
   }
 
   return {

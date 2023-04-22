@@ -3,7 +3,8 @@ import crypto from 'crypto';
 
 export type React = {
   reactId: number,
-  uIds: number[]
+  uIds: number[],
+  isThisUserReacted: boolean
 };
 
 export type Notif = {
@@ -36,10 +37,16 @@ export type Message = {
   isPinned: boolean
 };
 
+export type MsgStore = {
+  handle: string,
+  message: string
+};
+
 export type Standup = {
   isActive: boolean,
   timeFinish: number,
   starterId: number
+  msgStore: MsgStore[]
 };
 
 export type Channel = {

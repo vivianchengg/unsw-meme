@@ -128,7 +128,7 @@ const isOwner = (authId: number, messageId: number): boolean => {
   * @param {void}
   * @returns {number} length
 */
-const createId = () => {
+export const createId = () => {
   const data = getData();
   let length = 0;
 
@@ -180,7 +180,8 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
 
   const reactData = {
     reactId: 1,
-    uIds: uIds
+    uIds: uIds,
+    isThisUserReacted: false
   };
   react.push(reactData);
 
@@ -390,7 +391,8 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 
   const reactData = {
     reactId: 1,
-    uIds: uIds
+    uIds: uIds,
+    isThisUserReacted: false
   };
   react.push(reactData);
 
@@ -443,7 +445,8 @@ const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: n
   const uIds: number[] = [];
   const reactData = {
     reactId: 1,
-    uIds: uIds
+    uIds: uIds,
+    isThisUserReacted: false
   };
   react.push(reactData);
 
@@ -451,7 +454,7 @@ const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: n
     messageId: reservedId,
     uId: authUserId,
     message: message,
-    timeSent: Math.floor(timeSent / 1000),
+    timeSent: timeSent,
     reacts: react,
     isPinned: false
   };
@@ -469,9 +472,9 @@ const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: n
 
   const handles = checkMsgTag(message);
   for (const h of handles) {
-    const user = data.users.find(u => u.handleStr === h);
-    if (channel.allMembers.includes(user.uId)) {
-      user.notifications.unshift(notif);
+    const tagUser = data.users.find(u => u.handleStr === h);
+    if (channel.allMembers.includes(tagUser.uId)) {
+      tagUser.notifications.unshift(notif);
     }
   }
 
@@ -497,7 +500,8 @@ const sendDelayedMessageDM = (dmId: number, reservedId: number, authUserId: numb
 
   const reactData = {
     reactId: 1,
-    uIds: uIds
+    uIds: uIds,
+    isThisUserReacted: false
   };
   react.push(reactData);
 
@@ -523,9 +527,9 @@ const sendDelayedMessageDM = (dmId: number, reservedId: number, authUserId: numb
 
   const handles = checkMsgTag(message);
   for (const h of handles) {
-    const user = data.users.find(u => u.handleStr === h);
-    if (dm.allMembers.includes(user.uId)) {
-      user.notifications.unshift(notif);
+    const tagUser = data.users.find(u => u.handleStr === h);
+    if (dm.allMembers.includes(tagUser.uId)) {
+      tagUser.notifications.unshift(notif);
     }
   }
 
@@ -573,7 +577,7 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
 
   timeNow = Math.floor(new Date().getTime() / 1000);
   setTimeout(sendDelayedMessage, timeSent - timeNow, reservedId, channelId, authUserId, message, timeSent);
-
+  
   return {
     messageId: reservedId
   };
@@ -872,7 +876,9 @@ export const messageReactV1 = (token: string, messageId: number, reactId: number
   if (dm === undefined) {
     notif = { channelId: channel.channelId, dmId: -1, notificationMessage: notifMsg };
   }
-  user.notifications.unshift(notif);
+
+  const reactedUser = data.users.find(u => u.uId === message.uId);
+  reactedUser.notifications.unshift(notif);
 
   setData(data);
   return {};

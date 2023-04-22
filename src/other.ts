@@ -1,5 +1,5 @@
 import { getData, setData, Message } from './dataStore';
-import { isValidToken, isValidUser } from './users';
+import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 
 /**
@@ -91,22 +91,19 @@ export const adminuserRemoveV1 = (token: string, uId: number) => {
   if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
+  const authUser = data.users.find(u => u.uId === authUserId);
 
-  if (!isValidUser(uId)) {
-    throw HTTPError(400, 'invalid uId');
+  if (authUser.pId !== 1) {
+    throw HTTPError(403, 'authorised user is not global owner');
   }
 
   const user = data.users.find(u => u.uId === uId);
-  const authUser = data.users.find(u => u.uId === authUserId);
-
-  const globalPerm = 1;
-
-  if (countGlobalOwner() === 1 && user.pId === globalPerm) {
-    throw HTTPError(400, 'user is only global owner');
+  if (user === undefined) {
+    throw HTTPError(400, 'invalid uId');
   }
 
-  if (authUser.pId !== globalPerm) {
-    throw HTTPError(403, 'authorised user is not global owner');
+  if (countGlobalOwner() === 1 && user.pId === 1) {
+    throw HTTPError(400, 'user is only global owner');
   }
 
   // Changes all contents of channel messages sent by removed user to say 'Removed user' and removes user from channel
@@ -133,9 +130,10 @@ export const adminuserRemoveV1 = (token: string, uId: number) => {
 
     if (dm.allMembers.includes(uId)) {
       dm.allMembers = dm.allMembers.filter(id => id !== uId);
-      if (dm.owner === uId) {
-        dm.owner = null;
-      }
+    }
+
+    if (dm.owner === uId) {
+      dm.owner = null;
     }
   }
 
@@ -148,6 +146,8 @@ export const adminuserRemoveV1 = (token: string, uId: number) => {
   // email and handleStr is now reusable
   user.email = '';
   user.handleStr = '';
+
+  user.token = [];
 
   setData(data);
   return {};
@@ -181,20 +181,26 @@ const countGlobalOwner = () => {
  */
 export const adminuserPermChangeV1 = (token: string, uId: number, permissionId: number) => {
   const data = getData();
+  const globalPerm = 1;
+  const userPerm = 2;
   const authUserId = isValidToken(token);
   if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
 
-  if (!isValidUser(uId)) {
-    throw HTTPError(400, 'invalid uId');
+  const authUser = data.users.find(u => u.uId === authUserId);
+  if (authUser.pId !== globalPerm) {
+    throw HTTPError(403, 'authorised user is not global owner');
   }
 
   const user = data.users.find(u => u.uId === uId);
-  const authUser = data.users.find(u => u.uId === authUserId);
+  if (user === undefined) {
+    throw HTTPError(400, 'invalid uId');
+  }
 
-  const globalPerm = 1;
-  const userPerm = 2;
+  if (user.pId === permissionId) {
+    throw HTTPError(400, 'user already has permission Id level');
+  }
 
   if (permissionId !== globalPerm && permissionId !== userPerm) {
     throw HTTPError(400, 'invalid permission Id');
@@ -202,14 +208,6 @@ export const adminuserPermChangeV1 = (token: string, uId: number, permissionId: 
 
   if (countGlobalOwner() === 1 && user.pId === globalPerm && permissionId === 2) {
     throw HTTPError(400, 'only global owner is being demoted to user');
-  }
-
-  if (user.pId === permissionId) {
-    throw HTTPError(400, 'user already has permission Id level');
-  }
-
-  if (authUser.pId !== globalPerm) {
-    throw HTTPError(403, 'authorised user is not global owner');
   }
 
   user.pId = permissionId;

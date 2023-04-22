@@ -3,7 +3,6 @@ import morgan from 'morgan';
 import config from './config.json';
 import cors from 'cors';
 import errorHandler from 'middleware-http-errors';
-import { echo } from './echo';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelLeaveV2, channelAddOwnerV2, channelRemoveOwnerV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1, notificationsGetV1, searchV1, adminuserRemoveV1, adminuserPermChangeV1 } from './other';
@@ -23,12 +22,6 @@ app.use(morgan('dev'));
 
 const PORT: number = parseInt(process.env.PORT || config.port);
 const HOST: string = process.env.IP || 'localhost';
-
-// Example get request
-app.get('/echo', (req: Request, res: Response) => {
-  const data = req.query.echo as string;
-  return res.json(echo(data));
-});
 
 app.delete('/clear/v1', (req: Request, res: Response) => {
   const result = clearV1();

@@ -1,4 +1,4 @@
-import { Message, getData, setData } from './dataStore';
+import { Message, getData, setData, MsgStore } from './dataStore';
 import { isMember } from './channel';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
@@ -42,10 +42,13 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
   const members = [authUserId];
   const message: Message[] = [];
   const timeFinish: number = null;
+  const starterId: number = null;
+  const msgStore: MsgStore[] = [];
   const standup = {
     isActive: false,
     timeFinish: timeFinish,
-    starterId: -1
+    starterId: starterId,
+    msgStore: msgStore
   };
 
   const channel = {

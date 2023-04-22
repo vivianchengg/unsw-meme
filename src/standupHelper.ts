@@ -1,38 +1,37 @@
-import {
-  generateMessageId,
-} from '../Message/messageHelper';
-
-import {
-  channeldataStore,
-  dataStore,
-} from '../Other/types';
+import { createId } from './message';
+import { Channel, Data, React } from './dataStore';
 
 /**
  * Sends a the packaged standup message to the channel
  *
- * @param {dataStore} dataStore - dataStore object
- * @param {channeldataStore} channel - channeldataStore object
+ * @param {Data} dataStore - dataStore object
+ * @param {Channel} channel - channeldataStore object
  */
-const sendStandupMessage = (dataStore: dataStore, channel: channeldataStore) => {
-  const messageId = generateMessageId(dataStore);
+export const sendStandupMessage = (dataStore: Data, channel: Channel) => {
+  const messageId = createId();
   let message = '';
 
-  for (const standupMsg of channel.standupMessagesStorage) {
+  for (const standupMsg of channel.standup.msgStore) {
     message += standupMsg.handle + ': ' + standupMsg.message + '\n';
   }
   message = message.slice(0, -1);
 
+  const react: React[] = [];
+  const uIds: number[] = [];
+  const reactData = {
+    reactId: 1,
+    uIds: uIds,
+    isThisUserReacted: false
+  };
+  react.push(reactData);
+
   // Cannot use MessageSendV2 function in case user logged out after calling standup (invalid token)
   channel.messages.unshift({
     messageId: messageId,
-    uId: channel.standupCallerId,
+    uId: channel.standup.starterId,
     message: message,
-    timeSent: channel.standupFinish,
+    timeSent: channel.standup.timeFinish,
     isPinned: false,
-    reactorUIds: [],
+    reacts: react,
   });
-};
-
-export {
-  sendStandupMessage,
 };
