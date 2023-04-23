@@ -101,6 +101,7 @@ describe('test stat', () => {
     const channel = requestHelper('POST', '/channels/create/v3', tokenData, channelData);
     let userStat = requestHelper('GET', '/user/stats/v1', tokenData, {});
     expect(userStat.userStats.channelsJoined.length).toStrictEqual(2);
+    expect(userStat.userStats.involvementRate).toStrictEqual(1);
     let usersStat = requestHelper('GET', '/users/stats/v1', tokenData, {});
     expect(usersStat.workspaceStats.channelsExist.length).toStrictEqual(2);
 

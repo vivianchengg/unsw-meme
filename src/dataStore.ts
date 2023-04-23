@@ -255,6 +255,8 @@ export const updateUserStat = (data: Data, user: User) => {
     involve = 1;
   }
 
+  user.userStats.involvementRate = involve;
+
   const lastCJoin = user.userStats.channelsJoined.slice(-1)[0].numChannelsJoined;
   if (channelCount !== lastCJoin) {
     user.userStats.channelsJoined.push({ numChannelsJoined: channelCount, timeStamp: now });

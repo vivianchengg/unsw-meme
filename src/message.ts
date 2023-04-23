@@ -1,4 +1,4 @@
-import { getData, setData, React, updateWorkSpace, updateUserStat, Channel, User, Data, Message } from './dataStore';
+import { getData, setData, React, updateWorkSpace, updateUserStat, Channel, Dm, User, Data, Message } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 import { isHandleTaken } from './auth';
@@ -440,11 +440,10 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
 
 /**
  * Sends message to channel that is delayed until timeSent
- * @param {number} reservedId
- * @param {number} channelId
- * @param {number} authUserId
- * @param {string} message
- * @param {number} timeSent
+ * @param {Data} data
+ * @param {Message} message
+ * @param {Channel} channel
+ * @param {User} user
  */
 const sendDelayedMessage = (data: Data, message: Message, channel: Channel, user: User) => {
   const now = Math.floor(new Date().getTime() / 1000);
@@ -476,60 +475,37 @@ const sendDelayedMessage = (data: Data, message: Message, channel: Channel, user
 
 /**
  * Sends delayed message to DM at timeSent
- * @param {number} dmId
- * @param {number} reservedId
- * @param {number} authUserId
- * @param {string} message
- * @param {number} timeSent
+ * @param {Data} data
+ * @param {Message} message
+ * @param {Dm} dm
+ * @param {User} user
  */
-const sendDelayedMessageDM = (dmId: number, reservedId: number, authUserId: number, message: string, timeSent: number) => {
-  const data = getData();
-  const dm = data.dms.find(d => d.dmId === dmId);
-  const user = data.users.find(u => u.uId === authUserId);
+const sendDelayedMessageDM = (data: Data, message: Message, dm: Dm, user: User) => {
+  const now = Math.floor(new Date().getTime() / 1000);
+  message.timeSent = now;
 
-  const react: React[] = [];
-  const uIds: number[] = [];
-
-  const reactData = {
-    reactId: 1,
-    uIds: uIds,
-    isThisUserReacted: false
-  };
-  react.push(reactData);
-
-  const retMsg = {
-    messageId: reservedId,
-    uId: authUserId,
-    message: message,
-    timeSent: timeSent,
-    reacts: react,
-    isPinned: false
-  };
-
-  dm.messages.unshift(retMsg);
+  dm.messages.unshift(message);
+  reservedMessages -= 1;
+  updateWorkSpace(data);
+  updateUserStat(data, user);
+  setData(data);
 
   // add notif
-  const msg1 = message.slice(0, 20);
-  const notifMsg = `${user.handleStr} tagged you in ${dm.name}: ${msg1}`;
+  const msg = message.message.slice(0, 20);
+  const notifMsg = `${user.handleStr} tagged you in ${dm.name}: ${msg}`;
   const notif = {
     channelId: -1,
-    dmId: dmId,
+    dmId: dm.dmId,
     notificationMessage: notifMsg
   };
 
-  const handles = checkMsgTag(message);
+  const handles = checkMsgTag(message.message);
   for (const h of handles) {
     const tagUser = data.users.find(u => u.handleStr === h);
     if (dm.allMembers.includes(tagUser.uId)) {
       tagUser.notifications.unshift(notif);
     }
   }
-
-  updateWorkSpace(data);
-  updateUserStat(data, user);
-
-  setData(data);
-  reservedMessages -= 1;
 };
 
 /**
@@ -808,6 +784,7 @@ export const messageSendLaterDMV1 = (token: string, dmId: number, message: strin
   if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
+  const user = data.users.find(u => u.uId === authUserId);
 
   const dm = data.dms.find(d => d.dmId === dmId);
   if (dm === undefined) {
@@ -833,7 +810,28 @@ export const messageSendLaterDMV1 = (token: string, dmId: number, message: strin
   reservedMessages += 1;
 
   timeNow = Math.floor(new Date().getTime() / 1000);
-  setTimeout(sendDelayedMessageDM, timeSent - timeNow, dmId, reservedId, authUserId, message, timeSent);
+  setTimeout(() => {
+    const react: React[] = [];
+    const uIds: number[] = [];
+
+    const reactData = {
+      reactId: 1,
+      uIds: uIds,
+      isThisUserReacted: false
+    };
+
+    react.push(reactData);
+
+    const lateMessage = {
+      messageId: reservedId,
+      uId: authUserId,
+      message: message,
+      timeSent: timeNow,
+      reacts: react,
+      isPinned: false
+    };
+    sendDelayedMessageDM(data, lateMessage, dm, user);
+  }, (timeSent - timeNow) * 1000);
 
   console.log(data.dms);
   return {
