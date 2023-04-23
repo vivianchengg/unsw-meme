@@ -694,6 +694,7 @@ export const messageShareV1 = (token: string, ogMessageId: number, message: stri
   if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
+  const authUser = data.users.find(s => s.uId === authUserId);
 
   const channel = data.channels.find(c => c.channelId === channelId);
   const dm = data.dms.find(d => d.dmId === dmId);
@@ -766,6 +767,8 @@ export const messageShareV1 = (token: string, ogMessageId: number, message: stri
     }
   }
 
+  updateWorkSpace(data);
+  updateUserStat(data, authUser);
   setData(data);
   return { sharedMessageId: sharedMsgId };
 };
