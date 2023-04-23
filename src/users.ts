@@ -312,6 +312,12 @@ export const userProfileUploadPhotoV1 = async (token: string, imgUrl: string, xS
   }
 };
 
+/**
+  * return user stat
+  * 
+  * @param {string} token
+  * @returns {Object} - userStat
+*/
 export const userStatV1 = (token: string) => {
   const data = getData();
   const uId = isValidToken(token);
@@ -324,6 +330,12 @@ export const userStatV1 = (token: string) => {
   };
 };
 
+/**
+  * return workspace stat
+  * 
+  * @param {string} token
+  * @returns {Object} - workspace stat
+*/
 export const usersStatV1 = (token: string) => {
   const data = getData();
   const uId = isValidToken(token);

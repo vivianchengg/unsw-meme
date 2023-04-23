@@ -162,6 +162,11 @@ export const getHash = (input: string) => {
   return crypto.createHash('sha256').update(input).digest('hex');
 };
 
+/**
+  * update workspace stat
+  * 
+  * @param {Data} data
+*/
 export const updateWorkSpace = (data: Data) => {
   const now = Math.floor(new Date().getTime() / 1000);
   let numUsers = data.users.length;
@@ -213,6 +218,12 @@ export const updateWorkSpace = (data: Data) => {
   setData(data);
 };
 
+/**
+  * update user stat
+  * 
+  * @param {Data} data
+  * @param {User} user
+*/
 export const updateUserStat = (data: Data, user: User) => {
   const now = Math.floor(new Date().getTime() / 1000);
   let numMsgs = 0;

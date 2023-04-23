@@ -64,6 +64,12 @@ const hmDraws: string[] = [`
 =========
 `];
 
+/**
+  * return guessed and unguessed letters
+  * 
+  * @param {}
+  * @returns {String} - retWord
+*/
 export const letterLeft = () => {
   let retWord = '';
   for (let i = 0; i < word.length; i++) {
@@ -78,6 +84,12 @@ export const letterLeft = () => {
   return retWord;
 };
 
+/**
+  * end game
+  * 
+  * @param {string} token
+  * @param {number} channelId
+*/
 export const gameOver = (token: string, channelId: number) => {
   const message = `GAME OVER!\nWord: ${word}\ninput /guess [letter] for new game`;
   wrongGuess = 0;
@@ -87,6 +99,13 @@ export const gameOver = (token: string, channelId: number) => {
   messageSendV1(token, channelId, message);
 };
 
+/**
+  * start game
+  * 
+  * @param {string} letter
+  * @param {string} token
+  * @param {number} channelId
+*/
 export const gameStart = (letter: string, token: string, channelId: number) => {
   if (!chosenLetter.includes(letter) && word.includes(letter)) {
     chosenLetter.push(letter);
