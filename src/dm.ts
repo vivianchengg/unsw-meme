@@ -1,4 +1,4 @@
-import { Message, setData, getData } from './dataStore';
+import { Message, setData, getData, updateWorkSpace, updateUserStat } from './dataStore';
 import { userProfileV1, isValidToken, isValidUser } from './users';
 import HTTPError from 'http-errors';
 
@@ -71,7 +71,11 @@ export const dmCreateV1 = (token: string, uIds: number[]) => {
   for (const userId of uIds) {
     const user = data.users.find(u => u.uId === userId);
     user.notifications.unshift(notif);
+    updateUserStat(data, user);
   }
+
+  updateWorkSpace(data);
+  updateUserStat(data, owner);
 
   setData(data);
   return {
@@ -103,6 +107,7 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
   if (userId === null) {
     throw HTTPError(403, 'Invalid token error');
   }
+  const user = data.users.find(u => u.uId === userId);
 
   if (!dm.allMembers.includes(userId)) {
     throw HTTPError(403, 'User is not member of DM');
@@ -113,6 +118,8 @@ export const dmLeaveV1 = (token: string, dmId: number) => {
     dm.owner = null;
   }
 
+  updateWorkSpace(data);
+  updateUserStat(data, user);
   setData(data);
   return {};
 };
@@ -146,6 +153,13 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
   }
 
   data.dms = data.dms.filter(d => d.dmId !== dmId);
+  updateWorkSpace(data);
+
+  for (const id of dm.allMembers) {
+    const user = data.users.find(u => u.uId === id);
+    updateUserStat(data, user);
+  }
+
   setData(data);
   return {};
 };
@@ -210,12 +224,12 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
     throw HTTPError(400, 'start is greater than the total number of messages in the channel');
   }
 
-  const authUser = isValidToken(token);
-  if (authUser === null) {
+  const authUserId = isValidToken(token);
+  if (authUserId === null) {
     throw HTTPError(403, 'Invalid token error');
   }
 
-  if (!dm.allMembers.includes(authUser)) {
+  if (!dm.allMembers.includes(authUserId)) {
     throw HTTPError(403, 'user is not member of DM');
   }
 
@@ -227,6 +241,14 @@ export const dmMessagesV1 = (token: string, dmId: number, start: number) => {
   } else {
     end = -1;
     messages = dm.messages.slice(start);
+  }
+
+  for (const msg of messages) {
+    for (const r of msg.reacts) {
+      if (r.uIds.includes(authUserId)) {
+        r.isThisUserReacted = true;
+      }
+    }
   }
 
   return {
