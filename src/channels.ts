@@ -1,4 +1,4 @@
-import { Message, getData, setData, MsgStore } from './dataStore';
+import { Message, getData, setData, MsgStore, updateWorkSpace, updateUserStat } from './dataStore';
 import { isMember } from './channel';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
@@ -31,6 +31,7 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
   if (authUserId === null) {
     throw HTTPError(403, 'Invalid token error');
   }
+  const user = data.users.find(u => u.uId === authUserId);
 
   if (isValidName(name) === false) {
     throw HTTPError(400, 'Invalid name length error');
@@ -62,6 +63,9 @@ export const channelsCreateV1 = (token: string, name: string, isPublic: boolean)
   };
 
   data.channels.push(channel);
+
+  updateWorkSpace(data);
+  updateUserStat(data, user);
   setData(data);
 
   return { channelId: size };

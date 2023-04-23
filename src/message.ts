@@ -1,4 +1,4 @@
-import { getData, setData, React } from './dataStore';
+import { getData, setData, React, updateWorkSpace, updateUserStat, Channel, User, Data } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 import { isHandleTaken } from './auth';
@@ -213,6 +213,8 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
     }
   }
 
+  updateWorkSpace(data);
+  updateUserStat(data, sender);
   setData(data);
 
   return {
@@ -235,6 +237,8 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
     throw HTTPError(403, 'Invalid token error');
   }
 
+  const user = data.users.find(u => u.uId === authId);
+
   // channel or dm
   const validMsg = msgValid(authId, messageId);
   if (validMsg === null) {
@@ -253,6 +257,8 @@ export const messageRemoveV1 = (token: string, messageId: number) => {
     dm.messages = dm.messages.filter(m => m.messageId !== messageId);
   }
 
+  updateWorkSpace(data);
+  updateUserStat(data, user);
   setData(data);
   return {};
 };
@@ -351,6 +357,8 @@ export const messageEditV1 = (token: string, messageId: number, message: string)
     }
   }
 
+  updateWorkSpace(data);
+  updateUserStat(data, sender);
   setData(data);
   return {};
 };
@@ -424,6 +432,8 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
     }
   }
 
+  updateWorkSpace(data);
+  updateUserStat(data, sender);
   setData(data);
   return { messageId: id };
 };
@@ -436,33 +446,18 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
  * @param {string} message
  * @param {number} timeSent
  */
-const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: number, message: string, timeSent: number) => {
-  const data = getData();
-  const channel = data.channels.find(c => c.channelId === channelId);
-  const user = data.users.find(u => u.uId === authUserId);
+const sendDelayedMessage = (data: Data, message: Message, channel: ChannelCountMode, user: User) => {
+  const now = Math.floor(new Date().getTime() / 1000);
+  message.timeSent = now;
 
-  const react: React[] = [];
-  const uIds: number[] = [];
-  const reactData = {
-    reactId: 1,
-    uIds: uIds,
-    isThisUserReacted: false
-  };
-  react.push(reactData);
-
-  const retMsg = {
-    messageId: reservedId,
-    uId: authUserId,
-    message: message,
-    timeSent: timeSent,
-    reacts: react,
-    isPinned: false
-  };
-
-  channel.messages.unshift(retMsg);
+  channel.messages.unshift(message);
+  reservedMessages -= 1;
+  updateWorkSpace(data);
+  updateUserStat(data, user);
+  setData(data);
 
   // add notif
-  const msg = message.slice(0, 20);
+  const msg = message.message.slice(0, 20);
   const notifMsg = `${user.handleStr} tagged you in ${channel.name}: ${msg}`;
   const notif = {
     channelId: channel.channelId,
@@ -470,16 +465,13 @@ const sendDelayedMessage = (reservedId: number, channelId: number, authUserId: n
     notificationMessage: notifMsg
   };
 
-  const handles = checkMsgTag(message);
+  const handles = checkMsgTag(message.message);
   for (const h of handles) {
     const tagUser = data.users.find(u => u.handleStr === h);
     if (channel.allMembers.includes(tagUser.uId)) {
       tagUser.notifications.unshift(notif);
     }
   }
-
-  setData(data);
-  reservedMessages -= 1;
 };
 
 /**
@@ -533,6 +525,9 @@ const sendDelayedMessageDM = (dmId: number, reservedId: number, authUserId: numb
     }
   }
 
+  updateWorkSpace(data);
+  updateUserStat(data, user);
+
   setData(data);
   reservedMessages -= 1;
 };
@@ -551,6 +546,7 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
   if (authUserId === null) {
     throw HTTPError(403, 'invalid token');
   }
+  const user = data.users.find(u => u.uId === authUserId);
 
   const channel = data.channels.find(c => c.channelId === channelId);
   if (channel === undefined) {
@@ -576,7 +572,28 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
   reservedMessages += 1;
 
   timeNow = Math.floor(new Date().getTime() / 1000);
-  setTimeout(sendDelayedMessage, timeSent - timeNow, reservedId, channelId, authUserId, message, timeSent);
+  setTimeout(() => {
+    const react: React[] = [];
+    const uIds: number[] = [];
+
+    const reactData = {
+      reactId: 1,
+      uIds: uIds
+    };
+
+    react.push(reactData);
+
+    const lateMessage = {
+      messageId: reservedId,
+      uId: authUserId,
+      message: message,
+      timeSent: timeNow,
+      reacts: react,
+      isPinned: false
+    };
+    sendDelayedMessage(data, lateMessage, channel, user);
+    setData(data);
+  }, (timeSent - timeNow) * 1000);
 
   return {
     messageId: reservedId

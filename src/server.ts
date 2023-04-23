@@ -6,10 +6,11 @@ import errorHandler from 'middleware-http-errors';
 import { channelDetailsV3, channelJoinV3, channelInviteV3, channelMessagesV3, channelLeaveV2, channelAddOwnerV2, channelRemoveOwnerV2 } from './channel';
 import { channelsCreateV1, channelsListV1, channelsListAllV1 } from './channels';
 import { clearV1, notificationsGetV1, searchV1, adminuserRemoveV1, adminuserPermChangeV1 } from './other';
-import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1, userProfileUploadPhotoV1 } from './users';
+import { userProfileV1, userProfileSetName, userProfileSetHandleV1, userProfileSetEmailV1, usersAllV1, userProfileUploadPhotoV1, userStatV1, usersStatV1 } from './users';
 import { authRegisterV1, authLoginV1, authLogoutV1, authPasswordRequestV1, authPasswordResetV1 } from './auth';
 import { messageSendV1, messageRemoveV1, messageEditV1, messageSendDmV1, messageSendLaterDMV1, messagePinV1, messageUnpinV1, messageReactV1, messageUnreactV1, messageShareV1, messageSendLaterV1 } from './message';
 import { dmCreateV1, dmRemoveV1, dmLeaveV1, dmMessagesV1, dmListV1, dmDetailsV1 } from './dm';
+import { standupStartV1, standupActiveV1, standupSendV1 } from './standup';
 
 // Set up web app
 const app = express();
@@ -275,6 +276,34 @@ app.post('/user/profile/uploadphoto/v1', async (req: Request, res: Response) => 
   } catch (error) {
     return res.status(error.statusCode).json({ message: error.message });
   }
+});
+
+app.get('/user/stats/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  return res.json(userStatV1(token));
+});
+
+app.get('/users/stats/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  return res.json(usersStatV1(token));
+});
+
+app.post('/standup/start/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { channelId, length } = req.body;
+  return res.json(standupStartV1(token, channelId, length));
+});
+
+app.get('/standup/active/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const channelId = parseInt(req.query.channelId as string);
+  return res.json(standupActiveV1(token, channelId));
+});
+
+app.post('/standup/send/v1', (req: Request, res: Response) => {
+  const token = req.header('token');
+  const { channelId, message } = req.body;
+  return res.json(standupSendV1(token, channelId, message));
 });
 
 // Keep this BENEATH route definitions

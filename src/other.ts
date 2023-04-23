@@ -13,6 +13,12 @@ export const clearV1 = () => {
   data.users = [];
   data.channels = [];
   data.dms = [];
+  data.workspaceStats = {
+    channelsExist: [],
+    dmsExist: [],
+    messagesExist: [],
+    utilizationRate: 0
+  }
   setData(data);
   return {};
 };

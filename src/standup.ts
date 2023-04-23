@@ -1,7 +1,7 @@
-import { getData, setData } from './dataStore';
+import { getData, setData, updateWorkSpace, updateUserStat, Channel, Data, React } from './dataStore';
 import { isValidToken } from './users';
-import { sendStandupMessage } from './standupHelper';
 import HTTPError from 'http-errors';
+import { createId } from './message';
 
 /**
  * Starts a standup in a channel if it isn't already running
@@ -20,6 +20,7 @@ export const standupStartV1 = (token: string, channelId: number, length: number)
   if (uId === null) {
     throw HTTPError(403, 'Invalid Token');
   }
+  const starter = data.users.find(u => u.uId === uId);
 
   if (channel === undefined) {
     throw HTTPError(400, 'channelId is invalid');
@@ -45,7 +46,10 @@ export const standupStartV1 = (token: string, channelId: number, length: number)
   setTimeout(() => {
     if (channel.standup.msgStore.length !== 0) {
       sendStandupMessage(data, channel);
+      updateWorkSpace(data);
+      updateUserStat(data, starter);
     }
+    
     channel.standup.isActive = false;
     channel.standup.starterId = null;
     channel.standup.timeFinish = null;
@@ -58,6 +62,42 @@ export const standupStartV1 = (token: string, channelId: number, length: number)
   return {
     timeFinish: timeFinish
   };
+};
+
+/**
+ * Sends a the packaged standup message to the channel
+ *
+ * @param {Data} data
+ * @param {number} channelId 
+ */
+export const sendStandupMessage = (data: Data, channel: Channel) => {
+  const messageId = createId();
+  let message = '';
+
+  for (const standupMsg of channel.standup.msgStore) {
+    message += standupMsg.handle + ': ' + standupMsg.message + '\n';
+  }
+  message = message.slice(0, -1);
+
+  const react: React[] = [];
+  const uIds: number[] = [];
+  const reactData = {
+    reactId: 1,
+    uIds: uIds,
+    isThisUserReacted: false
+  };
+  react.push(reactData);
+
+  // Cannot use MessageSendV2 function in case user logged out after calling standup (invalid token)
+  channel.messages.unshift({
+    messageId: messageId,
+    uId: channel.standup.starterId,
+    message: message,
+    timeSent: channel.standup.timeFinish,
+    isPinned: false,
+    reacts: react,
+  });
+  setData(data);
 };
 
 /**

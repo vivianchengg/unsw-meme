@@ -311,3 +311,27 @@ export const userProfileUploadPhotoV1 = async (token: string, imgUrl: string, xS
     throw err;
   }
 };
+
+export const userStatV1 = (token: string) => {
+  const data = getData();
+  const uId = isValidToken(token);
+  if (uId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+  const user = data.users.find(u => u.uId === uId);
+  return {
+    userStats: user.userStats
+  };
+};
+
+export const usersStatV1 = (token: string) => {
+  const data = getData();
+  const uId = isValidToken(token);
+  if (uId === null) {
+    throw HTTPError(403, 'invalid token');
+  }
+
+  return {
+    workspaceStats: data.workspaceStats
+  };
+};

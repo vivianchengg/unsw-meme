@@ -1,4 +1,4 @@
-import { Channel, User, getData, setData } from './dataStore';
+import { Channel, User, getData, setData, updateWorkSpace, updateUserStat } from './dataStore';
 import { userProfileV1, isValidToken, isValidUser } from './users';
 import HTTPError from 'http-errors';
 
@@ -128,6 +128,9 @@ export const channelInviteV3 = (token: string, channelId: number, uId: number) =
   const user = data.users.find(u => u.uId === uId);
   user.notifications.unshift(notif);
 
+  updateWorkSpace(data);
+  updateUserStat(data, user);
+
   setData(data);
   return {};
 };
@@ -162,6 +165,8 @@ export const channelJoinV3 = (token: string, channelId: number) => {
   }
 
   channel.allMembers.push(authUserId);
+  updateWorkSpace(data);
+  updateUserStat(data, user);
   setData(data);
   return {};
 };
@@ -230,24 +235,31 @@ export const channelMessagesV3 = (token: string, channelId: number, start: numbe
 */
 export const channelLeaveV2 = (token: string, channelId: number) => {
   const data = getData();
-  const channel = data.channels.find(c => c.channelId === channelId);
-  if (channel === undefined) {
-    throw HTTPError(400, 'Invalid channel');
-  }
 
   const userId = isValidToken(token);
   if (userId === null) {
     throw HTTPError(403, 'invalid token');
+  }
+  const user = data.users.find(u => u.uId === userId);
+  
+  const channel = data.channels.find(c => c.channelId === channelId);
+  if (channel === undefined) {
+    throw HTTPError(400, 'Invalid channel');
   }
 
   if (!isMember(channel, userId)) {
     throw HTTPError(403, 'authorised user is not a member of the channel');
   }
 
+  if (channel.standup.isActive && channel.standup.starterId === userId) {
+    throw HTTPError(400, 'authorised user is the starter of an active standup');
+  }
+
   // Need to implement error where user is starter of active standup in channel
   channel.allMembers = channel.allMembers.filter(id => id !== userId);
   channel.ownerMembers = channel.ownerMembers.filter(id => id !== userId);
-
+  updateWorkSpace(data);
+  updateUserStat(data, user);
   setData(data);
   return {};
 };

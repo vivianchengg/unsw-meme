@@ -1,4 +1,4 @@
-import { getData, setData, getHash, Notif } from './dataStore';
+import { getData, setData, getHash, Notif, updateWorkSpace } from './dataStore';
 import { isValidToken } from './users';
 import validator from 'validator';
 import HTTPError from 'http-errors';
@@ -176,6 +176,32 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
   const url: string = null;
   const notif: Notif[] = [];
   const resetCode: string = null;
+  const now = Math.floor(new Date().getTime() / 1000);
+
+  // init workspace stat
+  updateWorkSpace(data);
+
+  const cJoin = {
+    numChannelsJoined: 0,
+    timeStamp: now
+  };
+
+  const dJoin = {
+    numDmsJoined: 0,
+    timeStamp: now
+  };
+  
+  const msgSent = {
+    numMessagesSent: 0,
+    timeStamp: now
+  };
+
+  const userStat = {
+    channelsJoined: [cJoin],
+    dmsJoined: [dJoin], 
+    messagesSent: [msgSent], 
+    involvementRate: 0
+  }
 
   const newUser = {
     uId: id,
@@ -189,10 +215,12 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     profileImgUrl: url,
     notifications: notif,
     resetCode: resetCode,
-    isRemoved: false
+    isRemoved: false,
+    userStats: userStat
   };
 
   data.users.push(newUser);
+
   setData(data);
 
   return {
