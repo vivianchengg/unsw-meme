@@ -2,6 +2,7 @@ import { getData, setData, React, updateWorkSpace, updateUserStat, Channel, Dm, 
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 import { isHandleTaken } from './auth';
+import { gameStart } from './hm';
 
 let reservedMessages = 0;
 
@@ -173,6 +174,14 @@ export const messageSendV1 = (token: string, channelId: number, message: string)
 
   if (message.length < 1 || message.length > 1000) {
     throw HTTPError(400, 'Invalid message length');
+  }
+
+  if (/^\/guess [a-z]$/i.test(message)) {
+    const command = '/guess ';
+    let letter = message.slice(command.length);
+    letter = letter.toLowerCase();
+    gameStart(letter, token, channelId);
+    return;
   }
 
   const react: React[] = [];
