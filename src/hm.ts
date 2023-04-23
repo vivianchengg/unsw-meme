@@ -66,7 +66,7 @@ const hmDraws: string[] = [`
 
 /**
   * return guessed and unguessed letters
-  * 
+  *
   * @param {}
   * @returns {String} - retWord
 */
@@ -86,7 +86,7 @@ export const letterLeft = () => {
 
 /**
   * end game
-  * 
+  *
   * @param {string} token
   * @param {number} channelId
 */
@@ -101,7 +101,7 @@ export const gameOver = (token: string, channelId: number) => {
 
 /**
   * start game
-  * 
+  *
   * @param {string} letter
   * @param {string} token
   * @param {number} channelId

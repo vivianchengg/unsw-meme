@@ -164,7 +164,7 @@ export const getHash = (input: string) => {
 
 /**
   * update workspace stat
-  * 
+  *
   * @param {Data} data
 */
 export const updateWorkSpace = (data: Data) => {
@@ -220,7 +220,7 @@ export const updateWorkSpace = (data: Data) => {
 
 /**
   * update user stat
-  * 
+  *
   * @param {Data} data
   * @param {User} user
 */
