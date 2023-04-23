@@ -49,7 +49,7 @@ export const standupStartV1 = (token: string, channelId: number, length: number)
       updateWorkSpace(data);
       updateUserStat(data, starter);
     }
-    
+
     channel.standup.isActive = false;
     channel.standup.starterId = null;
     channel.standup.timeFinish = null;
@@ -68,7 +68,7 @@ export const standupStartV1 = (token: string, channelId: number, length: number)
  * Sends a the packaged standup message to the channel
  *
  * @param {Data} data
- * @param {number} channelId 
+ * @param {number} channelId
  */
 export const sendStandupMessage = (data: Data, channel: Channel) => {
   const messageId = createId();

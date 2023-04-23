@@ -154,7 +154,7 @@ export const dmRemoveV1 = (token: string, dmId: number) => {
 
   data.dms = data.dms.filter(d => d.dmId !== dmId);
   updateWorkSpace(data);
-  
+
   for (const id of dm.allMembers) {
     const user = data.users.find(u => u.uId === id);
     updateUserStat(data, user);

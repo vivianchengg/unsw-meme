@@ -69,8 +69,8 @@ export type msgSent = {
 
 export type UserStat = {
   channelsJoined: cJoin[],
-  dmsJoined: dJoin[], 
-  messagesSent: msgSent[], 
+  dmsJoined: dJoin[],
+  messagesSent: msgSent[],
   involvementRate: number
 };
 
@@ -90,9 +90,9 @@ export type msgExist = {
 };
 
 export type WorkspaceStat = {
-  channelsExist: cExist[], 
-  dmsExist: dExist[], 
-  messagesExist: msgExist[], 
+  channelsExist: cExist[],
+  dmsExist: dExist[],
+  messagesExist: msgExist[],
   utilizationRate: number
 };
 
@@ -187,24 +187,24 @@ export const updateWorkSpace = (data: Data) => {
   }
 
   if (data.users.length === 0) {
-    data.workspaceStats.channelsExist = [{numChannelsExist: numChannels, timeStamp: now}];
-    data.workspaceStats.dmsExist = [{numDmsExist: numDms, timeStamp: now}];
-    data.workspaceStats.messagesExist = [{numMessagesExist: numMsgs, timeStamp: now}];
+    data.workspaceStats.channelsExist = [{ numChannelsExist: numChannels, timeStamp: now }];
+    data.workspaceStats.dmsExist = [{ numDmsExist: numDms, timeStamp: now }];
+    data.workspaceStats.messagesExist = [{ numMessagesExist: numMsgs, timeStamp: now }];
     numUsers = 1;
   } else {
     const lastCExist = data.workspaceStats.channelsExist.slice(-1)[0].numChannelsExist;
     if (numChannels !== lastCExist) {
-      data.workspaceStats.channelsExist.push({numChannelsExist: numChannels, timeStamp: now});
+      data.workspaceStats.channelsExist.push({ numChannelsExist: numChannels, timeStamp: now });
     }
 
     const lastDExist = data.workspaceStats.dmsExist.slice(-1)[0].numDmsExist;
     if (numDms !== lastDExist) {
-      data.workspaceStats.dmsExist.push({numDmsExist: numDms, timeStamp: now});
+      data.workspaceStats.dmsExist.push({ numDmsExist: numDms, timeStamp: now });
     }
 
     const lastMExist = data.workspaceStats.messagesExist.slice(-1)[0].numMessagesExist;
     if (numMsgs !== lastMExist) {
-      data.workspaceStats.messagesExist.push({numMessagesExist: numMsgs, timeStamp: now});
+      data.workspaceStats.messagesExist.push({ numMessagesExist: numMsgs, timeStamp: now });
     }
   }
 
@@ -240,7 +240,7 @@ export const updateUserStat = (data: Data, user: User) => {
           msgCount += 1;
         }
       }
-  
+
       numMsgs += dm.messages.length;
     }
   }
@@ -257,17 +257,17 @@ export const updateUserStat = (data: Data, user: User) => {
 
   const lastCJoin = user.userStats.channelsJoined.slice(-1)[0].numChannelsJoined;
   if (channelCount !== lastCJoin) {
-    user.userStats.channelsJoined.push({numChannelsJoined: channelCount, timeStamp: now});
+    user.userStats.channelsJoined.push({ numChannelsJoined: channelCount, timeStamp: now });
   }
 
   const lastDJoin = user.userStats.dmsJoined.slice(-1)[0].numDmsJoined;
   if (dmCount !== lastDJoin) {
-    user.userStats.dmsJoined.push({numDmsJoined: dmCount, timeStamp: now});
+    user.userStats.dmsJoined.push({ numDmsJoined: dmCount, timeStamp: now });
   }
-  
+
   const lastMSent = user.userStats.messagesSent.slice(-1)[0].numMessagesSent;
   if (msgCount !== lastMSent) {
-    user.userStats.messagesSent.push({numMessagesSent: msgCount, timeStamp: now});
+    user.userStats.messagesSent.push({ numMessagesSent: msgCount, timeStamp: now });
   }
 
   setData(data);

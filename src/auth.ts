@@ -190,7 +190,7 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
     numDmsJoined: 0,
     timeStamp: now
   };
-  
+
   const msgSent = {
     numMessagesSent: 0,
     timeStamp: now
@@ -198,10 +198,10 @@ export const authRegisterV1 = (email: string, password: string, nameFirst: strin
 
   const userStat = {
     channelsJoined: [cJoin],
-    dmsJoined: [dJoin], 
-    messagesSent: [msgSent], 
+    dmsJoined: [dJoin],
+    messagesSent: [msgSent],
     involvementRate: 0
-  }
+  };
 
   const newUser = {
     uId: id,

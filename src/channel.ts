@@ -241,7 +241,7 @@ export const channelLeaveV2 = (token: string, channelId: number) => {
     throw HTTPError(403, 'invalid token');
   }
   const user = data.users.find(u => u.uId === userId);
-  
+
   const channel = data.channels.find(c => c.channelId === channelId);
   if (channel === undefined) {
     throw HTTPError(400, 'Invalid channel');

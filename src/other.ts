@@ -18,7 +18,7 @@ export const clearV1 = () => {
     dmsExist: [],
     messagesExist: [],
     utilizationRate: 0
-  }
+  };
   setData(data);
   return {};
 };

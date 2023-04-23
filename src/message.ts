@@ -1,4 +1,4 @@
-import { getData, setData, React, updateWorkSpace, updateUserStat, Channel, User, Data } from './dataStore';
+import { getData, setData, React, updateWorkSpace, updateUserStat, Channel, User, Data, Message } from './dataStore';
 import { isValidToken } from './users';
 import HTTPError from 'http-errors';
 import { isHandleTaken } from './auth';
@@ -446,7 +446,7 @@ export const messageSendDmV1 = (token: string, dmId: number, message: string) =>
  * @param {string} message
  * @param {number} timeSent
  */
-const sendDelayedMessage = (data: Data, message: Message, channel: ChannelCountMode, user: User) => {
+const sendDelayedMessage = (data: Data, message: Message, channel: Channel, user: User) => {
   const now = Math.floor(new Date().getTime() / 1000);
   message.timeSent = now;
 
@@ -578,7 +578,8 @@ export const messageSendLaterV1 = (token: string, channelId: number, message: st
 
     const reactData = {
       reactId: 1,
-      uIds: uIds
+      uIds: uIds,
+      isThisUserReacted: false
     };
 
     react.push(reactData);

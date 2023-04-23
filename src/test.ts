@@ -1,9 +1,4 @@
 import { requestHelper } from './request';
-import { getData } from './dataStore';
-
-const sleep = (s: number) => {
-  return new Promise(resolve => setTimeout(resolve, s * 1000));
-}
 
 beforeEach(() => {
   requestHelper('DELETE', '/clear/v1', {}, {});
@@ -201,7 +196,7 @@ describe('test stat', () => {
     userStat = requestHelper('GET', '/user/stats/v1', token1Data, {});
     expect(userStat.userStats.dmsJoined.length).toStrictEqual(2);
     expect(userStat.userStats.dmsJoined[1].numDmsJoined).toStrictEqual(1);
-    
+
     // dm leave
     const leaveDetail = {
       dmId: dm1.dmId,
@@ -211,9 +206,9 @@ describe('test stat', () => {
     expect(userStat.userStats.dmsJoined.length).toStrictEqual(3);
     expect(userStat.userStats.dmsJoined[2].numDmsJoined).toStrictEqual(0);
     usersStat = requestHelper('GET', '/users/stats/v1', tokenData, {});
-    expect(usersStat.workspaceStats.utilizationRate).toStrictEqual(1/2);
-    
-    // dm remove 
+    expect(usersStat.workspaceStats.utilizationRate).toStrictEqual(1 / 2);
+
+    // dm remove
     const dmRemoveData = {
       dmId: dm1.dmId
     };
@@ -237,10 +232,9 @@ describe('test stat', () => {
     const dmMsgData = {
       dmId: dm1.dmId,
       message: 'hi'
-    }
+    };
 
     requestHelper('POST', '/message/senddm/v2', tokenData, dmMsgData);
-
   });
 
   test('test msg', () => {
@@ -294,7 +288,6 @@ describe('test stat', () => {
     expect(usersStat.workspaceStats.messagesExist.length).toStrictEqual(2);
     expect(usersStat.workspaceStats.messagesExist[1].numMessagesExist).toStrictEqual(1);
 
-
     // msg remove
     const msgRemoveData = {
       messageId: message.messageId
@@ -312,7 +305,7 @@ describe('test stat', () => {
     const edit1Data = {
       messageId: message.messageId,
       message: ''
-    }
+    };
     requestHelper('PUT', '/message/edit/v2', tokenData, edit1Data);
 
     userStat = requestHelper('GET', '/user/stats/v1', tokenData, {});
@@ -326,7 +319,7 @@ describe('test stat', () => {
     const edit2Data = {
       messageId: message.messageId,
       message: 'hi'
-    }
+    };
     requestHelper('PUT', '/message/edit/v2', tokenData, edit2Data);
 
     userStat = requestHelper('GET', '/user/stats/v1', tokenData, {});
