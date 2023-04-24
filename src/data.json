@@ -1,5 +1,11 @@
 {
   "users": [],
   "channels": [],
-  "dms": []
+  "dms": [],
+  "workspaceStats": {
+    "channelsExist": [],
+    "dmsExist": [],
+    "messagesExist": [],
+    "utilizationRate": 0
+  }
 }
