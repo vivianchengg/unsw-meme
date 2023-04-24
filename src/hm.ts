@@ -111,14 +111,14 @@ export const gameStart = (letter: string, token: string, channelId: number) => {
     chosenLetter.push(letter);
     correctLetter.push(letter);
     const retWord = letterLeft();
-    if (retWord === word) {
+    if (retWord.replace(/ /g, '') === word) {
       gameOver(token, channelId);
     } else {
-      const message = `CORRECT! ${retWord}`;
+      const message = `CORRECT!\n${retWord}`;
       messageSendV1(token, channelId, message);
     }
   } else if (chosenLetter.includes(letter)) {
-    const message = 'You have chosen the letter already!';
+    const message = `You have chosen the letter ${letter} already!\nChosen: ${chosenLetter}`;
     messageSendV1(token, channelId, message);
   } else if (!chosenLetter.includes(letter) && !word.includes(letter)) {
     chosenLetter.push(letter);
